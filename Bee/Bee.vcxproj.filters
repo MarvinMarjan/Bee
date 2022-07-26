@@ -22,6 +22,24 @@
     <Filter Include="src\System\Bootstrap">
       <UniqueIdentifier>{a36b567c-9e2f-48bf-a504-b65da9a8bb61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\System\Handle">
+      <UniqueIdentifier>{e536c05a-0f0e-4041-8989-25d96489e448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source">
+      <UniqueIdentifier>{69fb28a3-de2d-4d32-86ab-1562d06fe0e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source\Stream">
+      <UniqueIdentifier>{4d101548-8c34-4e65-94b1-20009fb700b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\System\System">
+      <UniqueIdentifier>{828c7721-8585-4863-b1f0-dc29bd84852c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source\Util">
+      <UniqueIdentifier>{ccb34ae1-ef92-468b-9dcd-de0f4590ef0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source\Cmds">
+      <UniqueIdentifier>{e8f306a0-d11d-47a2-9483-89d957f0aefa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -31,6 +49,30 @@
   <ItemGroup>
     <ClInclude Include="src\System\Bootstrap\bootstrap.h">
       <Filter>src\System\Bootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\Handle\path_handling.h">
+      <Filter>src\System\Handle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\ostream_clr.h">
+      <Filter>src\Source\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\ostream_snippet.h">
+      <Filter>src\Source\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\System\system_err.h">
+      <Filter>src\System\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\System\system.h">
+      <Filter>src\System\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\istream.h">
+      <Filter>src\Source\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Util\string_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Cmds\commands.h">
+      <Filter>src\Source\Cmds</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
