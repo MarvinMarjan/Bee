@@ -130,15 +130,22 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Source\Cmds\cmd_data.h" />
+    <ClInclude Include="src\Source\Cmds\cmd_args.h" />
+    <ClInclude Include="src\Source\Cmds\cmd_flag.h" />
     <ClInclude Include="src\Source\Cmds\commands.h" />
+    <ClInclude Include="src\Source\Cmds\Diagnostic\diag_data.h" />
     <ClInclude Include="src\Source\Stream\istream.h" />
     <ClInclude Include="src\Source\Stream\ostream_clr.h" />
     <ClInclude Include="src\Source\Stream\ostream_snippet.h" />
+    <ClInclude Include="src\Source\Util\cmd_util.h" />
+    <ClInclude Include="src\Source\Util\filesys_util.h" />
     <ClInclude Include="src\Source\Util\string_util.h" />
     <ClInclude Include="src\System\Bootstrap\bootstrap.h" />
     <ClInclude Include="src\System\Handle\path_handling.h" />
     <ClInclude Include="src\System\System\system.h" />
     <ClInclude Include="src\System\System\system_err.h" />
+    <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

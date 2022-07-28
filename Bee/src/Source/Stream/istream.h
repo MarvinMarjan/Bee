@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Util/string_util.h"
+
 #include <string>
 #include <conio.h>
 
@@ -22,6 +24,7 @@ namespace is
 		inline char operator[](size_t index) { return this->buff[index]; }
 
 		inline std::string get() { return this->buff; }
+		inline std::vector<std::string> get_split() { return util::split_string(this->buff); }
 
 		inline size_t size() { return this->buff.size(); }
 

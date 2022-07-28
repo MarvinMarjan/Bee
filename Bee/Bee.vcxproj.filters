@@ -40,6 +40,9 @@
     <Filter Include="src\Source\Cmds">
       <UniqueIdentifier>{e8f306a0-d11d-47a2-9483-89d957f0aefa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Cmds\Diagnostic">
+      <UniqueIdentifier>{6e5a8fab-e027-4090-b368-7db7d81a5376}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +76,27 @@
     </ClInclude>
     <ClInclude Include="src\Source\Cmds\commands.h">
       <Filter>src\Source\Cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Cmds\cmd_data.h">
+      <Filter>src\Source\Cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Util\cmd_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Util\filesys_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Cmds\cmd_args.h">
+      <Filter>src\Source\Cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Cmds\cmd_flag.h">
+      <Filter>src\Source\Cmds</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Cmds\Diagnostic\diag_data.h">
+      <Filter>src\Source\Cmds\Diagnostic</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\System\system_warn.h">
+      <Filter>src\System\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
