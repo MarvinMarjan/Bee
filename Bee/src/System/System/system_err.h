@@ -26,6 +26,11 @@ namespace sys
 				this->name = "Invalid_Path";
 				this->msg = "The following path isn't a folder or does not exist";
 				break;
+
+			default:
+				this->name = "<invalid>";
+				this->msg = "<invalid>";
+				break;
 			}
 		}
 

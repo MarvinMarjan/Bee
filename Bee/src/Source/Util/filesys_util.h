@@ -1,11 +1,13 @@
 #pragma once
 
+#include <sys/stat.h>
+#include <Windows.h>
+#include <direct.h>
+#include <dirent.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <direct.h>
-#include <dirent.h>
 
 #include "../Stream/ostream_snippet.h"
 
@@ -17,6 +19,13 @@ namespace util
 		File,
 		Folder
 	};
+
+	inline bool is_hidden(std::string path)
+	{
+		DWORD att = GetFileAttributesA(path.c_str());
+
+		return ((att != INVALID_FILE_ATTRIBUTES && (att & FILE_ATTRIBUTE_HIDDEN)) ? true : false);
+	}
 
 	std::vector<std::string> get_folder_ent(std::string path)
 	{

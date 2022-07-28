@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 			break;
 
 		case cmd::CD:
-			args = util::format_args(s_buff);
+			args = util::format_args_all(s_buff);
 
 			if (args.get().size() < cmd::arg_size(cmd::CD))
 			{
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
 			vector<cmd::Diag_data> ents;
 
 			bool dir_size, path_dbg;
-			args = util::format_args(s_buff);
+			args = util::format_args_all(s_buff);
 			flags = cmd::check_flags(args);
 
 			dir_size = (flags.is_active(cmd::Dirs_size)) ? true : false;
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 				util::EntType type = util::get_ent_type(path + ent);
 				string s_type = ((type == util::File) ? "File" : "Dirs");
 				float byte_size = (dir_size && type == util::Folder) ? (float)util::sizeof_folder(path + ent, path_dbg) :
-					(float)util::sizeof_file(path + ent);
+																	   (float)util::sizeof_file(path + ent);
 
 				float f_size = ((byte_size < 1000)
 					? byte_size : (byte_size >= 1000 && byte_size < 1000000)
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 					(byte_size >= 1000000 && byte_size < 1000000000) ? "MB" :
 					(byte_size >= 1000000000) ? "GB" : "BIG");
 
-				ents.push_back(cmd::Diag_data(ent, type, s_type, byte_size, f_size, f_sufix));
+				ents.push_back(cmd::Diag_data(ent, type, s_type, byte_size, f_size, f_sufix, util::is_hidden(path + ent)));
 			}
 
 			for (cmd::Diag_data ent : ents)
@@ -142,13 +142,20 @@ int main(int argc, char* argv[])
 				}
 				else cout << setw(13);
 
-				cout << "  " << ent.name << endl;
+				cout << "  " << ((ent.is_hidden) ? os::clr(ent.name, os::WT_GREEN) : ent.name) << endl;
 			}
 			break;
 		}
 
+		case cmd::Print:
+			args = util::format_args_all(s_buff);
+			for (cmd::Arg arg : args.get())
+				cout << arg.get_arg();
+			cout << endl;
+			break;
+
 		case cmd::Not_found:
-			sys::error(sys::Error(sys::Command_Not_Found), buff.get());
+			sys::error(sys::Error(sys::Command_Not_Found), s_buff[0]);
 			break;
 		}
 	}
