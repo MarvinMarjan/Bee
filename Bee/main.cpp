@@ -14,6 +14,9 @@
 #include "src/Source/Stream/ostream_clr.h"
 #include "src/Source/Stream/istream.h"
 
+#include "src/Source/Data/Shortcut/shortcut.h"
+#include "src/Source/Data/data.h"
+
 #include "src/Source/Cmds/Diagnostic/diag_data.h"
 #include "src/Source/Cmds/commands.h"
 #include "src/Source/Cmds/cmd_args.h"
@@ -42,7 +45,16 @@ int main(int argc, char* argv[])
 
 	sys::System _sys;
 	bt::Bootstrap boot;
+
+	//const string app_path = (boot.get_local_app_path() == "NULL") ? "NULL" : boot.get_local_app_path();
+	//const string app_path_f = app_path + ((app_path[app_path.size() - 1] == '/' || app_path[app_path.size() - 1] == '\\') ? "" : "/");
+
+	//cout << app_path << endl;
+
 	hand::Path path(boot);
+	dt::DBase dbase("src/Source/Data/DBase/shortcuts.txt");
+
+	if (dbase.fail) sys::warn(sys::DataBase_Bootstrap_Err);
 
 	path = util::swap(path.get_path(), '\\', '/');
 
@@ -56,11 +68,12 @@ int main(int argc, char* argv[])
 	{
 		cout << os::path(path);
 		buff = is::get_line();
-
+		
 		while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
 		while (util::ends_with(buff.get(), ' ')) buff = util::erase_last(buff.get());
 
 		s_buff = ((buff.get_split().size() == 0) ? vector<string>({ "" }) : buff.get_split());
+		args = util::format_args_all(s_buff, dbase);
 
 		switch (cmd::check(s_buff[0]))
 		{
@@ -82,15 +95,9 @@ int main(int argc, char* argv[])
 			break;
 
 		case cmd::CD:
-			args = util::format_args_all(s_buff);
+			if (util::_args(args, cmd::CD)) break;
 
-			if (args.get().size() < cmd::arg_size(cmd::CD))
-			{
-				sys::warn(sys::Insufficient_Args);
-				break;
-			}
-
-			if (!hand::exist_folder(path + args[0])) sys::error(sys::Invalid_Path, args[0].get_arg());
+			if (!hand::exist_folder(path + args[0])) sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
 			else path.cd(args[0].get_arg());
 			break;
 
@@ -99,7 +106,6 @@ int main(int argc, char* argv[])
 			vector<cmd::Diag_data> ents;
 
 			bool dir_size, path_dbg;
-			args = util::format_args_all(s_buff);
 			flags = cmd::check_flags(args);
 
 			dir_size = (flags.is_active(cmd::Dirs_size)) ? true : false;
@@ -148,10 +154,52 @@ int main(int argc, char* argv[])
 		}
 
 		case cmd::Print:
-			args = util::format_args_all(s_buff);
-			for (cmd::Arg arg : args.get())
-				cout << arg.get_arg();
+			for (cmd::Arg arg : args.get()) cout << arg.get_arg();
 			cout << endl;
+			break;
+
+		case cmd::Set: 
+			if (util::_args(args, cmd::Set)) break;
+			if (dbase.exist_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
+			else dbase.add_shortcut(dt::Shortcut(args[0].get_arg(), args[1].get_arg()));
+			break;
+
+		case cmd::Del:
+			if (util::_args(args, cmd::Del)) break;
+			if (dbase.exist_shortcut(args[0].get_arg())) dbase.del_shortcut(args[0].get_arg());
+			else sys::error(sys::Shortcut_Not_Found_Err, args[0].get_arg());
+			break;
+
+		case cmd::List:
+			for (dt::Shortcut st : dbase.get_all_shortcut())
+				cout << os::clr(st.get_name(), os::WT_CYAN) << "  " << os::clr('\"' + st.get_value() + '\"', os::GREEN) << endl;
+			break;
+
+		case cmd::Mfile:
+			if (util::_args(args, cmd::Mfile)) break;
+			util::create_file(args[0].get_arg());
+			break;
+
+		case cmd::RMfile:
+			if (util::_args(args, cmd::RMfile)) break;
+			if (hand::exist_file(args[0].get_arg())) util::remove_file(args[0].get_arg());
+			else sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			break;
+		
+		case cmd::Mdir:
+			if (util::_args(args, cmd::Mdir)) break;
+			util::create_folder(args[0].get_arg());
+			break;
+
+		case cmd::RMdir:
+			if (util::_args(args, cmd::RMfile)) break;
+			if (hand::exist_folder(args[0].get_arg())) util::remove_folder(args[0].get_arg());
+			else sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
+			break;
+
+		case cmd::Rename:
+			if (util::_args(args, cmd::RMfile)) break;
+			util::rename_f(args[0].get_arg(), args[1].get_arg());
 			break;
 
 		case cmd::Not_found:

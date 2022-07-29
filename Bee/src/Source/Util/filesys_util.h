@@ -58,6 +58,37 @@ namespace util
 			return Null;
 	}
 
+	std::vector<std::string> read_file(std::string path)
+	{
+		std::vector<std::string> lines;
+		std::string aux;
+
+		std::fstream file;
+		file.open(path.c_str(), std::ios::in);
+
+		while (!file.eof())
+		{
+			std::getline(file, aux);
+			lines.push_back(aux);
+		}
+
+		return lines;
+	}
+
+	inline void write_file(std::string path, std::string content, std::ios::openmode mode = std::ios::out)
+	{
+		std::fstream file;
+		file.open(path.c_str(), mode);
+
+		file << content;
+		file.close();
+	}
+
+	inline void rename_f(std::string path, std::string new_name)
+	{
+		int __trash = rename(path.c_str(), new_name.c_str());
+	}
+
 	inline void create_file(std::string path)
 	{
 		std::fstream file;
@@ -94,7 +125,7 @@ namespace util
 			ent_path = path + '/' + ent;
 
 			if (print_path)
-				std::cout << os::load_c() << os::save_c() << os::del_win(0) << "analyzing: " << ent_path;
+				std::cout << os::load_c() << os::save_c() << os::del_win(0) << os::clr("analyzing: ", os::WT_YELLOW) << os::clr(ent_path, os::WT_GREEN);
 			
 			if (get_ent_type(ent_path) == Folder)
 				size += sizeof_folder(ent_path, print_path, false);

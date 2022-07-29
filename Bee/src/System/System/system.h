@@ -9,8 +9,8 @@
 #include "system_warn.h"
 
 
-#define VERSION "0.0.0"
-#define VERSION_STATE "DEV"
+#define VERSION "0.0.1"
+#define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
 
@@ -44,8 +44,8 @@ namespace sys
 
 	inline void details()
 	{
-		std::cout << "Name: " << os::clr(NAME, os::YELLOW) << std::endl << 
-			"Version: " << VERSION << " " << os::clr(VERSION_STATE, os::PURPLE, os::UNDERLINE) << std::endl << std::endl;
+		std::cout << os::clr("Name: ", os::WT_YELLOW) << os::clr(NAME, os::YELLOW) << std::endl <<
+			os::clr("Version: ", os::WT_YELLOW) << os::clr(VERSION, os::WT_GREEN) << " " << os::clr(VERSION_STATE, os::PURPLE, os::UNDERLINE) << std::endl << std::endl;
 	}
 
 	inline void help(cmd::CMD_Data cmd)

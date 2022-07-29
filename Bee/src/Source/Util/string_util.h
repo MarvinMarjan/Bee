@@ -28,6 +28,16 @@ namespace util
 		return split;
 	}
 
+	std::string join_string(std::vector<std::string> src, std::string ch = " ", size_t init = 0)
+	{
+		std::string j_src = "";
+
+		for (size_t i = init; i < src.size(); i++)
+			j_src += src[i] + ((i + 1 >= src.size()) ? "" : ch);
+		
+		return j_src;
+	}
+
 	inline std::string swap(std::string src, char targ_ch, char new_ch)
 	{
 		std::string s_src = "";

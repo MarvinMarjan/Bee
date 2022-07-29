@@ -6,8 +6,10 @@ namespace sys
 {
 	enum ErrorType
 	{
+		Shortcut_Not_Found_Err,
 		Command_Not_Found,
-		Invalid_Path
+		Invalid_Path_File,
+		Invalid_Path_Dir
 	};
 
 	class Error
@@ -22,9 +24,19 @@ namespace sys
 				this->msg = "The following command was write incorrectly or does not exist";
 				break;
 
-			case Invalid_Path:
-				this->name = "Invalid_Path";
+			case Invalid_Path_Dir:
+				this->name = "Invalid_Path_Dir";
 				this->msg = "The following path isn't a folder or does not exist";
+				break;
+
+			case Invalid_Path_File:
+				this->name = "Invalid_Path_File";
+				this->msg = "The following path isn't a file or does not exist";
+				break;
+
+			case Shortcut_Not_Found_Err:
+				this->name = "Shortcut_Not_Found";
+				this->msg = "The following shortcut couldn't be found";
 				break;
 
 			default:

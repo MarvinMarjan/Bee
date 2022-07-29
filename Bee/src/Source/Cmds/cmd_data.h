@@ -18,7 +18,16 @@ namespace cmd
 
 		CD,
 		Diagnostic,
-		Print
+		Print,
+		Set,
+		Del,
+		List,
+
+		Mfile,
+		RMfile,
+		Mdir,
+		RMdir,
+		Rename
 	};
 
 	class CMD_Data
@@ -75,6 +84,58 @@ namespace cmd
 				this->syntax = "print [ String ]";
 				break;
 
+			case Set:
+				this->name = "set";
+				this->description = "Create or edit a shortcut";
+				this->syntax = "set [ Name ] [ Value ]";
+				break;
+
+			case Del:
+				this->name = "del";
+				this->description = "Delete a shortcut";
+				this->syntax = "del [ Name ]";
+				break;
+
+			case List:
+				this->name = "list";
+				this->description = "List all shortcuts";
+				this->syntax = "list";
+				break;
+
+			case Mfile:
+				this->name = "mfile";
+				this->description = "Create a file";
+				this->syntax = "mfile [ Path ]";
+				this->name_variants = { "mfile", "make_file"};
+				break;
+
+			case RMfile:
+				this->name = "rmfile";
+				this->description = "Remove a file";
+				this->syntax = "rmfile [ Path ]";
+				this->name_variants = { "rmfile", "remove_file" };
+				break;
+
+			case Mdir:
+				this->name = "mdir";
+				this->description = "Create e directory";
+				this->syntax = "mdir [ Path ]";
+				this->name_variants = { "mdir", "make_dir" };
+				break;
+
+			case RMdir:
+				this->name = "rmdir";
+				this->description = "Remove a directory";
+				this->syntax = "rmdir [ Path ]";
+				this->name_variants = { "rmdir", "remove_dir" };
+				break;
+
+			case Rename:
+				this->name = "rename";
+				this->description = "Rename a file/directory";
+				this->syntax = "rename [ Path ] [ New_Name ]";
+				break;
+
 			default:
 				this->name = "<invalid>";
 				this->description = "<invalid>";
@@ -93,17 +154,20 @@ namespace cmd
 	{
 		switch (cmd)
 		{
-		case CD:
-			return 1;
+		case CD:         return 1;
+		case Diagnostic: return 0;
+		case Print:	     return 0;
+		case Set:        return 2;
+		case Del:        return 1;
+		case List:       return 0;
 
-		case Diagnostic:
-			return 0;
+		case Mfile:      return 1;
+		case RMfile:     return 1;
+		case Mdir:       return 1;
+		case RMdir:      return 1;
+		case Rename:     return 2;
 
-		case Print:
-			return 0;
-
-		default:
-			return -1;
+		default: return -1;
 		}
 	}
 }

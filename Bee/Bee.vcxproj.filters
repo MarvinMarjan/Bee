@@ -43,6 +43,12 @@
     <Filter Include="src\Source\Cmds\Diagnostic">
       <UniqueIdentifier>{6e5a8fab-e027-4090-b368-7db7d81a5376}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Data">
+      <UniqueIdentifier>{7dec91ae-bc8e-42ca-adbc-97ba2c0d5a8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source\Data\Shortcut">
+      <UniqueIdentifier>{1e948339-095b-418d-a842-2a361b8c0736}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -97,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="src\System\System\system_warn.h">
       <Filter>src\System\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Data\Shortcut\shortcut.h">
+      <Filter>src\Source\Data\Shortcut</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Data\data.h">
+      <Filter>src\Source\Data</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

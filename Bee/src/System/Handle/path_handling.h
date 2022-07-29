@@ -1,6 +1,7 @@
 #pragma once
 
 #include <dirent.h>
+#include <fstream>
 #include <string>
 
 #include "../Bootstrap/bootstrap.h"
@@ -34,7 +35,7 @@ namespace hand
 
 		void cd(std::string path) 
 		{
-			if (path == ".") return;
+			if (path == "." || path == "") return;
 			if (path == "/")
 			{
 				this->path = "C:/";
@@ -70,6 +71,14 @@ namespace hand
 		DIR* dir = opendir(path.c_str());
 
 		return ((!dir) ? false : true);
+	}
+
+	inline bool exist_file(std::string path)
+	{
+		std::fstream file;
+		file.open(path.c_str(), std::ios::in);
+
+		return (file.fail()) ? false : true;
 	}
 
 	inline bool is_abs(std::string path)
