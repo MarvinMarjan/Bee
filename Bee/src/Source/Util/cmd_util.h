@@ -12,7 +12,7 @@
 
 namespace util
 {
-	std::vector<std::string> format_args1(std::vector<std::string> src, dt::DBase dbase)
+	std::vector<std::string> format_args1(std::vector<std::string> src, dt::DBase& dbase)
 	{
 		std::vector<std::string> f_src;
 
@@ -78,7 +78,7 @@ namespace util
 		return f_src;
 	}
 
-	inline std::vector<std::string> format_args_all(std::vector<std::string> src, dt::DBase dbase)
+	inline std::vector<std::string> format_args_all(std::vector<std::string> src, dt::DBase& dbase)
 	{
 		std::vector<std::string> f_src = format_args1(src, dbase);
 		f_src = format_args2(f_src);

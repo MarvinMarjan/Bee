@@ -39,9 +39,9 @@ namespace dt
 			std::string content = "";
 
 			for (Shortcut scut : this->shortcut)
-				content += scut.get_name() + ((scut.get_value() != "") ? " " : "") + "\n";
+				content += scut.get_name() + ((scut.get_value() != "") ? " " : "") + scut.get_value() + "\n";
 
-			util::write_file(this->path, content);
+			util::write_file(this->path, content, std::ios::out, false);
 		}
 
 		inline void del_shortcut(std::string name)

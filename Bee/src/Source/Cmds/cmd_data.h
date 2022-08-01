@@ -27,7 +27,10 @@ namespace cmd
 		RMfile,
 		Mdir,
 		RMdir,
-		Rename
+		Rename,
+		Sizeof,
+		Read,
+		Write
 	};
 
 	class CMD_Data
@@ -74,7 +77,7 @@ namespace cmd
 			case Diagnostic:
 				this->name = "diag";
 				this->description = "Displays the details of the current directory";
-				this->syntax = "diag [ dirs_size (-ds) ? ] [ path_debug (-pd) ? ] ";
+				this->syntax = "diag { dirs_size (-ds) ? } { path_debug (-pd) ? } ";
 				this->name_variants = { "diag", "diagnostic" };
 				break;
 
@@ -136,6 +139,24 @@ namespace cmd
 				this->syntax = "rename [ Path ] [ New_Name ]";
 				break;
 
+			case Sizeof:
+				this->name = "sizeof";
+				this->description = "Return the size of a file in bytes";
+				this->syntax = "sizeof [ Path ]";
+				break;
+
+			case Read:
+				this->name = "read";
+				this->description = "Return the content of a file";
+				this->syntax = "read [ Path ]";
+				break;
+
+			case Write:
+				this->name = "write";
+				this->description = "Write content in a file";
+				this->syntax = "write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }";
+				break;
+
 			default:
 				this->name = "<invalid>";
 				this->description = "<invalid>";
@@ -166,6 +187,9 @@ namespace cmd
 		case Mdir:       return 1;
 		case RMdir:      return 1;
 		case Rename:     return 2;
+		case Sizeof:     return 1;
+		case Read:       return 1;
+		case Write:      return 2;
 
 		default: return -1;
 		}

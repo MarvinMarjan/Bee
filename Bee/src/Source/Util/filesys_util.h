@@ -75,12 +75,12 @@ namespace util
 		return lines;
 	}
 
-	inline void write_file(std::string path, std::string content, std::ios::openmode mode = std::ios::out)
+	inline void write_file(std::string path, std::string content, std::ios::openmode mode = std::ios::app, bool new_line = true)
 	{
 		std::fstream file;
 		file.open(path.c_str(), mode);
 
-		file << content;
+		file << content << ((new_line) ? "\n" : "");
 		file.close();
 	}
 

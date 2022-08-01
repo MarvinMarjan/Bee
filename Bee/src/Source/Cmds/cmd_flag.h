@@ -10,7 +10,10 @@ namespace cmd
 	enum Flags
 	{
 		Dirs_size,
-		Path_debug
+		Path_debug,
+
+		Not_New_Line,
+		Clear_File
 	};
 
 	class CMD_Flags
@@ -40,10 +43,13 @@ namespace cmd
 		{
 			std::string flag = arg.get_flag();
 
-			if (arg.get_flag() == "") return {};
+			if (arg.get_flag() == "") continue;
 
 			else if (flag == "ds") flags.push_back(Dirs_size);
 			else if (flag == "pd") flags.push_back(Path_debug);
+
+			else if (flag == "nl") flags.push_back(Not_New_Line);
+			else if (flag == "cf") flags.push_back(Clear_File);
 		}
 
 		return flags;

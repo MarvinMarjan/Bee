@@ -137,6 +137,8 @@
     <ClInclude Include="src\Source\Cmds\Diagnostic\diag_data.h" />
     <ClInclude Include="src\Source\Data\data.h" />
     <ClInclude Include="src\Source\Data\Shortcut\shortcut.h" />
+    <ClInclude Include="src\Source\Operator\operator.h" />
+    <ClInclude Include="src\Source\Operator\OP_Repeat\op_iterator.h" />
     <ClInclude Include="src\Source\Stream\istream.h" />
     <ClInclude Include="src\Source\Stream\ostream_clr.h" />
     <ClInclude Include="src\Source\Stream\ostream_snippet.h" />

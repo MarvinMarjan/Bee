@@ -49,6 +49,12 @@
     <Filter Include="src\Source\Data\Shortcut">
       <UniqueIdentifier>{1e948339-095b-418d-a842-2a361b8c0736}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Operator">
+      <UniqueIdentifier>{59d0a4e6-6c98-4758-9a52-1643517c89b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Source\Operator\OP_Repeat">
+      <UniqueIdentifier>{2aab51c7-32dd-4374-abea-af604f478f1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -109,6 +115,12 @@
     </ClInclude>
     <ClInclude Include="src\Source\Data\data.h">
       <Filter>src\Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Operator\operator.h">
+      <Filter>src\Source\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Operator\OP_Repeat\op_iterator.h">
+      <Filter>src\Source\Operator\OP_Repeat</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

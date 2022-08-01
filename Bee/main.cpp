@@ -23,6 +23,9 @@
 #include "src/Source/Cmds/cmd_data.h"
 #include "src/Source/Cmds/cmd_flag.h"
 
+#include "src/Source/Operator/OP_Repeat/op_iterator.h"
+#include "src/Source/Operator/operator.h"
+
 #include "src/Source/Util/string_util.h"
 #include "src/Source/Util/cmd_util.h"
 #include "src/Source/Util/filesys_util.h"
@@ -45,35 +48,43 @@ int main(int argc, char* argv[])
 
 	sys::System _sys;
 	bt::Bootstrap boot;
-
-	//const string app_path = (boot.get_local_app_path() == "NULL") ? "NULL" : boot.get_local_app_path();
-	//const string app_path_f = app_path + ((app_path[app_path.size() - 1] == '/' || app_path[app_path.size() - 1] == '\\') ? "" : "/");
-
-	//cout << app_path << endl;
-
+	
 	hand::Path path(boot);
-	dt::DBase dbase("src/Source/Data/DBase/shortcuts.txt");
-
-	if (dbase.fail) sys::warn(sys::DataBase_Bootstrap_Err);
-
 	path = util::swap(path.get_path(), '\\', '/');
 
-	is::Buffer buff;
+	dt::DBase dbase("src/Source/Data/DBase/shortcuts.txt");
+	if (dbase.fail) sys::warn(sys::DataBase_Bootstrap_Err);
 
+	is::Buffer buff;
 	vector<string> s_buff;
+
 	cmd::CMD_Arg args;
 	cmd::CMD_Flags flags;
 
+	op::Iterator op_itr;
+
 	while (!_sys.abort)
 	{
-		cout << os::path(path);
-		buff = is::get_line();
-		
-		while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
-		while (util::ends_with(buff.get(), ' ')) buff = util::erase_last(buff.get());
+		if (!_sys.blocked)
+		{
+			cout << os::path(path);
+			buff = is::get_line();
 
-		s_buff = ((buff.get_split().size() == 0) ? vector<string>({ "" }) : buff.get_split());
-		args = util::format_args_all(s_buff, dbase);
+			while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
+			while (util::ends_with(buff.get(), ' ')) buff = util::erase_last(buff.get());
+
+			s_buff = ((buff.get_split().size() == 0) ? vector<string>({ "" }) : buff.get_split());
+			args = util::format_args_all(s_buff, dbase);
+
+			flags = cmd::check_flags(args);
+		}
+
+		if (cmd::check(s_buff[0]) == cmd::Not_found)
+			switch (op::check(s_buff[0][0]))
+			{
+			case op::OP_Repeat:
+				continue;
+			}
 
 		switch (cmd::check(s_buff[0]))
 		{
@@ -106,7 +117,6 @@ int main(int argc, char* argv[])
 			vector<cmd::Diag_data> ents;
 
 			bool dir_size, path_dbg;
-			flags = cmd::check_flags(args);
 
 			dir_size = (flags.is_active(cmd::Dirs_size)) ? true : false;
 			path_dbg = (flags.is_active(cmd::Path_debug)) ? true : false;
@@ -116,7 +126,7 @@ int main(int argc, char* argv[])
 				util::EntType type = util::get_ent_type(path + ent);
 				string s_type = ((type == util::File) ? "File" : "Dirs");
 				float byte_size = (dir_size && type == util::Folder) ? (float)util::sizeof_folder(path + ent, path_dbg) :
-																	   (float)util::sizeof_file(path + ent);
+																		(float)util::sizeof_file(path + ent);
 
 				float f_size = ((byte_size < 1000)
 					? byte_size : (byte_size >= 1000 && byte_size < 1000000)
@@ -198,8 +208,27 @@ int main(int argc, char* argv[])
 			break;
 
 		case cmd::Rename:
-			if (util::_args(args, cmd::RMfile)) break;
+			if (util::_args(args, cmd::Rename)) break;
 			util::rename_f(args[0].get_arg(), args[1].get_arg());
+			break;
+
+		case cmd::Sizeof:
+			if (util::_args(args, cmd::Sizeof)) break;
+			if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			else cout << util::sizeof_file(args[0].get_arg()) << endl;
+			break;
+
+		case cmd::Read:
+			if (util::_args(args, cmd::Read)) break;
+			if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			else for (string line : util::read_file(args[0].get_arg()))
+					cout << line << endl;
+			break;
+
+		case cmd::Write:
+			if (util::_args(args, cmd::Write)) break;
+			if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			else util::write_file(args[0].get_arg(), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? ios::out : ios::app), (!flags.is_active(cmd::Not_New_Line)));
 			break;
 
 		case cmd::Not_found:

@@ -9,7 +9,7 @@
 #include "system_warn.h"
 
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -20,6 +20,8 @@ namespace sys
 	{
 	public:
 		bool abort = false;
+		bool blocked = false;
+		bool cmd_blocked = false;
 	};
 
 	inline void error(sys::Error err, std::string arg = "") 

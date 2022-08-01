@@ -27,7 +27,10 @@ namespace cmd
 		cmd::CMD_Data(RMfile),
 		cmd::CMD_Data(Mdir),
 		cmd::CMD_Data(RMdir),
-		cmd::CMD_Data(Rename)
+		cmd::CMD_Data(Rename),
+		cmd::CMD_Data(Sizeof),
+		cmd::CMD_Data(Read),
+		cmd::CMD_Data(Write)
 	};
 
 	Command check(is::Buffer buff)
@@ -52,6 +55,9 @@ namespace cmd
 		else if (buff == "mdir" || buff == "make_dir") return Mdir;
 		else if (buff == "rmdir" || buff == "remove_dir") return RMdir;
 		else if (buff == "rename") return Rename;
+		else if (buff == "sizeof") return Sizeof;
+		else if (buff == "read") return Read;
+		else if (buff == "write") return Write;
 
 		else return Not_found;
 	}
