@@ -64,6 +64,8 @@ int main(int argc, char* argv[])
 
 	op::OP_Aux op_aux;
 
+	cin.get();
+
 	while (!_sys.abort)
 	{
 		if (op_aux.repeat.is && op_aux.repeat.itr >= op_aux.repeat.times)
