@@ -111,6 +111,44 @@ namespace util
 		return -1;
 	}
 
+	inline size_t lineof_file(std::string path)
+	{
+		std::string buffer;
+		size_t lines = 0;
+
+		std::fstream file;
+		file.open(path.c_str(), std::ios::in);
+
+		while (!file.eof())
+		{
+			std::getline(file, buffer);
+			lines++;
+		}
+
+		return lines;
+	}
+
+	size_t linesof_folder(std::string path)
+	{
+		std::vector<std::string> ents = get_folder_ent(path);
+		std::string ent_path;
+
+		size_t lines = 0;
+
+		for (std::string ent : ents)
+		{
+			ent_path = path + '/' + ent;
+
+			if (get_ent_type(ent_path) == Folder)
+				lines += linesof_folder(ent_path);
+
+			else
+				lines += lineof_file(ent_path);
+		}
+
+		return lines;
+	}
+
 	long long sizeof_folder(std::string path, bool print_path = false, bool root = true)
 	{
 		std::vector<std::string> ents = get_folder_ent(path);

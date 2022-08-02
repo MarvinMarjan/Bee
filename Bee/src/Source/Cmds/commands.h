@@ -19,6 +19,7 @@ namespace cmd
 		cmd::CMD_Data(CD),
 		cmd::CMD_Data(Diagnostic),
 		cmd::CMD_Data(Print),
+		cmd::CMD_Data(Add),
 		cmd::CMD_Data(Set),
 		cmd::CMD_Data(Del),
 		cmd::CMD_Data(List),
@@ -30,9 +31,8 @@ namespace cmd
 		cmd::CMD_Data(Rename),
 		cmd::CMD_Data(Sizeof),
 		cmd::CMD_Data(Read),
-		cmd::CMD_Data(Write),
+		cmd::CMD_Data(Write)
 
-		cmd::CMD_Data(Add)
 	};
 
 	Command check(is::Buffer buff)
@@ -48,6 +48,7 @@ namespace cmd
 		else if (buff == "cd") return CD;
 		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;
 		else if (buff == "print") return Print;
+		else if (buff == "add") return Add;
 		else if (buff == "set") return Set;
 		else if (buff == "del") return Del;
 		else if (buff == "list") return List;
@@ -58,10 +59,10 @@ namespace cmd
 		else if (buff == "rmdir" || buff == "remove_dir") return RMdir;
 		else if (buff == "rename") return Rename;
 		else if (buff == "sizeof") return Sizeof;
+		else if (buff == "lineof") return Lineof;
 		else if (buff == "read") return Read;
 		else if (buff == "write") return Write;
 
-		else if (buff == "add") return Add;
 
 		else return Not_found;
 	}
