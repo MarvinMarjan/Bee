@@ -55,6 +55,35 @@ namespace cmd
 		inline Arg operator[](size_t index) { return this->args[index]; }
 
 		inline std::vector<Arg> get() { return this->args; }
+		inline std::vector<std::string> get_str() 
+		{
+			std::vector<std::string> str_args;
+
+			for (Arg arg : this->args)
+				str_args.push_back(arg.get_arg());
+
+			return str_args;
+		}
+
+		inline void erase_first()
+		{
+			std::vector<Arg> e_args;
+
+			for (size_t i = 1; i < this->args.size(); i++)
+				e_args.push_back(this->args[i]);
+
+			this->args = e_args;
+		}
+
+		inline void erase_flags()
+		{
+			for (size_t i = 0; i < this->args.size(); i++)
+				if (this->args[i].get_type() == cmd::Flag)
+				{
+					this->args.erase(this->args.begin() + i);
+					i--;
+				}
+		}
 
 	private:
 		std::vector<Arg> args;

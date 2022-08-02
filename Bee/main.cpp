@@ -24,6 +24,7 @@
 #include "src/Source/Cmds/cmd_flag.h"
 
 #include "src/Source/Operator/OP_Repeat/op_iterator.h"
+#include "src/Source/Operator/op_process.h"
 #include "src/Source/Operator/operator.h"
 
 #include "src/Source/Util/string_util.h"
@@ -61,10 +62,17 @@ int main(int argc, char* argv[])
 	cmd::CMD_Arg args;
 	cmd::CMD_Flags flags;
 
-	op::Iterator op_itr;
+	op::OP_Aux op_aux;
 
 	while (!_sys.abort)
 	{
+		if (op_aux.repeat.is && op_aux.repeat.itr >= op_aux.repeat.times)
+		{
+			_sys.blocked = false;
+			op_aux.repeat.itr = 0;
+			op_aux.repeat.is = false;
+		}
+
 		if (!_sys.blocked)
 		{
 			cout << os::path(path);
@@ -77,12 +85,22 @@ int main(int argc, char* argv[])
 			args = util::format_args_all(s_buff, dbase);
 
 			flags = cmd::check_flags(args);
+			args.erase_flags();
 		}
 
-		if (cmd::check(s_buff[0]) == cmd::Not_found)
+		if (cmd::check(s_buff[0]) == cmd::Not_found && !op_aux.repeat.is)
 			switch (op::check(s_buff[0][0]))
 			{
 			case op::OP_Repeat:
+				op_aux.repeat.times = stoi(util::erase_first(s_buff[0]));
+				op_aux.repeat.is = true;
+				_sys.blocked = true;
+
+				buff = util::join_string(args.get_str());
+				s_buff.erase(s_buff.begin());
+				args = util::format_args_all(s_buff, dbase);
+				args.erase_flags();
+
 				continue;
 			}
 
@@ -165,7 +183,7 @@ int main(int argc, char* argv[])
 
 		case cmd::Print:
 			for (cmd::Arg arg : args.get()) cout << arg.get_arg();
-			cout << endl;
+			if (!flags.is_active(cmd::Not_New_Line)) cout << endl;
 			break;
 
 		case cmd::Set: 
@@ -231,9 +249,16 @@ int main(int argc, char* argv[])
 			else util::write_file(args[0].get_arg(), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? ios::out : ios::app), (!flags.is_active(cmd::Not_New_Line)));
 			break;
 
+		case cmd::Add:
+			if (util::_args(args, cmd::Add)) break;
+			break;
+			// under development
+
 		case cmd::Not_found:
 			sys::error(sys::Error(sys::Command_Not_Found), s_buff[0]);
 			break;
 		}
+
+		if (op_aux.repeat.is) op_aux.repeat.itr += 1;
 	}
 }

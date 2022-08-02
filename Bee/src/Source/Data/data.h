@@ -2,7 +2,9 @@
 
 #include "../Util/filesys_util.h"
 #include "../Util/string_util.h"
+
 #include "Shortcut/shortcut.h"
+#include "Function/function.h"
 
 #include <string>
 #include <vector>
@@ -51,7 +53,16 @@ namespace dt
 					this->shortcut.erase(this->shortcut.begin() + i);
 		}
 
+		inline void del_function(std::string name)
+		{
+			for (size_t i = 0; i < this->shortcut.size(); i++)
+				if (this->function[i].get_name() == name)
+					this->function.erase(this->function.begin() + i);
+		}
+
 		inline void add_shortcut(Shortcut shortcut) { this->shortcut.push_back(shortcut); }
+		inline void add_function(Function function) { this->function.push_back(function); }
+
 		inline Shortcut* get_shortcut(std::string name)
 		{
 			for (size_t i = 0; i < this->shortcut.size(); i++)
@@ -61,7 +72,17 @@ namespace dt
 			return nullptr;
 		}
 
+		inline Function* get_function(std::string name)
+		{
+			for (size_t i = 0; i < this->function.size(); i++)
+				if (this->function[i].get_name() == name)
+					return &this->function[i];
+
+			return nullptr;
+		}
+
 		inline std::vector<Shortcut> get_all_shortcut() { return this->shortcut; }
+		inline std::vector<Function> get_all_function() { return this->function; }
 
 		inline bool exist_shortcut(std::string name)
 		{
@@ -72,10 +93,20 @@ namespace dt
 			return false;
 		}
 
+		inline bool exist_function(std::string name)
+		{
+			for (size_t i = 0; i < this->function.size(); i++)
+				if (this->function[i].get_name() == name)
+					return true;
+
+			return false;
+		}
+
 		bool fail;
 
 	private:
 		std::vector<Shortcut> shortcut;
+		std::vector<Function> function;
 
 
 		std::string path;

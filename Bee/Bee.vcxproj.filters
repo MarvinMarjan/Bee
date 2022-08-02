@@ -55,6 +55,9 @@
     <Filter Include="src\Source\Operator\OP_Repeat">
       <UniqueIdentifier>{2aab51c7-32dd-4374-abea-af604f478f1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Data\Function">
+      <UniqueIdentifier>{2af0b726-ba37-4601-9723-81ca0f586360}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -121,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="src\Source\Operator\OP_Repeat\op_iterator.h">
       <Filter>src\Source\Operator\OP_Repeat</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Operator\op_process.h">
+      <Filter>src\Source\Operator</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Data\Function\function.h">
+      <Filter>src\Source\Data\Function</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

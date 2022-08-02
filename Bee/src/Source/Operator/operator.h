@@ -1,5 +1,7 @@
 #pragma once
 
+#include "op_process.h"
+
 namespace op
 {
 	enum Operator
@@ -7,6 +9,12 @@ namespace op
 		Null,
 
 		OP_Repeat
+	};
+
+	class OP_Aux
+	{
+	public:
+		op::OP_Repeat_Process repeat;
 	};
 
 	Operator check(char ch)

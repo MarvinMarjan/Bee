@@ -30,7 +30,9 @@ namespace cmd
 		cmd::CMD_Data(Rename),
 		cmd::CMD_Data(Sizeof),
 		cmd::CMD_Data(Read),
-		cmd::CMD_Data(Write)
+		cmd::CMD_Data(Write),
+
+		cmd::CMD_Data(Add)
 	};
 
 	Command check(is::Buffer buff)
@@ -58,6 +60,8 @@ namespace cmd
 		else if (buff == "sizeof") return Sizeof;
 		else if (buff == "read") return Read;
 		else if (buff == "write") return Write;
+
+		else if (buff == "add") return Add;
 
 		else return Not_found;
 	}

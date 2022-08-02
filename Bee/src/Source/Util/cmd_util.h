@@ -50,6 +50,19 @@ namespace util
 				}
 			}
 
+			else if (src[i][0] == '#')
+			{
+				std::string name = src[i];
+				name.erase(0, 1);
+
+				if (name == "input")
+				{
+					std::string buff;
+					std::getline(std::cin, buff);
+					f_src.push_back(buff);
+				}
+			}
+
 			else f_src.push_back(src[i]);
 		}
 

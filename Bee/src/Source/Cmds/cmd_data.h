@@ -19,6 +19,7 @@ namespace cmd
 		CD,
 		Diagnostic,
 		Print,
+
 		Set,
 		Del,
 		List,
@@ -30,7 +31,9 @@ namespace cmd
 		Rename,
 		Sizeof,
 		Read,
-		Write
+		Write,
+
+		Add
 	};
 
 	class CMD_Data
@@ -157,6 +160,12 @@ namespace cmd
 				this->syntax = "write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }";
 				break;
 
+			case Add:
+				this->name = "add";
+				this->description = "Add a new command";
+				this->syntax = "add [ Cmd_Name ] [ Block ]";
+				break;
+
 			default:
 				this->name = "<invalid>";
 				this->description = "<invalid>";
@@ -190,6 +199,8 @@ namespace cmd
 		case Sizeof:     return 1;
 		case Read:       return 1;
 		case Write:      return 2;
+
+		case Add:        return 2;
 
 		default: return -1;
 		}
