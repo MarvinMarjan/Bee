@@ -30,6 +30,7 @@ namespace cmd
 		RMdir,
 		Rename,
 		Sizeof,
+		Lineof,
 		Read,
 		Write,
 
@@ -148,6 +149,12 @@ namespace cmd
 				this->syntax = "sizeof [ Path ]";
 				break;
 
+			case Lineof:
+				this->name = "lineof";
+				this->description = "Return the total lines of a file";
+				this->syntax = "lineof [ Path ]";
+				break;
+
 			case Read:
 				this->name = "read";
 				this->description = "Return the content of a file";
@@ -197,6 +204,7 @@ namespace cmd
 		case RMdir:      return 1;
 		case Rename:     return 2;
 		case Sizeof:     return 1;
+		case Lineof:     return 1;
 		case Read:       return 1;
 		case Write:      return 2;
 

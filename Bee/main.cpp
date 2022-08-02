@@ -186,6 +186,11 @@ int main(int argc, char* argv[])
 			if (!flags.is_active(cmd::Not_New_Line)) cout << endl;
 			break;
 
+		case cmd::Add:
+			if (util::_args(args, cmd::Add)) break;
+			break;
+			// under development
+
 		case cmd::Set: 
 			if (util::_args(args, cmd::Set)) break;
 			if (dbase.exist_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
@@ -236,6 +241,11 @@ int main(int argc, char* argv[])
 			else cout << util::sizeof_file(args[0].get_arg()) << endl;
 			break;
 
+		case cmd::Lineof:
+			if (util::_args(args, cmd::Lineof)) break;
+			cout << util::lineof_file(args[0].get_arg()) << endl;
+			break;
+
 		case cmd::Read:
 			if (util::_args(args, cmd::Read)) break;
 			if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
@@ -249,10 +259,6 @@ int main(int argc, char* argv[])
 			else util::write_file(args[0].get_arg(), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? ios::out : ios::app), (!flags.is_active(cmd::Not_New_Line)));
 			break;
 
-		case cmd::Add:
-			if (util::_args(args, cmd::Add)) break;
-			break;
-			// under development
 
 		case cmd::Not_found:
 			sys::error(sys::Error(sys::Command_Not_Found), s_buff[0]);
