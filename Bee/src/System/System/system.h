@@ -9,7 +9,7 @@
 #include "system_warn.h"
 
 
-#define VERSION "0.0.3.1"
+#define VERSION "0.0.4 (BETA)"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 

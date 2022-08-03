@@ -19,7 +19,10 @@ namespace cmd
 		cmd::CMD_Data(CD),
 		cmd::CMD_Data(Diagnostic),
 		cmd::CMD_Data(Print),
+
 		cmd::CMD_Data(Add),
+		cmd::CMD_Data(Edit),
+
 		cmd::CMD_Data(Set),
 		cmd::CMD_Data(Del),
 		cmd::CMD_Data(List),
@@ -48,7 +51,11 @@ namespace cmd
 		else if (buff == "cd") return CD;
 		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;
 		else if (buff == "print") return Print;
+
 		else if (buff == "add") return Add;
+		else if (buff == "edit") return Edit;
+
+
 		else if (buff == "set") return Set;
 		else if (buff == "del") return Del;
 		else if (buff == "list") return List;

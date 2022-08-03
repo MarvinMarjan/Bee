@@ -20,6 +20,9 @@ namespace cmd
 		Diagnostic,
 		Print,
 
+		Add,
+		Edit,
+
 		Set,
 		Del,
 		List,
@@ -32,9 +35,9 @@ namespace cmd
 		Sizeof,
 		Lineof,
 		Read,
-		Write,
+		Write
 
-		Add
+
 	};
 
 	class CMD_Data
@@ -89,6 +92,18 @@ namespace cmd
 				this->name = "print";
 				this->description = "Print a specific value in the console";
 				this->syntax = "print [ String ]";
+				break;
+
+			case Add:
+				this->name = "add";
+				this->description = "Add a new command";
+				this->syntax = "add [ Cmd_Name ] [ Block ]";
+				break;
+
+			case Edit:
+				this->name = "edit";
+				this->description = "Edit a created command";
+				this->syntax = "edit [ Cmd_Name ] [ Block ]";
 				break;
 
 			case Set:
@@ -159,18 +174,14 @@ namespace cmd
 				this->name = "read";
 				this->description = "Return the content of a file";
 				this->syntax = "read [ Path ]";
+				this->name_variants = { "read", "read_file" };
 				break;
 
 			case Write:
 				this->name = "write";
 				this->description = "Write content in a file";
 				this->syntax = "write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }";
-				break;
-
-			case Add:
-				this->name = "add";
-				this->description = "Add a new command";
-				this->syntax = "add [ Cmd_Name ] [ Block ]";
+				this->name_variants = { "write", "write_file" };
 				break;
 
 			default:
@@ -194,6 +205,10 @@ namespace cmd
 		case CD:         return 1;
 		case Diagnostic: return 0;
 		case Print:	     return 0;
+
+		case Add:        return 2;
+		case Edit:       return 2;
+
 		case Set:        return 2;
 		case Del:        return 1;
 		case List:       return 0;
@@ -205,10 +220,10 @@ namespace cmd
 		case Rename:     return 2;
 		case Sizeof:     return 1;
 		case Lineof:     return 1;
+
 		case Read:       return 1;
 		case Write:      return 2;
 
-		case Add:        return 2;
 
 		default: return -1;
 		}

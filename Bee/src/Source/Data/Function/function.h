@@ -18,6 +18,10 @@ namespace dt
 		inline std::string get_name() { return this->name; }
 		inline std::vector<std::string> get_block() { return this->block; }
 
+		inline void set_block(std::vector<std::string> block) { this->block = block; }
+
+		inline void operator=(std::vector<std::string> block) { this->set_block(block); }
+
 	private:
 		std::string name;
 		std::vector<std::string> block;

@@ -6,6 +6,7 @@ namespace sys
 {
 	enum ErrorType
 	{
+		Function_Not_Found_Err,
 		Shortcut_Not_Found_Err,
 		Command_Not_Found,
 		Invalid_Path_File,
@@ -37,6 +38,11 @@ namespace sys
 			case Shortcut_Not_Found_Err:
 				this->name = "Shortcut_Not_Found";
 				this->msg = "The following shortcut couldn't be found";
+				break;
+				
+			case Function_Not_Found_Err:
+				this->name = "Function_Not_Found";
+				this->msg = "The following function couldn't be found";
 				break;
 
 			default:
