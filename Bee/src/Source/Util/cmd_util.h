@@ -6,21 +6,32 @@
 #include "../../System/System/system_warn.h"
 #include "../../System/System/system.h"
 
+#include "../../Source/Util/cmd_util.h"
+
 #include "../Data/Shortcut/shortcut.h"
 
 #include "../Cmds/cmd_data.h"
 
 namespace util
 {
-	std::vector<std::string> format_args1(std::vector<std::string> src, dt::DBase& dbase)
+	inline std::vector<std::string> format_args_all(std::vector<std::string>& src, dt::DBase& dbase);
+
+	std::vector<std::string> format_args1(std::vector<std::string>& _src, dt::DBase& dbase)
 	{
 		std::vector<std::string> f_src;
+		std::vector<std::string> src = _src;
 
 		src.erase(src.begin());
 
 		for (size_t i = 0; i < src.size(); i++)
 		{
-			if (src[i][0] == '\"' && src[i].size() > 1)
+			if (src[i][0] == '*')
+			{
+				f_src.push_back(util::erase_first(src[i]));
+				_src[i + 1] = util::erase_first(_src[i + 1]);
+			}
+
+			else if (src[i][0] == '\"' && src[i].size() > 1)
 			{
 				std::string aux = "";
 
@@ -28,13 +39,47 @@ namespace util
 				{
 					aux += src[i] + ((src[i][src[i].size() - 1] == '\"') ? "" : " ");
 
-					if (src[i][src[i].size() - 1] == '\"') break;
+					if ((src[i][src[i].size() - 1] == '\"')) break;
 				}
 
 				aux.erase(0, 1);
 				aux.erase(aux.size() - 1);
 
 				f_src.push_back(aux);
+			}
+
+			else if (src[i][0] == '{' && src[i].size() > 1)
+			{
+				std::vector<std::string> parts;
+				std::string aux = "";
+
+				for (i; i < src.size(); i++)
+				{
+					aux += src[i] + ((src[i][src[i].size() - 1] == '}') ? "" : " ");
+
+					if ((src[i][src[i].size() - 1] == '}')) break;
+				}
+
+				aux.erase(0, 1);
+				aux.erase(aux.size() - 1);
+
+				std::vector<std::string> vec_aux = util::split_string(aux, ';');
+
+				for (size_t o = 0; o < vec_aux.size(); o++)
+				{
+					while (util::starts_with(vec_aux[o], " ")) vec_aux[o] = util::erase_first(vec_aux[o]);
+					while (util::ends_with(vec_aux[o], ' ')) vec_aux[o] = util::erase_last(vec_aux[o]);
+
+					std::vector<std::string> vec_part = util::split_string(vec_aux[o]);
+
+					//parts.push_back(vec_part[0]);
+					
+					for (std::string arg : vec_part) parts.push_back(arg);
+					for (std::string part : parts) f_src.push_back(part);
+
+					if (o + 1 < vec_aux.size()) f_src.push_back(";");
+					parts.clear();
+				}
 			}
 
 			else if (src[i][0] == '$')
@@ -69,7 +114,7 @@ namespace util
 		return f_src;
 	}
 
-	std::vector<std::string> format_args2(std::vector<std::string> src)
+	std::vector<std::string> format_args2(std::vector<std::string>& src)
 	{
 		std::vector<std::string> f_src = src;
 
@@ -91,7 +136,7 @@ namespace util
 		return f_src;
 	}
 
-	inline std::vector<std::string> format_args_all(std::vector<std::string> src, dt::DBase& dbase)
+	inline std::vector<std::string> format_args_all(std::vector<std::string>& src, dt::DBase& dbase)
 	{
 		std::vector<std::string> f_src = format_args1(src, dbase);
 		f_src = format_args2(f_src);

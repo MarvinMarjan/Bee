@@ -142,6 +142,7 @@
     <ClInclude Include="src\Source\Stream\istream.h" />
     <ClInclude Include="src\Source\Stream\ostream_clr.h" />
     <ClInclude Include="src\Source\Stream\ostream_snippet.h" />
+    <ClInclude Include="src\Source\Util\array_util.h" />
     <ClInclude Include="src\Source\Util\cmd_util.h" />
     <ClInclude Include="src\Source\Util\filesys_util.h" />
     <ClInclude Include="src\Source\Util\string_util.h" />

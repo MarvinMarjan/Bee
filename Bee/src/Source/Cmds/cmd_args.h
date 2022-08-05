@@ -23,7 +23,7 @@ namespace cmd
 			this->type = (this->arg[0] == '-') ? Flag : Argument;
 		};
 
-		inline std::string get_arg() { return this->arg; }
+		inline std::string get_arg(bool ignore = true) { return (this->type == Flag && ignore) ? "" : this->arg; }
 		inline ArgType get_type() { return this->type; }
 
 		inline std::string get_flag() { return (this->type == Flag) ? util::erase_first(this->arg) : ""; }
@@ -55,12 +55,12 @@ namespace cmd
 		inline Arg operator[](size_t index) { return this->args[index]; }
 
 		inline std::vector<Arg> get() { return this->args; }
-		inline std::vector<std::string> get_str() 
+		inline std::vector<std::string> get_str(bool ignore = true) 
 		{
 			std::vector<std::string> str_args;
 
 			for (Arg arg : this->args)
-				str_args.push_back(arg.get_arg());
+				str_args.push_back(arg.get_arg(ignore));
 
 			return str_args;
 		}

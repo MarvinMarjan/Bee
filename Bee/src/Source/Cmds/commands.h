@@ -21,7 +21,7 @@ namespace cmd
 		cmd::CMD_Data(Print),
 
 		cmd::CMD_Data(Add),
-		cmd::CMD_Data(Edit),
+		cmd::CMD_Data(Rmv),
 
 		cmd::CMD_Data(Set),
 		cmd::CMD_Data(Del),
@@ -33,6 +33,7 @@ namespace cmd
 		cmd::CMD_Data(RMdir),
 		cmd::CMD_Data(Rename),
 		cmd::CMD_Data(Sizeof),
+		cmd::CMD_Data(Lineof),
 		cmd::CMD_Data(Read),
 		cmd::CMD_Data(Write)
 
@@ -53,7 +54,7 @@ namespace cmd
 		else if (buff == "print") return Print;
 
 		else if (buff == "add") return Add;
-		else if (buff == "edit") return Edit;
+		else if (buff == "rmv" || buff == "remove") return Rmv;
 
 
 		else if (buff == "set") return Set;

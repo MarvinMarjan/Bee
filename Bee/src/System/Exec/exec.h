@@ -27,9 +27,10 @@
 
 #include "../../../src/Source/Operator/operator.h"
 
-#include "../../../src/Source/Util/string_util.h"
-#include "../../../src/Source/Util/cmd_util.h"
 #include "../../../src/Source/Util/filesys_util.h"
+#include "../../../src/Source/Util/string_util.h"
+#include "../../../src/Source/Util/array_util.h"
+#include "../../../src/Source/Util/cmd_util.h"
 
 void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
 	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags)
@@ -143,25 +144,24 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 			std::getline(std::cin, buffer);
 			if (buffer != ";") block.push_back(buffer);
 		} while (buffer != ";");
-		dbase.add_function(dt::Function(args[0].get_arg(), block));
-		break;
-	}
-
-	case cmd::Edit: {
-		std::vector<std::string> block;
-		std::string buffer;
-
-		if (util::_args(args, cmd::Edit)) break;
-
-		if (!dbase.exist_function(args[0].get_arg())) { sys::error(sys::Function_Not_Found_Err, args[0].get_arg()); break; }
-		if (args[1].get_arg() == "...") do
+		else for (std::string line : util::split_string(util::join_string(util::get_from(args.get_str(false), 1)), ';'))
 		{
-			std::getline(std::cin, buffer);
-			if (buffer != ";") block.push_back(buffer);
-		} while (buffer != ";");
-		dbase.get_function(args[0].get_arg())->set_block(block);
+			while (line[0] == ' ') line = util::erase_first(line);
+			while (line[line.size() - 1] == ' ') line = util::erase_last(line);
+
+			block.push_back(line);
+		}
+
+		if (dbase.exist_function(args[0].get_arg())) dbase.get_function(args[0].get_arg())->set_block(block);
+		else dbase.add_function(dt::Function(args[0].get_arg(), block));
 		break;
 	}
+
+	case cmd::Rmv:
+		if (util::_args(args, cmd::Rmv)) break;
+		if (dbase.exist_function(args[0].get_arg())) dbase.del_function(args[0].get_arg());
+		else sys::error(sys::Function_Not_Found_Err, args[0].get_arg());
+		break;
 
 	case cmd::Set:
 		if (util::_args(args, cmd::Set)) break;

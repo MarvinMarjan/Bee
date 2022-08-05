@@ -128,5 +128,8 @@
     <ClInclude Include="src\System\Exec\exec.h">
       <Filter>src\System\Exec</Filter>
     </ClInclude>
+    <ClInclude Include="src\Source\Util\array_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -48,6 +48,24 @@ namespace util
 		return s_src;
 	}
 
+	inline size_t find_first(std::string src, char ch)
+	{
+		for (size_t i = 0; i < src.size(); i++)
+			if (src[i] == ch)
+				return i;
+	}
+
+	inline std::vector<size_t> find_all(std::string src, char ch)
+	{
+		std::vector<size_t> indexes;
+
+		for (size_t i = 0; i < src.size(); i++)
+			if (src[i] == ch)
+				indexes.push_back(i);
+
+		return indexes;
+	}
+
 	inline size_t find_last(std::string src, char ch)
 	{
 		size_t index = -1;
@@ -68,6 +86,17 @@ namespace util
 
 		for (size_t i = 0; i < src.size(); i++)
 			if (i < begin || i > end)
+				e_src += src[i];
+
+		return e_src;
+	}
+
+	inline std::string erase_ch(std::string src, size_t ch_index)
+	{
+		std::string e_src = "";
+
+		for (size_t i = 0; i < src.size(); i++)
+			if (i != ch_index)
 				e_src += src[i];
 
 		return e_src;

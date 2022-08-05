@@ -21,7 +21,7 @@ namespace cmd
 		Print,
 
 		Add,
-		Edit,
+		Rmv,
 
 		Set,
 		Del,
@@ -100,10 +100,11 @@ namespace cmd
 				this->syntax = "add [ Cmd_Name ] [ Block ]";
 				break;
 
-			case Edit:
-				this->name = "edit";
-				this->description = "Edit a created command";
-				this->syntax = "edit [ Cmd_Name ] [ Block ]";
+			case Rmv:
+				this->name = "rmv";
+				this->description = "Remove a created command";
+				this->syntax = "rmv [ Cmd_Name ]";
+				this->name_variants = { "rmv", "remove" };
 				break;
 
 			case Set:
@@ -207,7 +208,7 @@ namespace cmd
 		case Print:	     return 0;
 
 		case Add:        return 2;
-		case Edit:       return 2;
+		case Rmv:        return 1;
 
 		case Set:        return 2;
 		case Del:        return 1;
