@@ -9,6 +9,8 @@
 #include "../../../src/System/Handle/path_handling.h"
 #include "../../../src/System/Bootstrap/bootstrap.h"
 
+#include "../../../src/System/System/system_warn.h"
+#include "../../../src/System/System/system_ask.h"
 #include "../../../src/System/System/system_err.h"
 #include "../../../src/System/System/system.h"
 
@@ -182,53 +184,66 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 
 	case cmd::Mfile:
 		if (util::_args(args, cmd::Mfile)) break;
-		util::create_file(args[0].get_arg());
+		util::create_file(util::_fmt(path, args[0]));
 		break;
 
 	case cmd::RMfile:
 		if (util::_args(args, cmd::RMfile)) break;
-		if (hand::exist_file(args[0].get_arg())) util::remove_file(args[0].get_arg());
+		if (hand::exist_file(util::_fmt(path, args[0]))) util::remove_file(util::_fmt(path, args[0]));
 		else sys::error(sys::Invalid_Path_File, args[0].get_arg());
 		break;
 
 	case cmd::Mdir:
 		if (util::_args(args, cmd::Mdir)) break;
-		util::create_folder(args[0].get_arg());
+		util::create_folder(util::_fmt(path, args[0]));
 		break;
 
 	case cmd::RMdir:
+		std::cout << os::scroll_up(3) << os::up_ln() << os::up_ln() << os::up_ln();
 		if (util::_args(args, cmd::RMfile)) break;
-		if (hand::exist_folder(args[0].get_arg())) util::remove_folder(args[0].get_arg());
-		else sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
+		if (!hand::exist_folder(util::_fmt(path, args[0])))
+		{
+			sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
+			break;
+		}
+
+		if (util::get_folder_ent(util::_fmt(path, args[0])).size() == 0) util::remove_folder(util::_fmt(path, args[0]));
+		else if (sys::ask(sys::Remove_Not_Empty_Dir)) util::remove_not_empty_folder(util::_fmt(path, args[0]), flags.is_active(cmd::Path_debug));
 		break;
 
 	case cmd::Rename:
 		if (util::_args(args, cmd::Rename)) break;
-		util::rename_f(args[0].get_arg(), args[1].get_arg());
+		util::rename_f(util::_fmt(path, args[0]), args[1].get_arg());
 		break;
 
 	case cmd::Sizeof:
 		if (util::_args(args, cmd::Sizeof)) break;
-		if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
-		else std::cout << util::sizeof_file(args[0].get_arg()) << std::endl;
+		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		else std::cout << util::sizeof_file(util::_fmt(path, args[0])) << std::endl;
 		break;
 
 	case cmd::Lineof:
 		if (util::_args(args, cmd::Lineof)) break;
-		std::cout << util::lineof_file(args[0].get_arg()) << std::endl;
+		if (!hand::exist_file(util::_fmt(path, args[0])))
+		{
+			sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			break;
+		}
+
+		std::cout << util::lineof_file(util::_fmt(path, args[0])) << std::endl;
 		break;
 
 	case cmd::Read:
 		if (util::_args(args, cmd::Read)) break;
-		if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
-		else for (std::string line : util::read_file(args[0].get_arg()))
+		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		else for (std::string line : util::read_file(util::_fmt(path, args[0])))
 			std::cout << line << std::endl;
 		break;
 
 	case cmd::Write:
 		if (util::_args(args, cmd::Write)) break;
-		if (!hand::exist_file(args[0].get_arg())) sys::error(sys::Invalid_Path_File, args[0].get_arg());
-		else util::write_file(args[0].get_arg(), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? std::ios::out : std::ios::app), (!flags.is_active(cmd::Not_New_Line)));
+		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		else util::write_file(util::_fmt(path, args[0]), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? std::ios::out : std::ios::app), (!flags.is_active(cmd::Not_New_Line)));
 		break;
 
 

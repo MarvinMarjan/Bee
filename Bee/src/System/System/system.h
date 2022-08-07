@@ -5,11 +5,12 @@
 #include "../../Source/Stream/ostream_clr.h"
 #include "../../Source/Cmds/commands.h"
 
-#include "system_err.h"
 #include "system_warn.h"
+#include "system_ask.h"
+#include "system_err.h"
 
 
-#define VERSION "0.0.4.1"
+#define VERSION "0.0.4.2"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -42,6 +43,18 @@ namespace sys
 			std::cout << ": " << os::clr('\"' + arg + '\"', os::GREEN);
 
 		std::cout << std::endl << std::endl;
+	}
+
+	inline bool ask(sys::Question ask)
+	{
+		std::string res;
+		std::cout << os::clr("[" + ask.name + "] ", os::WT_GREEN) << ask.msg << " (S/N): ";
+
+		std::getline(std::cin, res);
+		res = util::to_lower(res);
+
+		if (res == "y" || res == "yes") return true;
+		if (res == "n" || res == "no") return false;
 	}
 
 	inline void details()

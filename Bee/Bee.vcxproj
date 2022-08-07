@@ -150,6 +150,7 @@
     <ClInclude Include="src\System\Exec\exec.h" />
     <ClInclude Include="src\System\Handle\path_handling.h" />
     <ClInclude Include="src\System\System\system.h" />
+    <ClInclude Include="src\System\System\system_ask.h" />
     <ClInclude Include="src\System\System\system_err.h" />
     <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>

@@ -137,4 +137,13 @@ namespace util
 	{
 		return (src.size() && src[src.size() - 1] == ch);
 	}
+
+	inline std::string to_lower(std::string src)
+	{
+		std::string l_src;
+
+		for (char ch : src) l_src += tolower(ch);
+
+		return l_src;
+	}
 }

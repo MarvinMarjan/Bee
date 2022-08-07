@@ -6,6 +6,7 @@
 #include "../../System/System/system_warn.h"
 #include "../../System/System/system.h"
 
+#include "../../System/Handle/path_handling.h"
 #include "../../Source/Util/cmd_util.h"
 
 #include "../Data/Shortcut/shortcut.h"
@@ -71,8 +72,6 @@ namespace util
 					while (util::ends_with(vec_aux[o], ' ')) vec_aux[o] = util::erase_last(vec_aux[o]);
 
 					std::vector<std::string> vec_part = util::split_string(vec_aux[o]);
-
-					//parts.push_back(vec_part[0]);
 					
 					for (std::string arg : vec_part) parts.push_back(arg);
 					for (std::string part : parts) f_src.push_back(part);
@@ -120,7 +119,13 @@ namespace util
 
 		for (size_t i = 0; i < f_src.size(); i++)
 		{
-			if (f_src[i] == "+")
+			if (f_src[i][0] == '*')
+			{
+				f_src.push_back(util::erase_first(src[i]));
+				src[i + 1] = util::erase_first(src[i + 1]);
+			}
+
+			else if (f_src[i] == "+")
 			{
 				if (i + 1 >= f_src.size() || i == 0) sys::warn(sys::Incomplete_Expression);
 				else
@@ -153,5 +158,11 @@ namespace util
 		}
 
 		return false;
+	}
+
+	inline std::string _fmt(hand::Path path, cmd::Arg arg)
+	{
+		if (hand::is_abs(arg.get_arg())) return arg.get_arg();
+		else return path + arg.get_arg();
 	}
 }

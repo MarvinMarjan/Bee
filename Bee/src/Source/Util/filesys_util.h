@@ -187,4 +187,37 @@ namespace util
 	{
 		int _buff = _rmdir(path.c_str());
 	}
+
+	void remove_not_empty_folder(std::string path, bool print_path = false, bool root = true)
+	{
+		std::string ent_path;
+
+		if (root)
+			std::cout << os::c_move(0) << os::save_c();
+
+		for (std::string ent : get_folder_ent(path))
+		{
+			ent_path = path + '/' + ent;
+
+			if (print_path)
+				std::cout << os::load_c() << os::save_c() << os::del_win(0) << os::clr("removing: ", os::WT_YELLOW) << os::clr(ent_path, os::WT_GREEN);
+
+			if (get_ent_type(ent_path) == File)
+				util::remove_file(ent_path);
+
+			else
+			{
+				if (get_folder_ent(ent_path).size() == 0)
+					remove_folder(ent_path);
+
+				else
+					remove_not_empty_folder(ent_path, print_path, false);
+			}
+		}
+
+		if (print_path)
+			std::cout << os::load_c() << os::del_win(0) << os::c_move(0);
+
+		remove_folder(path);
+	}
 }
