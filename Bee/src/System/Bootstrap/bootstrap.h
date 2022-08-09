@@ -6,7 +6,6 @@
 #include <string>
 
 #include "../../Source/Stream/ostream_clr.h"
-#include "../System/system.h"
 
 namespace bt
 {

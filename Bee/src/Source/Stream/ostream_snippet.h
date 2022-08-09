@@ -25,7 +25,26 @@ namespace os
 		return path.get_path() + clr(" $ ", Color::WT_YELLOW);
 	}
 
+	/*
+	* del_ln modes:
+	* 
+	* 0: clear from cursor to the end of the line
+	* 1: clear from cursor to beginning of the line
+	* 2: clear entire line
+	* 
+	*/
+
 	inline std::string del_ln(unsigned int mode)  { return "\033[" + std::to_string(mode) + 'K'; }
+
+	/*
+	* del_win modes:
+	* 
+	* 0: clear from cursor to end of screen
+	* 1: clear from cursor to beginning of the screen
+	* 2: clear entire screen
+	* 
+	*/
+
 	inline std::string del_win(unsigned int mode) { return "\033[" + std::to_string(mode) + 'J'; }
 
 	inline std::string up_ln() { return LINE_UP; }

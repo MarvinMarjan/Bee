@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Windows.h>
 #include <iostream>
 
+#include "../../Source/Stream/ostream_snippet.h"
 #include "../../Source/Stream/ostream_clr.h"
 #include "../../Source/Cmds/commands.h"
 
@@ -10,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.4.2"
+#define VERSION "0.0.4.4"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -55,12 +57,29 @@ namespace sys
 
 		if (res == "y" || res == "yes") return true;
 		if (res == "n" || res == "no") return false;
+
+		return false;
 	}
 
 	inline void details()
 	{
 		std::cout << os::clr("Name: ", os::WT_YELLOW) << os::clr(NAME, os::YELLOW) << std::endl <<
 			os::clr("Version: ", os::WT_YELLOW) << os::clr(VERSION, os::WT_GREEN) << " " << os::clr(VERSION_STATE, os::PURPLE, os::UNDERLINE) << std::endl << std::endl;
+	}
+
+	inline void OS_stat(MEMORYSTATUSEX stat, bool update = false)
+	{
+		std::cout << "Physical     RAM (MB): " << os::clr(std::to_string(stat.ullTotalPhys/1024/1024), os::Color::WT_CYAN) << std::endl;
+
+		std::cout << "Avaliable    RAM (KB): " << os::clr(std::to_string(stat.ullAvailPhys/1024), os::Color::WT_CYAN) << std::endl;
+		std::cout << "RAM Usage            : " << os::clr(std::to_string(stat.dwMemoryLoad) + '%', os::Color::WT_CYAN) << std::endl;
+	
+		if (update)
+		{
+			for (size_t i = 0; i < 500000000; i++) {}
+
+			std::cout << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2);
+		}
 	}
 
 	inline void help(cmd::CMD_Data cmd)

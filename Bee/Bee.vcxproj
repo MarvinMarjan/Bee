@@ -145,6 +145,7 @@
     <ClInclude Include="src\Source\Util\array_util.h" />
     <ClInclude Include="src\Source\Util\cmd_util.h" />
     <ClInclude Include="src\Source\Util\filesys_util.h" />
+    <ClInclude Include="src\Source\Util\memory_util.h" />
     <ClInclude Include="src\Source\Util\string_util.h" />
     <ClInclude Include="src\System\Bootstrap\bootstrap.h" />
     <ClInclude Include="src\System\Exec\exec.h" />

@@ -35,8 +35,10 @@ namespace cmd
 		cmd::CMD_Data(Sizeof),
 		cmd::CMD_Data(Lineof),
 		cmd::CMD_Data(Read),
-		cmd::CMD_Data(Write)
+		cmd::CMD_Data(Write),
 
+		cmd::CMD_Data(Run),
+		cmd::CMD_Data(Stat)
 	};
 
 	Command check(is::Buffer buff)
@@ -71,6 +73,8 @@ namespace cmd
 		else if (buff == "read") return Read;
 		else if (buff == "write") return Write;
 
+		else if (buff == "run") return Run;
+		else if (buff == "stat" || buff == "stats" || buff == "status" || buff == ".s") return Stat;
 
 		else return Not_found;
 	}

@@ -134,5 +134,8 @@
     <ClInclude Include="src\System\System\system_ask.h">
       <Filter>src\System\System</Filter>
     </ClInclude>
+    <ClInclude Include="src\Source\Util\memory_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

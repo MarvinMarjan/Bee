@@ -30,6 +30,7 @@
 #include "../../../src/Source/Operator/operator.h"
 
 #include "../../../src/Source/Util/filesys_util.h"
+#include "../../../src/Source/Util/memory_util.h"
 #include "../../../src/Source/Util/string_util.h"
 #include "../../../src/Source/Util/array_util.h"
 #include "../../../src/Source/Util/cmd_util.h"
@@ -246,6 +247,23 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 		else util::write_file(util::_fmt(path, args[0]), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? std::ios::out : std::ios::app), (!flags.is_active(cmd::Not_New_Line)));
 		break;
 
+	case cmd::Run:
+		if (util::_args(args, cmd::Run)) break;
+		system(args[0].get_arg().c_str());
+		break;
+
+	case cmd::Stat: {
+		MEMORYSTATUSEX stat = util::get_mem_stat();
+		char ch;
+
+		if (flags.is_active(cmd::Update))
+			while ((ch = ((_kbhit()) ? is::get_ch() : 0)) == 0) {
+				stat = util::get_mem_stat();
+				sys::OS_stat(stat, true);
+			}
+		else sys::OS_stat(stat);
+		break;
+	}
 
 	case cmd::Not_found:
 		sys::error(sys::Error(sys::Command_Not_Found), s_buff[0]);

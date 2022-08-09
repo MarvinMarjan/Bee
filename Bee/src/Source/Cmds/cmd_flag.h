@@ -13,7 +13,9 @@ namespace cmd
 		Path_debug,
 
 		Not_New_Line,
-		Clear_File
+		Clear_File,
+
+		Update
 	};
 
 	class CMD_Flags
@@ -50,6 +52,8 @@ namespace cmd
 
 			else if (flag == "nl") flags.push_back(Not_New_Line);
 			else if (flag == "cf") flags.push_back(Clear_File);
+
+			else if (flag == "up") flags.push_back(Update);
 		}
 
 		return flags;

@@ -35,9 +35,10 @@ namespace cmd
 		Sizeof,
 		Lineof,
 		Read,
-		Write
+		Write,
 
-
+		Run,
+		Stat
 	};
 
 	class CMD_Data
@@ -185,6 +186,19 @@ namespace cmd
 				this->name_variants = { "write", "write_file" };
 				break;
 
+			case Run:
+				this->name = "run";
+				this->description = "Run a OS command";
+				this->syntax = "run [ Command ]";
+				break;
+
+			case Stat:
+				this->name = "stat";
+				this->description = "Show OS status";
+				this->syntax = "stat { update (-up) ? }";
+				this->name_variants = { "stat", "stats", "status", ".s" };
+				break;
+
 			default:
 				this->name = "<invalid>";
 				this->description = "<invalid>";
@@ -225,6 +239,8 @@ namespace cmd
 		case Read:       return 1;
 		case Write:      return 2;
 
+		case Run:        return 1;
+		case Stat:       return 0;
 
 		default: return -1;
 		}
