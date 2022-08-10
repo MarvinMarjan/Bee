@@ -147,7 +147,10 @@
     <ClInclude Include="src\Source\Util\filesys_util.h" />
     <ClInclude Include="src\Source\Util\memory_util.h" />
     <ClInclude Include="src\Source\Util\string_util.h" />
+    <ClInclude Include="src\Source\Util\system_util.h" />
     <ClInclude Include="src\System\Bootstrap\bootstrap.h" />
+    <ClInclude Include="src\System\Bootstrap\bootstrap_flag.h" />
+    <ClInclude Include="src\System\Bootstrap\bootstrap_mode.h" />
     <ClInclude Include="src\System\Exec\exec.h" />
     <ClInclude Include="src\System\Handle\path_handling.h" />
     <ClInclude Include="src\System\System\system.h" />

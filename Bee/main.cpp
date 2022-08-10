@@ -17,8 +17,13 @@ int main(int argc, char* argv[])
 	system("color");
 
 	sys::System _sys;
+
 	bt::Bootstrap boot;
+	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
+	bt::BootMode mode = bt::get_bt_mode(argc, argv, _sys.mode_arg_index);
 	
+	if (btflag.is_active(bt::HideWindow)) util::set_window(util::Hidden);
+
 	hand::Path path(boot);
 	path = util::swap(path.get_path(), '\\', '/');
 
@@ -33,8 +38,14 @@ int main(int argc, char* argv[])
 
 	while (!_sys.abort)
 	{
-		cout << os::path(path);
-		buff = is::get_line();
+		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
+		if (mode == bt::Default) buff = is::get_line();
+
+		else if (mode == bt::InlineCMD)
+		{
+			buff = (string)argv[_sys.mode_arg_index + _sys.inline_mode_arg_itr];
+			buff = util::swap(buff.get(), '\'', '\"');
+		}
 
 		while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
 		while (util::ends_with(buff.get(), ' ')) buff = util::erase_last(buff.get());
@@ -62,6 +73,16 @@ int main(int argc, char* argv[])
 			if (op::check(s_buff[0][0]) != op::Null) continue;
 		}
 
+		if (mode != bt::Default && !btflag.is_active(bt::HidePath)) cout << buff << endl;
+
 		run(_sys, path, dbase, buff, s_buff, args, flags);
+
+		if (mode == bt::InlineCMD)
+		{
+			if (_sys.inline_mode_arg_itr >= argc - _sys.mode_arg_index - 1) _sys.abort = true;
+			else _sys.inline_mode_arg_itr++;
+		}
 	}
+
+	if (mode != bt::Default && btflag.is_active(bt::Pause)) is::get_ch();
 }

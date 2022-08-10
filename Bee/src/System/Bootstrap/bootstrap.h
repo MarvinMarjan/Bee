@@ -17,11 +17,9 @@ namespace bt
 		Bootstrap()
 		{
 			this->call_path = bt::get_call_path();
-			//this->local_app_path = ((!("BEE_PATH")) ? "NULL" : _wgetenv("BEE_PATH"));
 		}
 
 		inline std::string get_call_path() { return this->call_path; }
-		//inline std::string get_local_app_path() { return this->local_app_path; }
 
 	private:
 		std::string call_path;

@@ -12,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.4.4"
+#define VERSION "0.0.5"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -23,8 +23,10 @@ namespace sys
 	{
 	public:
 		bool abort = false;
-		bool blocked = false;
-		bool cmd_blocked = false;
+
+		size_t inline_mode_arg_itr = 0;
+
+		size_t mode_arg_index;
 	};
 
 	inline void error(sys::Error err, std::string arg = "") 
@@ -80,6 +82,11 @@ namespace sys
 
 			std::cout << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2);
 		}
+	}
+
+	inline void bee_help()
+	{
+
 	}
 
 	inline void help(cmd::CMD_Data cmd)

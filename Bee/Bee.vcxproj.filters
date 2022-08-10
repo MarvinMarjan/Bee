@@ -137,5 +137,14 @@
     <ClInclude Include="src\Source\Util\memory_util.h">
       <Filter>src\Source\Util</Filter>
     </ClInclude>
+    <ClInclude Include="src\System\Bootstrap\bootstrap_mode.h">
+      <Filter>src\System\Bootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\Bootstrap\bootstrap_flag.h">
+      <Filter>src\System\Bootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Util\system_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,9 @@
 #include <vector>
 
 #include "../../../src/System/Handle/path_handling.h"
+
+#include "../../../src/System/Bootstrap/bootstrap_flag.h"
+#include "../../../src/System/Bootstrap/bootstrap_mode.h"
 #include "../../../src/System/Bootstrap/bootstrap.h"
 
 #include "../../../src/System/System/system_warn.h"
@@ -30,6 +33,7 @@
 #include "../../../src/Source/Operator/operator.h"
 
 #include "../../../src/Source/Util/filesys_util.h"
+#include "../../../src/Source/Util/system_util.h"
 #include "../../../src/Source/Util/memory_util.h"
 #include "../../../src/Source/Util/string_util.h"
 #include "../../../src/Source/Util/array_util.h"
