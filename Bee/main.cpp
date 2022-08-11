@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
 
 	sys::System _sys;
 
+	it::Itelli_Buffer it_buff;
+
 	bt::Bootstrap boot;
 	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
 	bt::BootMode mode = bt::get_bt_mode(argc, argv, _sys.mode_arg_index);
@@ -48,7 +50,9 @@ int main(int argc, char* argv[])
 	while (!_sys.abort)
 	{
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
-		if (mode == bt::Default) buff = is::get_line();
+		if (mode == bt::Default) buff = it::get_line_itelli(it_buff);
+
+		it_buff.add_buff(buff);
 
 		switch (mode)
 		{

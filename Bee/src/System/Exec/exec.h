@@ -17,6 +17,8 @@
 #include "../../../src/System/System/system_err.h"
 #include "../../../src/System/System/system.h"
 
+#include "../../../src/Source/Stream/Itellisense/itellisense_buffer.h"
+#include "../../../src/Source/Stream/Itellisense/itellisense.h"
 #include "../../../src/Source/Stream/ostream_snippet.h"
 #include "../../../src/Source/Stream/ostream_clr.h"
 #include "../../../src/Source/Stream/istream.h"

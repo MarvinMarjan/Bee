@@ -106,8 +106,9 @@ namespace util
 	{
 		std::string e_src = "";
 
-		for (size_t i = 0; i < src.size() - 1; i++)
-			e_src += src[i];
+		if (src.size() != 0)
+			for (size_t i = 0; i < src.size() - 1; i++)
+				e_src += src[i];
 
 		return e_src;
 	}

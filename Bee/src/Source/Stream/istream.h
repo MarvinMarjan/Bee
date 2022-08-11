@@ -28,7 +28,6 @@ namespace is
 
 		inline size_t size() { return this->buff.size(); }
 
-
 		inline void erase_last()
 		{
 			std::string buff = "";
@@ -49,10 +48,9 @@ namespace is
 		Enter = 13
 	};
 
-	inline char get_ch()
-	{
-		return _getch();
-	}
+	inline char get_ch() { return _getch();	}
+
+	inline bool k_hit() { return _kbhit(); }
 
 	inline std::string get_line()
 	{

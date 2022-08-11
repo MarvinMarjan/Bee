@@ -58,6 +58,9 @@
     <Filter Include="src\System\Exec">
       <UniqueIdentifier>{75274cf7-1d47-453c-a8a0-12b82ef95c98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Stream\Itellisense">
+      <UniqueIdentifier>{62de4690-d328-4e90-be40-497c1a76d0d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -145,6 +148,12 @@
     </ClInclude>
     <ClInclude Include="src\Source\Util\system_util.h">
       <Filter>src\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\Itellisense\itellisense.h">
+      <Filter>src\Source\Stream\Itellisense</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\Itellisense\itellisense_buffer.h">
+      <Filter>src\Source\Stream\Itellisense</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
