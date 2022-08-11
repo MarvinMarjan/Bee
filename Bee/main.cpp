@@ -21,6 +21,15 @@ int main(int argc, char* argv[])
 	bt::Bootstrap boot;
 	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
 	bt::BootMode mode = bt::get_bt_mode(argc, argv, _sys.mode_arg_index);
+
+	if (mode == bt::ReadFile)
+	{
+		if (hand::exist_file(argv[_sys.mode_arg_index])) boot.src_file = util::read_file(argv[_sys.mode_arg_index]);
+		else {
+			sys::error(sys::Invalid_Path_File, argv[_sys.mode_arg_index]);
+			_sys.abort = true;
+		}
+	}
 	
 	if (btflag.is_active(bt::HideWindow)) util::set_window(util::Hidden);
 
@@ -41,10 +50,15 @@ int main(int argc, char* argv[])
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
 		if (mode == bt::Default) buff = is::get_line();
 
-		else if (mode == bt::InlineCMD)
+		switch (mode)
 		{
+		case bt::InlineCMD:
 			buff = (string)argv[_sys.mode_arg_index + _sys.inline_mode_arg_itr];
 			buff = util::swap(buff.get(), '\'', '\"');
+			break;
+
+		case bt::ReadFile:
+			buff = boot.src_file[_sys.readfile_mode_arg_itr];
 		}
 
 		while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
@@ -81,6 +95,12 @@ int main(int argc, char* argv[])
 		{
 			if (_sys.inline_mode_arg_itr >= argc - _sys.mode_arg_index - 1) _sys.abort = true;
 			else _sys.inline_mode_arg_itr++;
+		}
+
+		if (mode == bt::ReadFile)
+		{
+			if (_sys.readfile_mode_arg_itr >= util::lineof_file(argv[_sys.mode_arg_index]) - 1) _sys.abort = true;
+			else _sys.readfile_mode_arg_itr++;
 		}
 	}
 

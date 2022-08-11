@@ -21,9 +21,12 @@ namespace bt
 
 		inline std::string get_call_path() { return this->call_path; }
 
+		std::vector<std::string> src_file;
+
 	private:
 		std::string call_path;
 		std::string local_app_path;
+
 	};
 
 	inline std::string get_call_path()

@@ -12,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.5"
+#define VERSION "0.0.5.1"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -25,6 +25,7 @@ namespace sys
 		bool abort = false;
 
 		size_t inline_mode_arg_itr = 0;
+		size_t readfile_mode_arg_itr = 0;
 
 		size_t mode_arg_index;
 	};
