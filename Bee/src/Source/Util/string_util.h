@@ -5,6 +5,8 @@
 
 namespace util
 {
+	inline std::string erase_last(std::string src);
+
 	std::vector<std::string> split_string(std::string src, char ch = ' ')
 	{
 		std::vector<std::string> split;
@@ -95,8 +97,10 @@ namespace util
 	{
 		std::string e_src = "";
 
+		if (ch_index == src.size()) return util::erase_last(src);
+
 		for (size_t i = 0; i < src.size(); i++)
-			if (i != ch_index)
+			if (i != ch_index - 1)
 				e_src += src[i];
 
 		return e_src;
@@ -118,7 +122,6 @@ namespace util
 		std::string e_src = "";
 
 		count = ((count < 1) ? 1 : count);
-
 		for (size_t i = count; i < src.size(); i++)
 			e_src += src[i];
 
@@ -134,17 +137,35 @@ namespace util
 		return true;
 	}
 
-	inline bool ends_with(std::string src, char ch)
-	{
+	inline bool ends_with(std::string src, char ch) {
 		return (src.size() && src[src.size() - 1] == ch);
 	}
 
-	inline std::string to_lower(std::string src)
-	{
+	inline std::string to_lower(std::string src) {
 		std::string l_src;
-
 		for (char ch : src) l_src += tolower(ch);
-
 		return l_src;
+	}
+
+	inline std::string to_upper(std::string src) {
+		std::string u_src;
+		for (char ch : src) u_src += toupper(ch);
+		return u_src;
+	}
+
+	inline std::string insert_ch(std::string src, char ch, size_t index)
+	{
+		std::string n_src = "";
+
+		if (index >= src.size()) return src + ch;
+
+		for (size_t i = 0; i < src.size(); i++)
+		{
+			if (i == index)	n_src += ch;
+
+			n_src += src[i];
+		}
+
+		return n_src;
 	}
 }

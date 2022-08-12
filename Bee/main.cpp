@@ -14,8 +14,6 @@ inline std::ostream& operator<<(std::ostream& os, is::Buffer buff)
 
 int main(int argc, char* argv[])
 {
-	system("color");
-
 	sys::System _sys;
 
 	it::Itelli_Buffer it_buff;
@@ -52,7 +50,7 @@ int main(int argc, char* argv[])
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
 		if (mode == bt::Default) buff = it::get_line_itelli(it_buff);
 
-		it_buff.add_buff(buff);
+		if (buff != "") it_buff.add_buff(buff);
 
 		switch (mode)
 		{

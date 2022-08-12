@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Windows.h>
 #include <direct.h>
 #include <iostream>
 #include <cstdlib>
@@ -17,6 +18,12 @@ namespace bt
 		Bootstrap()
 		{
 			this->call_path = bt::get_call_path();
+
+			// disable console caret
+			const CONSOLE_CURSOR_INFO c_info = { 1, FALSE };
+			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &c_info);
+
+			system("color");
 		}
 
 		inline std::string get_call_path() { return this->call_path; }

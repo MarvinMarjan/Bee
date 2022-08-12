@@ -45,16 +45,28 @@ namespace os
 	* 
 	*/
 
-	inline std::string del_win(unsigned int mode) { return "\033[" + std::to_string(mode) + 'J'; }
+	inline std::string del_win(size_t mode) { return "\033[" + std::to_string(mode) + 'J'; }
 
 	inline std::string up_ln() { return LINE_UP; }
-
-	inline std::string c_move(unsigned int col) { return "\033[" + std::to_string(col) + "G"; }
-	inline std::string l_move(unsigned int ln)  { return "\033[" + std::to_string(ln) + ";H"; }
+   
+	inline std::string c_move(size_t col) { return "\033[" + std::to_string(col) + "G"; }
+	inline std::string l_move(size_t ln)  { return "\033[" + std::to_string(ln) + ";H"; }
 
 	inline std::string save_c() { return "\033[s"; }
 	inline std::string load_c() { return "\033[u"; }
 
-	inline std::string scroll_dw(unsigned int lines) { return "\033[" + std::to_string(lines) + "T"; }
-	inline std::string scroll_up(unsigned int lines) { return "\033[" + std::to_string(lines) + "S"; }
+	inline std::string scroll_dw(size_t lines) { return "\033[" + std::to_string(lines) + "T"; }
+	inline std::string scroll_up(size_t lines) { return "\033[" + std::to_string(lines) + "S"; }
+   
+	inline std::string cmove_left(size_t times = 0) {
+		std::string full = "";
+		for (size_t i = 0; i < times; i++) full += "\033[D";
+		return full;
+	}
+
+	inline std::string cmove_right(size_t times = 0) {
+		std::string full = "";
+		for (size_t i = 0; i < times; i++) full += "\033[C";
+		return full;
+	}
 }
