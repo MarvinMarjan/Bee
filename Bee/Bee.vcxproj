@@ -160,6 +160,9 @@
     <ClInclude Include="src\System\System\system_err.h" />
     <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Source\Data\DBase\shortcuts.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

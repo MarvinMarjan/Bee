@@ -14,8 +14,10 @@ namespace os
 		BLUE,
 		PURPLE,
 		CYAN,
+		WHITE,
 
-		WT_RED = 91,
+		GRAY = 90,
+		WT_RED ,
 		WT_GREEN,
 		WT_YELLOW,
 		WT_BLUE,
@@ -30,8 +32,8 @@ namespace os
 		DARK,
 		ITALIC,
 		UNDERLINE,
-		TOGGLE,
-		TOGGLE2,
+		TOGGLE_SLOW,
+		TOGGLE_RAPID,
 		INVERT,
 		_VOID,
 		CROSSED

@@ -61,6 +61,9 @@
     <Filter Include="src\Source\Stream\Itellisense">
       <UniqueIdentifier>{62de4690-d328-4e90-be40-497c1a76d0d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Source\Data\DBase">
+      <UniqueIdentifier>{bbc01284-beca-4358-b351-126efc3903dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -155,5 +158,10 @@
     <ClInclude Include="src\Source\Stream\Itellisense\itellisense_buffer.h">
       <Filter>src\Source\Stream\Itellisense</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\Source\Data\DBase\shortcuts.txt">
+      <Filter>src\Source\Data\DBase</Filter>
+    </Text>
   </ItemGroup>
 </Project>

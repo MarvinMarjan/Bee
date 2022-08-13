@@ -16,7 +16,7 @@ namespace util
 		{
 			if (src[i] == ch || i + 1 >= src.size())
 			{
-				if (i + 1 >= src.size())
+				if (i + 1 >= src.size() && src[src.size() - 1] != ch)
 					aux += src[i];
 
 				split.push_back(aux);
@@ -55,6 +55,8 @@ namespace util
 		for (size_t i = 0; i < src.size(); i++)
 			if (src[i] == ch)
 				return i;
+
+		return -1;
 	}
 
 	inline std::vector<size_t> find_all(std::string src, char ch)
@@ -167,5 +169,11 @@ namespace util
 		}
 
 		return n_src;
+	}
+
+	inline std::string str_char(char ch)
+	{
+		std::string str(1, ch);
+		return str;
 	}
 }

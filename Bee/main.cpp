@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	while (!_sys.abort)
 	{
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
-		if (mode == bt::Default) buff = it::get_line_itelli(it_buff);
+		if (mode == bt::Default) buff = it::itelli_stdin(dbase, it_buff);
 
 		if (buff != "") it_buff.add_buff(buff);
 
@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
 			buff = boot.src_file[_sys.readfile_mode_arg_itr];
 		}
 
-		while (util::starts_with(buff.get(), " ")) buff = util::erase_first(buff.get());
-		while (util::ends_with(buff.get(), ' ')) buff = util::erase_last(buff.get());
+		while (util::starts_with(buff.get(), " ") || util::starts_with(buff.get(), "\t")) buff = util::erase_first(buff.get());
+		while (util::ends_with(buff.get(), ' ') || util::ends_with(buff.get(), '\t')) buff = util::erase_last(buff.get());
 
 		s_buff = ((buff.get_split().size() == 0) ? vector<string>({ "" }) : buff.get_split());
 		args = util::format_args_all(s_buff, dbase);

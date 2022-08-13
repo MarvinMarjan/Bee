@@ -52,7 +52,10 @@ namespace is
 		ArrowUp = 72,
 		ArrowDown = 80,
 		ArrowLeft = 75,
-		ArrowRight = 77
+		ArrowRight = 77,
+
+		Quote = 34,
+		DollarSign = 36
 	};
 
 	inline char get_ch() { return _getch();	}
