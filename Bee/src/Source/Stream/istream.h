@@ -55,7 +55,10 @@ namespace is
 		ArrowRight = 77,
 
 		Quote = 34,
-		DollarSign = 36
+		DollarSign = 36,
+		Hyphen = 45,
+
+		Tab = 9
 	};
 
 	inline char get_ch() { return _getch();	}

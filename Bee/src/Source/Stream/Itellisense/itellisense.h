@@ -3,11 +3,14 @@
 #include <iostream>
 #include <string>
 
+#include "itellisense_substring.h"
 #include "itellisense_buffer.h"
 
 #include "../istream.h"
 
+#include "../../Util/itellisense_util.h"
 #include "../../Util/string_util.h"
+#include "../../Util/array_util.h"
 
 #include "../../Data/data.h"
 
@@ -29,11 +32,19 @@ namespace it
 		if (i == index)	itelli_draw_caret(caret_color, caret_color_mode, ch);
 	}
 
-	std::string itelli_stdin(dt::DBase dbase, Itelli_Buffer it_buff, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE)
+	std::string itelli_stdin(hand::Path path, dt::DBase dbase, Itelli_Buffer it_buff, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE)
 	{
 		std::cout << os::save_c();
-
+		
 		std::string buffer = "";
+
+		std::vector<std::string> ents;
+		std::vector<std::string> aux;
+		Itelli_Buffer query_list;
+		std::string sub_bf_str;
+		substring sub_bf;
+		bool tab_process = false;
+
 		size_t index = 0;
 		size_t col = 0;
 
@@ -44,16 +55,50 @@ namespace it
 		do {
 			if (index >= buffer.size()) itelli_draw_caret(caret_color, caret_color_mode);
 
+			set_substring(sub_bf, buffer, ((index == 0) ? index : index - 1));
+
 			ch = is::get_ch();
 
 			if ((int)ch == is::Enter) draw_caret = false;
+			else if ((int)ch == is::Tab) {
+				if (!tab_process) {
+					sub_bf_str = util::sub_string(buffer, ((sub_bf.begin == 0) ? sub_bf.begin : sub_bf.begin + 1), sub_bf.end);
+					ents = util::get_folder_ent(path.get_path());
+					tab_process = true;
+				}
+
+				aux = util::get_query_list(((util::exist(sub_bf_str, ents) ? "" : sub_bf_str)), ents);
+
+				for (size_t i = 0; i < aux.size(); i++)
+					if (util::find_all(aux[i], ' ').size() != 0) {
+						aux[i] = util::insert(aux[i], "\"", 0);
+						aux[i] += '\"';
+					}
+
+				query_list.set_buff(aux, false);
+
+				if (query_list.size() > 0) {
+					buffer = util::erase(buffer, sub_bf.begin, sub_bf.end);
+					buffer = util::insert(buffer, ((buffer.size() == 0) ? "" : " ") + query_list.buff_get().get(), sub_bf.begin);
+				}
+
+				index = buffer.size();
+
+				query_list.buff_up(true, true);
+
+				if (query_list.get_itr() == query_list.size()) query_list.set_itr(0);
+			}
+
+			else if (tab_process) {
+				tab_process = false;
+				query_list.set_itr(0);
+			}
 
 			itelli_stdin_arrow_config(ch, buffer, it_buff, index, col);
 
 			std::cout << os::load_c() << os::del_win(0);
-			
+
 			for (size_t i = 0; i < buffer.size(); i++)
-			{
 				switch ((int)buffer[i])
 				{
 				case is::Quote: {
@@ -82,6 +127,13 @@ namespace it
 					}
 				}
 
+				case is::Hyphen:
+					for (i; i < buffer.size(); i++) {
+						if (buffer[i] == ' ') break;
+						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
+						else std::cout << os::clr(util::str_char(buffer[i]), os::GRAY, os::DARK);
+					}
+
 				default:
 					if (cmd::check(util::split_string(buffer)[0]) != cmd::Not_found && i < util::find_first(buffer, ' '))
 						for (i; i < util::find_first(buffer, ' '); i++) {
@@ -93,7 +145,6 @@ namespace it
 				    if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
 					else std::cout << buffer[i];
 				}
-			}
 
 		} while (ch != is::Enter);
 
@@ -144,8 +195,8 @@ namespace it
 			buffer = util::erase_ch(buffer, index);
 			if (index > 0) index--;
 		}
-		else if (ch != is::Enter) {
-			buffer = util::insert_ch(buffer, ch, index);
+		else if (ch != is::Enter && ch != is::Tab) {
+			buffer = util::insert(buffer, util::str_char(ch), index);
 			index++;
 		}
 	}

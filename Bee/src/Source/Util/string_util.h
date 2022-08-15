@@ -5,6 +5,12 @@
 
 namespace util
 {
+	enum Direction
+	{
+		Left,
+		Right
+	};
+
 	inline std::string erase_last(std::string src);
 
 	std::vector<std::string> split_string(std::string src, char ch = ' ')
@@ -40,6 +46,19 @@ namespace util
 		return j_src;
 	}
 
+	std::string sub_string(std::string src, size_t begin, size_t end)
+	{
+		std::string substr = "";
+
+		for (size_t i = begin; i < end; i++)
+		{
+			substr += src[i];
+			if (i + 1 >= src.size()) break;
+		}
+
+		return substr;
+	}
+
 	inline std::string swap(std::string src, char targ_ch, char new_ch)
 	{
 		std::string s_src = "";
@@ -50,13 +69,20 @@ namespace util
 		return s_src;
 	}
 
-	inline size_t find_first(std::string src, char ch)
+	size_t find_first(std::string src, char ch, size_t init = 0, Direction direction = Right)
 	{
-		for (size_t i = 0; i < src.size(); i++)
+		size_t i = init;
+
+		for (i; ; ((direction == Right) ? i++ : i--))
+		{
 			if (src[i] == ch)
 				return i;
 
-		return -1;
+			if (direction == Right && i >= src.size()) break;
+			if (direction == Left && i <= 0) break;
+		}
+
+		return i;
 	}
 
 	inline std::vector<size_t> find_all(std::string src, char ch)
@@ -70,11 +96,11 @@ namespace util
 		return indexes;
 	}
 
-	inline size_t find_last(std::string src, char ch)
+	size_t find_last(std::string src, char ch, size_t init = 0, Direction direction = Right)
 	{
 		size_t index = -1;
 
-		for (size_t i = 0; i < src.size(); i++)
+		for (size_t i = init; ((direction == Right) ? i < src.size() : i >= 0); ((direction == Right) ? i++ : i--))
 			if (src[i] == ch)
 				index = i;
 
@@ -154,17 +180,16 @@ namespace util
 		for (char ch : src) u_src += toupper(ch);
 		return u_src;
 	}
-
-	inline std::string insert_ch(std::string src, char ch, size_t index)
+	
+	inline std::string insert(std::string src, std::string str, size_t index)
 	{
 		std::string n_src = "";
 
-		if (index >= src.size()) return src + ch;
+		if (index >= src.size()) return src + str;
 
 		for (size_t i = 0; i < src.size(); i++)
 		{
-			if (i == index)	n_src += ch;
-
+			if (i == index) n_src += str;
 			n_src += src[i];
 		}
 

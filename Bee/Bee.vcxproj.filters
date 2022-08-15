@@ -158,6 +158,12 @@
     <ClInclude Include="src\Source\Stream\Itellisense\itellisense_buffer.h">
       <Filter>src\Source\Stream\Itellisense</Filter>
     </ClInclude>
+    <ClInclude Include="src\Source\Util\itellisense_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Stream\Itellisense\itellisense_substring.h">
+      <Filter>src\Source\Stream\Itellisense</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\Source\Data\DBase\shortcuts.txt">

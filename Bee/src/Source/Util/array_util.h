@@ -15,4 +15,14 @@ namespace util
 
 		return _src;
 	}
+
+	template<typename T>
+	inline bool exist(T item, std::vector<T> arr)
+	{
+		for (size_t i = 0; i < arr.size(); i++)
+			if (item == arr[i]) 
+				return true;
+
+		return false;
+	}
 }

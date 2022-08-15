@@ -142,11 +142,13 @@
     <ClInclude Include="src\Source\Stream\istream.h" />
     <ClInclude Include="src\Source\Stream\Itellisense\itellisense.h" />
     <ClInclude Include="src\Source\Stream\Itellisense\itellisense_buffer.h" />
+    <ClInclude Include="src\Source\Stream\Itellisense\itellisense_substring.h" />
     <ClInclude Include="src\Source\Stream\ostream_clr.h" />
     <ClInclude Include="src\Source\Stream\ostream_snippet.h" />
     <ClInclude Include="src\Source\Util\array_util.h" />
     <ClInclude Include="src\Source\Util\cmd_util.h" />
     <ClInclude Include="src\Source\Util\filesys_util.h" />
+    <ClInclude Include="src\Source\Util\itellisense_util.h" />
     <ClInclude Include="src\Source\Util\memory_util.h" />
     <ClInclude Include="src\Source\Util\string_util.h" />
     <ClInclude Include="src\Source\Util\system_util.h" />

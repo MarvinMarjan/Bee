@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	while (!_sys.abort)
 	{
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) cout << os::path(path);
-		if (mode == bt::Default) buff = it::itelli_stdin(dbase, it_buff);
+		if (mode == bt::Default) buff = it::itelli_stdin(path, dbase, it_buff);
 
 		if (buff != "") it_buff.add_buff(buff);
 

@@ -12,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.6"
+#define VERSION "0.0.6.2"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
