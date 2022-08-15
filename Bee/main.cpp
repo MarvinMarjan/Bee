@@ -83,6 +83,7 @@ int main(int argc, char* argv[])
 				args.erase_first();
 				s_buff = ((buff.get_split().size() == 0) ? vector<string>({ "" }) : buff.get_split());
 				for (size_t i = 0; i < times; i++) run(_sys, path, dbase, buff, s_buff, args, flags);
+				continue;
 			}
 			}
 

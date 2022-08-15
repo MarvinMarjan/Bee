@@ -68,6 +68,9 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 		_sys.abort = true;
 		break;
 
+	case cmd::Setting:
+		break;
+
 	case cmd::Detail:
 		sys::details();
 		break;

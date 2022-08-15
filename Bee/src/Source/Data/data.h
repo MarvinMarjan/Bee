@@ -3,6 +3,7 @@
 #include "../Util/filesys_util.h"
 #include "../Util/string_util.h"
 
+#include "../../System/System/system_setting.h"
 #include "Shortcut/shortcut.h"
 #include "Function/function.h"
 
@@ -107,6 +108,14 @@ namespace dt
 	private:
 		std::vector<Shortcut> shortcut;
 		std::vector<Function> function;
+
+		// crie uma classe propria para todas as configurações do sistema (class System_Settings)
+
+
+		/*std::vector<sys::Sys_Setting> setting =
+		{
+			sys::Sys_Setting("Caret_Color", "UNDERLINE_RED")
+		};*/
 
 
 		std::string path;

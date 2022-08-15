@@ -12,6 +12,7 @@ namespace cmd
 		Not_found,
 
 		Exit,
+		Setting,
 		Detail,
 		Help,
 		Clear,
@@ -39,6 +40,7 @@ namespace cmd
 
 		Run,
 		Stat
+
 	};
 
 	class CMD_Data
@@ -54,6 +56,12 @@ namespace cmd
 				this->syntax = "exit";
 				this->name_variants = { "exit", ".x", ".exit", "quit", ".quit" };
 				break;
+
+			case Setting:
+				this->name = "setting";
+				this->description = "Open system settings";
+				this->syntax = "setting";
+				this->name_variants = { "setting", "config", ".sett", ".conf", ";" };
 
 			case Detail:
 				this->name = "detail";

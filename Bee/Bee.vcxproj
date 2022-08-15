@@ -160,6 +160,7 @@
     <ClInclude Include="src\System\System\system.h" />
     <ClInclude Include="src\System\System\system_ask.h" />
     <ClInclude Include="src\System\System\system_err.h" />
+    <ClInclude Include="src\System\System\system_setting.h" />
     <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>
   <ItemGroup>

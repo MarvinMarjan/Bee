@@ -125,6 +125,7 @@ namespace it
 						else if (dbase.exist_shortcut(name)) std::cout << os::clr(util::str_char(buffer[i]), os::CYAN);
 						else std::cout << buffer[i];
 					}
+					break;
 				}
 
 				case is::Hyphen:
@@ -133,6 +134,7 @@ namespace it
 						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
 						else std::cout << os::clr(util::str_char(buffer[i]), os::GRAY, os::DARK);
 					}
+					break;
 
 				default:
 					if (cmd::check(util::split_string(buffer)[0]) != cmd::Not_found && i < util::find_first(buffer, ' '))
