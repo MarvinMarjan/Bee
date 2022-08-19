@@ -8,6 +8,7 @@ namespace sys
 	{
 		Function_Not_Found_Err,
 		Shortcut_Not_Found_Err,
+		Setting_Not_Found_Err,
 		Command_Not_Found,
 		Invalid_Path_File,
 		Invalid_Path_Dir
@@ -43,6 +44,11 @@ namespace sys
 			case Function_Not_Found_Err:
 				this->name = "Function_Not_Found";
 				this->msg = "The following function couldn't be found";
+				break;
+
+			case Setting_Not_Found_Err:
+				this->name = "Setting_Not_Found";
+				this->msg = "The following setting couldn't be found";
 				break;
 
 			default:

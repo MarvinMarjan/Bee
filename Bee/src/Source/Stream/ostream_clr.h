@@ -1,11 +1,33 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace os
 {
+
+	const std::vector<std::string> STRColors = {
+		"RED",
+		"GREEN",
+		"YELLOW",
+		"BLUE",
+		"PURPLE",
+		"CYAN",
+		"WHITE",
+
+		"GRAY",
+		"WT_RED",
+		"WT_GREEN",
+		"WT_YELLOW",
+		"WT_BLUE",
+		"WT_PURPLE",
+		"WT_CYAN"
+	};
+
 	enum Color
 	{
+		Nothing = -1,
+
 		Null = 0,
 
 		RED = 31,

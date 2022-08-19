@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,7 +161,9 @@
     <ClInclude Include="src\System\System\system.h" />
     <ClInclude Include="src\System\System\system_ask.h" />
     <ClInclude Include="src\System\System\system_err.h" />
-    <ClInclude Include="src\System\System\system_setting.h" />
+    <ClInclude Include="src\System\System\System_Settings\setting_types_converts.h" />
+    <ClInclude Include="src\System\System\System_Settings\system_setting.h" />
+    <ClInclude Include="src\System\System\System_Settings\system_setting_def.h" />
     <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>
   <ItemGroup>

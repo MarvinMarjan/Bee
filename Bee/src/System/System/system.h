@@ -12,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.6.2"
+#define VERSION "0.0.6.5"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -24,10 +24,20 @@ namespace sys
 	public:
 		bool abort = false;
 
+		bool use_itellisense = true;
+
 		size_t inline_mode_arg_itr = 0;
 		size_t readfile_mode_arg_itr = 0;
 
 		size_t mode_arg_index;
+
+		inline void update(System_Settings sys_config)
+		{
+			if (boolstring_to_bool(sys_config["itellisense"]->get_value()))
+				this->use_itellisense = true;
+			else 
+				this->use_itellisense = false;
+		}
 	};
 
 	inline void error(sys::Error err, std::string arg = "") 

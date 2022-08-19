@@ -54,10 +54,12 @@ namespace is
 		ArrowLeft = 75,
 		ArrowRight = 77,
 
-		Quote = 34,
-		DollarSign = 36,
-		Hyphen = 45,
-
+		Quote = 34,      //  "
+		NumberSign = 35, //  #
+		DollarSign = 36, //  $
+		Hyphen = 45,     //  -
+		Backslash = 92,  //  \
+ 
 		Tab = 9
 	};
 

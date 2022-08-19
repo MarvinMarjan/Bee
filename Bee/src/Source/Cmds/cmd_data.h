@@ -17,6 +17,8 @@ namespace cmd
 		Help,
 		Clear,
 
+		Color,
+
 		CD,
 		Diagnostic,
 		Print,
@@ -59,9 +61,10 @@ namespace cmd
 
 			case Setting:
 				this->name = "setting";
-				this->description = "Open system settings";
+				this->description = "Show/Edit system settings";
 				this->syntax = "setting";
-				this->name_variants = { "setting", "config", ".sett", ".conf", ";" };
+				this->name_variants = { "setting", "config", ".sett", ".conf", "*" };
+				break;
 
 			case Detail:
 				this->name = "detail";
@@ -82,6 +85,13 @@ namespace cmd
 				this->description = "Clear the console";
 				this->syntax = "clear";
 				this->name_variants = { "clear", "clean", ".cl" };
+				break;
+
+			case Color:
+				this->name = "color";
+				this->description = "Show a list of colors";
+				this->syntax = "color";
+				this->name_variants = { "color", "clr" };
 				break;
 
 			case CD:
@@ -226,15 +236,12 @@ namespace cmd
 		switch (cmd)
 		{
 		case CD:         return 1;
-		case Diagnostic: return 0;
-		case Print:	     return 0;
 
 		case Add:        return 2;
 		case Rmv:        return 1;
 
 		case Set:        return 2;
 		case Del:        return 1;
-		case List:       return 0;
 
 		case Mfile:      return 1;
 		case RMfile:     return 1;
@@ -248,9 +255,8 @@ namespace cmd
 		case Write:      return 2;
 
 		case Run:        return 1;
-		case Stat:       return 0;
 
-		default: return -1;
+		default: return 0;
 		}
 	}
 }

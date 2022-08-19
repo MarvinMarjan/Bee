@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../../Source/Stream/ostream_clr.h"
+#include "../../Source/Util/system_util.h"
 
 namespace bt
 {
@@ -20,8 +21,7 @@ namespace bt
 			this->call_path = bt::get_call_path();
 
 			// disable console caret
-			const CONSOLE_CURSOR_INFO c_info = { 1, FALSE };
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &c_info);
+			util::set_mouse_visible(util::False);
 
 			system("color");
 		}

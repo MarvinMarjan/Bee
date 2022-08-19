@@ -17,6 +17,8 @@ namespace cmd
 		cmd::CMD_Data(Help),
 		cmd::CMD_Data(Clear),
 
+		cmd::CMD_Data(Color),
+
 		cmd::CMD_Data(CD),
 		cmd::CMD_Data(Diagnostic),
 		cmd::CMD_Data(Print),
@@ -47,11 +49,12 @@ namespace cmd
 		if (buff == "") return Null;
 
 		else if (buff == ".x" || buff == ".exit" || buff == "exit" || buff == "quit" || buff == ".quit") return Exit;
-		else if (buff == "setting" || buff == "config" || buff == ".sett" || buff == ".conf" || buff == ";") return Setting;
+		else if (buff == "setting" || buff == "config" || buff == ".sett" || buff == ".conf" || buff == "*") return Setting;
 		else if (buff == ".d" || buff == ".detail" || buff == "detail") return Detail;
 		else if (buff == ".h" || buff == ".help" || buff == "help") return Help;
 		else if (buff == "clear" || buff == "clean" || buff == ".cl") return Clear;
 
+		else if (buff == "color" || buff == "clr") return Color;
 
 		else if (buff == "cd") return CD;
 		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;

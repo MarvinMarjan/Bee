@@ -26,8 +26,7 @@ namespace util
 
 		for (size_t i = 0; i < src.size(); i++)
 		{
-			if (src[i][0] == '*')
-			{
+			if (src[i][0] == '*') {
 				f_src.push_back(util::erase_first(src[i]));
 				_src[i + 1] = util::erase_first(_src[i + 1]);
 			}
@@ -36,8 +35,7 @@ namespace util
 			{
 				std::string aux = "";
 
-				for (i; i < src.size(); i++)
-				{
+				for (i; i < src.size(); i++) {
 					aux += src[i] + ((src[i][src[i].size() - 1] == '\"') ? "" : " ");
 
 					if ((src[i][src[i].size() - 1] == '\"')) break;
@@ -54,8 +52,7 @@ namespace util
 				std::vector<std::string> parts;
 				std::string aux = "";
 
-				for (i; i < src.size(); i++)
-				{
+				for (i; i < src.size(); i++) {
 					aux += src[i] + ((src[i][src[i].size() - 1] == '}') ? "" : " ");
 
 					if ((src[i][src[i].size() - 1] == '}')) break;
@@ -81,14 +78,12 @@ namespace util
 				}
 			}
 
-			else if (src[i][0] == '$')
-			{
+			else if (src[i][0] == '$') {
 				std::string name = src[i];
 				name.erase(0, 1);
 
 				if (dbase.exist_shortcut(name)) f_src.push_back(dbase.get_shortcut(name)->get_value());
-				else
-				{
+				else {
 					sys::warn(sys::Shortcut_Not_Found_Warn, src[i]);
 					f_src.push_back(src[i]);
 				}
@@ -99,12 +94,20 @@ namespace util
 				std::string name = src[i];
 				name.erase(0, 1);
 
-				if (name == "input")
-				{
+				if (name == "input") {
 					std::string buff;
+					set_mouse_visible(True);
 					std::getline(std::cin, buff);
+					set_mouse_visible(False);
 					f_src.push_back(buff);
 				}
+			}
+
+			else if (src[i][0] == '\\') {
+				std::string name = src[i];
+				name.erase(0, 1);
+				
+				if (util::string_to_color(name) != os::Nothing) f_src.push_back(os::get_clr(util::string_to_color(name)));
 			}
 
 			else f_src.push_back(src[i]);

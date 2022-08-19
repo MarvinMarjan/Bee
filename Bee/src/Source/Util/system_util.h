@@ -21,9 +21,21 @@ namespace util
 		Visible = SW_SHOW
 	};
 
+	enum ButtonVisible
+	{
+		True = TRUE,
+		False = FALSE
+	};
+
 	inline void set_window(WindowState state)
 	{
 		ShowWindow(GetConsoleWindow(), state);
+	}
+
+	inline void set_mouse_visible(ButtonVisible state)
+	{
+		const CONSOLE_CURSOR_INFO c_info = { 1, state };
+		SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &c_info);
 	}
 
 	inline bool get_button_state(Button btn, ButtonState state)

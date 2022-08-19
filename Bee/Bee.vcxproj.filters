@@ -64,6 +64,9 @@
     <Filter Include="src\Source\Data\DBase">
       <UniqueIdentifier>{bbc01284-beca-4358-b351-126efc3903dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\System\System\System_Settings">
+      <UniqueIdentifier>{37709c71-488d-48e9-853b-960a75e2a5bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -164,8 +167,14 @@
     <ClInclude Include="src\Source\Stream\Itellisense\itellisense_substring.h">
       <Filter>src\Source\Stream\Itellisense</Filter>
     </ClInclude>
-    <ClInclude Include="src\System\System\system_setting.h">
-      <Filter>src\System\System</Filter>
+    <ClInclude Include="src\System\System\System_Settings\system_setting.h">
+      <Filter>src\System\System\System_Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\System\System_Settings\system_setting_def.h">
+      <Filter>src\System\System\System_Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\System\System\System_Settings\setting_types_converts.h">
+      <Filter>src\System\System\System_Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

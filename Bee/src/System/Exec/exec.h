@@ -6,42 +6,45 @@
 #include <string>
 #include <vector>
 
-#include "../../../src/System/Handle/path_handling.h"
+#include "../../System/Handle/path_handling.h"
 
-#include "../../../src/System/Bootstrap/bootstrap_flag.h"
-#include "../../../src/System/Bootstrap/bootstrap_mode.h"
-#include "../../../src/System/Bootstrap/bootstrap.h"
+#include "../../System/Bootstrap/bootstrap_flag.h"
+#include "../../System/Bootstrap/bootstrap_mode.h"
+#include "../../System/Bootstrap/bootstrap.h"
 
-#include "../../../src/System/System/system_warn.h"
-#include "../../../src/System/System/system_ask.h"
-#include "../../../src/System/System/system_err.h"
-#include "../../../src/System/System/system.h"
+#include "../../System/System/System_Settings/setting_types_converts.h"
+#include "../../System/System/System_Settings/system_setting_def.h"
+#include "../../System/System/System_Settings/system_setting.h"
+#include "../../System/System/system_warn.h"
+#include "../../System/System/system_ask.h"
+#include "../../System/System/system_err.h"
+#include "../../System/System/system.h"
 
-#include "../../../src/Source/Stream/Itellisense/itellisense_buffer.h"
-#include "../../../src/Source/Stream/Itellisense/itellisense.h"
-#include "../../../src/Source/Stream/ostream_snippet.h"
-#include "../../../src/Source/Stream/ostream_clr.h"
-#include "../../../src/Source/Stream/istream.h"
+#include "../../Source/Stream/Itellisense/itellisense_buffer.h"
+#include "../../Source/Stream/Itellisense/itellisense.h"
+#include "../../Source/Stream/ostream_snippet.h"
+#include "../../Source/Stream/ostream_clr.h"
+#include "../../Source/Stream/istream.h"
 
-#include "../../../src/Source/Data/Shortcut/shortcut.h"
-#include "../../../src/Source/Data/data.h"
+#include "../../Source/Data/Shortcut/shortcut.h"
+#include "../../Source/Data/data.h"
 
-#include "../../../src/Source/Cmds/Diagnostic/diag_data.h"
-#include "../../../src/Source/Cmds/commands.h"
-#include "../../../src/Source/Cmds/cmd_args.h"
-#include "../../../src/Source/Cmds/cmd_data.h"
-#include "../../../src/Source/Cmds/cmd_flag.h"
+#include "../../Source/Cmds/Diagnostic/diag_data.h"
+#include "../../Source/Cmds/commands.h"
+#include "../../Source/Cmds/cmd_args.h"
+#include "../../Source/Cmds/cmd_data.h"
+#include "../../Source/Cmds/cmd_flag.h"
 
-#include "../../../src/Source/Operator/operator.h"
+#include "../../Source/Operator/operator.h"
 
-#include "../../../src/Source/Util/filesys_util.h"
-#include "../../../src/Source/Util/system_util.h"
-#include "../../../src/Source/Util/memory_util.h"
-#include "../../../src/Source/Util/string_util.h"
-#include "../../../src/Source/Util/array_util.h"
-#include "../../../src/Source/Util/cmd_util.h"
+#include "../../Source/Util/filesys_util.h"
+#include "../../Source/Util/system_util.h"
+#include "../../Source/Util/memory_util.h"
+#include "../../Source/Util/string_util.h"
+#include "../../Source/Util/array_util.h"
+#include "../../Source/Util/cmd_util.h"
 
-void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
+void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
 	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags)
 {
 	if (dbase.exist_function(s_buff[0]))
@@ -55,7 +58,7 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 			flags = cmd::check_flags(args);
 			args.erase_flags();
 
-			run(_sys, path, dbase, buff, s_buff, args, flags);
+			run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
 		}
 
 		return;
@@ -65,11 +68,66 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 	{
 	case cmd::Null: break;
 	case cmd::Exit:
-		_sys.abort = true;
+		system.abort = true;
 		break;
 
-	case cmd::Setting:
+	case cmd::Setting: {
+		if (args.get().size() == 0) 
+		{
+			std::string name, value;
+			sys::SettingType type;
+
+			for (size_t i = 0; i < sys_config.get_size(); i++) {
+				name = sys_config[i]->get_name();
+				value = sys_config[i]->get_value();
+				type = sys_config[i]->get_type();
+
+				std::cout << os::clr(name, os::WT_CYAN) << "   ";
+				
+				switch (type)
+				{
+				case sys::Color:
+					std::cout << os::clr(value, util::string_to_color(value)) << std::endl;
+					break;
+
+				case sys::Bool:
+					std::cout << os::clr(value, os::WT_YELLOW) << std::endl;
+					break;
+				}
+			}
+			break;
+		}
+
+		else if (args.get().size() == 1)
+		{
+			std::string name = args[0].get_arg();
+			std::string value;
+
+			sys::SettingType type;
+
+			if (!sys_config.exist(name)) sys::error(sys::Setting_Not_Found_Err, name);
+			else {
+				type = sys_config[name]->get_type();
+				value = sys_config[name]->get_value();
+
+				std::cout << ((type == sys::Color) ? os::clr(value, util::string_to_color(value)) :
+					(type == sys::Bool) ? os::clr(value, os::WT_YELLOW) : value) << std::endl;
+			}
+		}
+
+		else if (args.get().size() == 2) {
+			std::string name = args[0].get_arg();
+			std::string value = (sys_config[name]->get_type() == sys::Bool) ? util::to_lower(args[1].get_arg()) : args[1].get_arg();
+
+			if (!sys_config.exist(name)) sys::error(sys::Setting_Not_Found_Err, name);
+
+			else if (sys_config[name]->is_same_type(value)) sys_config[name]->set_value(value);
+		}
+		
+		sys::set_defs(defs, sys_config);
+
 		break;
+	}
 
 	case cmd::Detail:
 		sys::details();
@@ -80,7 +138,12 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 		break;
 
 	case cmd::Clear:
-		system("cls");
+		std::system("cls");
+		break;
+
+	case cmd::Color:
+		for (std::string color : os::STRColors)
+			std::cout << os::clr(color, util::string_to_color(color)) << std::endl;
 		break;
 
 	case cmd::CD:
@@ -144,6 +207,7 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 	case cmd::Print:
 		for (cmd::Arg arg : args.get()) std::cout << arg.get_arg();
 		if (!flags.is_active(cmd::Not_New_Line)) std::cout << std::endl;
+		std::cout << os::get_clr();
 		break;
 
 	case cmd::Add: {
@@ -258,7 +322,7 @@ void run(sys::System& _sys, hand::Path& path, dt::DBase& dbase, is::Buffer& buff
 
 	case cmd::Run:
 		if (util::_args(args, cmd::Run)) break;
-		system(args[0].get_arg().c_str());
+		std::system(args[0].get_arg().c_str());
 		break;
 
 	case cmd::Stat: {
