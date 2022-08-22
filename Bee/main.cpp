@@ -24,8 +24,7 @@ int main(int argc, char* argv[])
 	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
 	bt::BootMode mode = bt::get_bt_mode(argc, argv, system.mode_arg_index);
 
-	if (mode == bt::ReadFile)
-	{
+	if (mode == bt::ReadFile) {
 		if (hand::exist_file(argv[system.mode_arg_index])) boot.src_file = util::read_file(argv[system.mode_arg_index]);
 		else {
 			sys::error(sys::Invalid_Path_File, argv[system.mode_arg_index]);
@@ -101,22 +100,18 @@ int main(int argc, char* argv[])
 
 		run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
 
-		if (mode == bt::InlineCMD)
-		{
+		if (mode == bt::InlineCMD) {
 			if (system.inline_mode_arg_itr >= argc - system.mode_arg_index - 1) system.abort = true;
 			else system.inline_mode_arg_itr++;
 		}
 
-		if (mode == bt::ReadFile)
-		{
+		if (mode == bt::ReadFile) {
 			if (system.readfile_mode_arg_itr >= util::lineof_file(argv[system.mode_arg_index]) - 1) system.abort = true;
 			else system.readfile_mode_arg_itr++;
 		}
 	}
 
 	if (mode != bt::Default && btflag.is_active(bt::Pause)) is::get_ch();
-
-	util::set_mouse_visible(util::True);
 
 	return EXIT_SUCCESS;
 }

@@ -12,7 +12,7 @@
 #include "system_err.h"
 
 
-#define VERSION "0.0.6.5"
+#define VERSION "0.0.7"
 #define VERSION_STATE "DEV - TEST"
 #define NAME "Bee"
 
@@ -38,6 +38,10 @@ namespace sys
 			else 
 				this->use_itellisense = false;
 		}
+
+		~System() {
+			util::set_mouse_visible(util::True);
+		}
 	};
 
 	inline void error(sys::Error err, std::string arg = "") 
@@ -62,6 +66,7 @@ namespace sys
 
 	inline bool ask(sys::Question ask)
 	{
+		util::set_mouse_visible(util::True);
 		std::string res;
 		std::cout << os::clr("[" + ask.name + "] ", os::WT_GREEN) << ask.msg << " (S/N): ";
 
@@ -71,6 +76,7 @@ namespace sys
 		if (res == "y" || res == "yes") return true;
 		if (res == "n" || res == "no") return false;
 
+		util::set_mouse_visible(util::False);
 		return false;
 	}
 

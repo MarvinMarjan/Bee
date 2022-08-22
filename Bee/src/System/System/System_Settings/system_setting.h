@@ -41,14 +41,14 @@ namespace sys
 			case Any: return true;
 			case Color:
 				if (util::string_to_color(value) != os::Nothing) return true;
-				else return false;
 				break;
 
 			case Bool:
 				if (util::to_lower(value) == "true" || util::to_lower(value) == "false") return true;
-				else return false;
 				break;
 			}
+
+			return false;
 		}
 
 	private:
