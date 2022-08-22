@@ -80,7 +80,7 @@ namespace it
 				query_list.set_buff(aux, false);
 
 				if (query_list.size() > 0) {
-					buffer = util::erase(buffer, sub_bf.begin, sub_bf.end);
+					buffer = util::erase(buffer, sub_bf.begin - ((query_list.buff_get_last().get()[0] == '\"' && query_list.get_itr() != 0) ? 1 : 0), sub_bf.end);
 					buffer = util::insert(buffer, ((buffer.size() == 0) ? "" : " ") + query_list.buff_get().get(), sub_bf.begin);
 				}
 

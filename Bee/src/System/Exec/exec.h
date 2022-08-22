@@ -77,7 +77,8 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 			std::string name, value;
 			sys::SettingType type;
 
-			for (size_t i = 0; i < sys_config.get_size(); i++) {
+			for (size_t i = 0; i < sys_config.get_size(); i++)
+			{
 				name = sys_config[i]->get_name();
 				value = sys_config[i]->get_value();
 				type = sys_config[i]->get_type();
@@ -154,13 +155,14 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Diagnostic: {
-		std::cout << os::scroll_up(3) << os::up_ln() << os::up_ln() << os::up_ln();
 		std::vector<cmd::Diag_data> ents;
 
 		bool dir_size, path_dbg;
 
 		dir_size = (flags.is_active(cmd::Dirs_size)) ? true : false;
 		path_dbg = (flags.is_active(cmd::Path_debug)) ? true : false;
+
+		if (path_dbg) std::cout << os::scroll_up(3) << os::up_ln() << os::up_ln() << os::up_ln();
 
 		for (std::string ent : util::get_folder_ent(path.get_path()))
 		{
@@ -215,13 +217,15 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		std::string buffer;
 
 		if (util::_args(args, cmd::Add)) break;
-		if (args[1].get_arg() == "...") do
-		{
+		if (args[1].get_arg() == "...") do {
+			util::set_mouse_visible(util::True);
 			std::getline(std::cin, buffer);
-			if (buffer != ";") block.push_back(buffer);
+			if (buffer != ";") {
+				block.push_back(buffer);
+				util::set_mouse_visible(util::False);
+			}
 		} while (buffer != ";");
-		else for (std::string line : util::split_string(util::join_string(util::get_from(args.get_str(false), 1)), ';'))
-		{
+		else for (std::string line : util::split_string(util::join_string(util::get_from(args.get_str(false), 1)), ';')) {
 			while (line[0] == ' ') line = util::erase_first(line);
 			while (line[line.size() - 1] == ' ') line = util::erase_last(line);
 
@@ -258,7 +262,10 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 	case cmd::Mfile:
 		if (util::_args(args, cmd::Mfile)) break;
-		util::create_file(util::_fmt(path, args[0]));
+		if (hand::exist_file(util::_fmt(path, args[0]))) {
+			if (sys::ask(sys::Replace_File)) util::create_file(util::_fmt(path, args[0]));
+		}
+		else util::create_file(util::_fmt(path, args[0]));
 		break;
 
 	case cmd::RMfile:

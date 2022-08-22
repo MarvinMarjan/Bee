@@ -35,6 +35,9 @@ namespace it
 
 		inline is::Buffer buff_get() { return this->buff[this->iterator]; }
 
+		inline is::Buffer buff_get_last() { return this->buff[this->iterator - ((this->iterator > 0) ? 1 : 0)]; }
+		inline is::Buffer buff_get_next() { return this->buff[this->iterator + ((this->iterator < this->size()) ? 1 : 0)]; }
+
 		inline void buff_up(bool ignore_init = false, bool ignore_limit = false) { 
 			if (this->iterator + 1 < this->buff.size() || ignore_limit) {
 				if (!this->init || ignore_init) this->iterator++;
