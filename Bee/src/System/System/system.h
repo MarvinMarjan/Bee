@@ -3,34 +3,63 @@
 #include <Windows.h>
 #include <iostream>
 
+#include "../../Deps/nlohmann/json.hpp"
+
 #include "../../Source/Stream/ostream_snippet.h"
 #include "../../Source/Stream/ostream_clr.h"
 #include "../../Source/Cmds/commands.h"
+
+#include "../../Source/Util/filesys_util.h"
 
 #include "system_warn.h"
 #include "system_ask.h"
 #include "system_err.h"
 
+#define BEE_SYSTEM_INFO_PATH "src/System/System/system_info.json"
 
-#define VERSION "0.0.7"
-#define VERSION_STATE "DEV - TEST"
-#define NAME "Bee"
-
+using json = nlohmann::json;
 
 namespace sys
 {
+	inline void error(sys::Error err, std::string arg = "");
+
 	class System
 	{
 	public:
-		bool abort = false;
-
 		bool use_itellisense = true;
+		bool pause_sys = false;
+		bool abort = false;
 
 		size_t inline_mode_arg_itr = 0;
 		size_t readfile_mode_arg_itr = 0;
-
 		size_t mode_arg_index;
 
+		std::string version_state;
+		std::string version;
+		std::string name;
+		std::string os;
+
+		System()
+		{
+			if (!hand::exist_file(BEE_SYSTEM_INFO_PATH)) {
+				error(System_Bootstrap_Err);
+				this->pause_sys = true;
+				this->abort = true;
+				return;
+			}
+
+			json sys_info = json::parse(util::read_fs_file(BEE_SYSTEM_INFO_PATH));
+
+			this->os = sys_info["os"];
+			this->name = sys_info["name"];
+			this->version = sys_info["version"]["data"];
+			this->version_state = sys_info["version"]["state"];
+		}
+
+		~System() {
+			util::set_mouse_visible(util::True);
+		}
+		
 		inline void update(System_Settings sys_config)
 		{
 			if (boolstring_to_bool(sys_config["itellisense"]->get_value()))
@@ -38,13 +67,9 @@ namespace sys
 			else 
 				this->use_itellisense = false;
 		}
-
-		~System() {
-			util::set_mouse_visible(util::True);
-		}
 	};
 
-	inline void error(sys::Error err, std::string arg = "") 
+	inline void error(sys::Error err, std::string arg) 
 	{
 		std::cout << os::clr("[" + err.name + "] ", os::WT_RED) << err.msg;
 
@@ -80,10 +105,13 @@ namespace sys
 		return false;
 	}
 
-	inline void details()
+	inline void details(System& system)
 	{
-		std::cout << os::clr("Name: ", os::WT_YELLOW) << os::clr(NAME, os::YELLOW) << std::endl <<
-			os::clr("Version: ", os::WT_YELLOW) << os::clr(VERSION, os::WT_GREEN) << " " << os::clr(VERSION_STATE, os::PURPLE, os::UNDERLINE) << std::endl << std::endl;
+		std::cout << os::clr("name: ", os::WT_YELLOW) << os::clr(system.name, os::YELLOW) << std::endl;
+		std::cout << os::clr("version: ", os::WT_YELLOW) << os::clr(system.version, os::WT_GREEN) 
+			<< " " << os::clr(system.version_state, os::PURPLE, os::UNDERLINE) << std::endl;
+		
+		std::cout << os::clr("os: ", os::WT_YELLOW) << os::clr(system.os, os::WT_CYAN) << std::endl << std::endl;
 	}
 
 	inline void OS_stat(MEMORYSTATUSEX stat, bool update = false)

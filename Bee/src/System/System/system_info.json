@@ -1,0 +1,10 @@
+{
+  "name": "Bee",
+
+  "version": {
+    "state": "DEV - TEST",
+    "data": "v0.0.8"
+  },
+
+  "os": "Windows"
+}

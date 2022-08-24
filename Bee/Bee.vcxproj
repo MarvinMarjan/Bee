@@ -167,7 +167,11 @@
     <ClInclude Include="src\System\System\system_warn.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\Source\Data\DBase\shortcuts.txt" />
+    <Text Include="src\Source\Data\DBase\shortcuts.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Source\Data\DBase\functions.json" />
+    <None Include="src\System\System\system_info.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

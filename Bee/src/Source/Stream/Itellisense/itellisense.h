@@ -33,7 +33,7 @@ namespace it
 		if (i == index)	itelli_draw_caret(caret_color, caret_color_mode, ch);
 	}
 
-	std::string itelli_stdin(hand::Path path, dt::DBase dbase, Itelli_Buffer it_buff, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE)
+	std::string itelli_stdin(hand::Path path, dt::DBase& dbase, Itelli_Buffer it_buff, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE)
 	{
 		std::cout << os::save_c();
 		

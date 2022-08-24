@@ -67,6 +67,9 @@
     <Filter Include="src\System\System\System_Settings">
       <UniqueIdentifier>{37709c71-488d-48e9-853b-960a75e2a5bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Deps">
+      <UniqueIdentifier>{94c1253e-7c72-4fa0-83bb-d2e443e1fa01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -178,8 +181,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\Source\Data\DBase\shortcuts.txt">
+    <Text Include="src\Source\Data\DBase\shortcuts.json">
       <Filter>src\Source\Data\DBase</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Source\Data\DBase\functions.json">
+      <Filter>src\Source\Data\DBase</Filter>
+    </None>
+    <None Include="src\System\System\system_info.json">
+      <Filter>src\System\System</Filter>
+    </None>
   </ItemGroup>
 </Project>

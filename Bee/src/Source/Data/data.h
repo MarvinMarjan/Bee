@@ -1,50 +1,60 @@
 #pragma once
 
+#include "../../Deps/nlohmann/json.hpp"
+
 #include "../Util/filesys_util.h"
 #include "../Util/string_util.h"
 
 #include "../../System/System/System_Settings/system_setting.h"
+
 #include "Shortcut/shortcut.h"
 #include "Function/function.h"
 
 #include <string>
 #include <vector>
 
+#define BEE_SHORTCUT_FILE_PATH "src/Source/Data/DBase/shortcuts.json"
+#define BEE_FUNCTION_FILE_PATH "src/Source/Data/DBase/functions.json"
+
+using json = nlohmann::json;
+
 namespace dt
 {
 	class DBase
 	{
 	public:
-		DBase() {};
-		DBase(std::string path)
+		DBase()
 		{
-			if (!hand::exist_file(path))
-			{
+			if (!hand::exist_file(BEE_SHORTCUT_FILE_PATH) || !hand::exist_file(BEE_FUNCTION_FILE_PATH)) {
 				this->fail = true;
 				return;
 			}
 
-			this->path = path;
-			std::vector<std::string> lines = util::read_file(path);
+			this->shortcut_db = json::parse(util::read_fs_file(BEE_SHORTCUT_FILE_PATH));
+			this->function_db = json::parse(util::read_fs_file(BEE_FUNCTION_FILE_PATH));
 
-			for (std::string line : lines)
-			{
-				if (line == "") continue;
-				std::vector<std::string> s_line = util::split_string(line);
-				this->add_shortcut(Shortcut(s_line[0], util::join_string(s_line, " ", 1)));
-			}
+			for (size_t i = 0; i < this->shortcut_db["shortcut"].size(); i++)
+				this->add_shortcut(Shortcut(this->shortcut_db["shortcut"][i]["name"], this->shortcut_db["shortcut"][i]["value"]));
+
+			for (size_t i = 0; i < this->function_db["function"].size(); i++)
+				this->add_function(Function(this->function_db["function"][i]["name"], this->function_db["function"][i]["block"]));
 
 			this->fail = false;
 		}
 
 		~DBase()
 		{
-			std::string content = "";
+			this->shortcut_db["shortcut"].clear();
+			this->function_db["function"].clear();
 
-			for (Shortcut scut : this->shortcut)
-				content += scut.get_name() + ((scut.get_value() != "") ? " " : "") + scut.get_value() + "\n";
+			for (Shortcut sct : this->shortcut)
+				this->shortcut_db["shortcut"].push_back({ {"name", sct.get_name()}, {"value", sct.get_value()} });
 
-			util::write_file(this->path, content, std::ios::out, false);
+			for (Function func : this->function)
+				this->function_db["function"].push_back({ {"name", func.get_name()}, {"block", func.get_block()} });
+
+			util::write_file(BEE_SHORTCUT_FILE_PATH, this->shortcut_db.dump(2), std::ios::out, false);
+			util::write_file(BEE_FUNCTION_FILE_PATH, this->function_db.dump(2), std::ios::out, false);
 		}
 
 		inline void del_shortcut(std::string name)
@@ -56,7 +66,7 @@ namespace dt
 
 		inline void del_function(std::string name)
 		{
-			for (size_t i = 0; i < this->shortcut.size(); i++)
+			for (size_t i = 0; i < this->function.size(); i++)
 				if (this->function[i].get_name() == name)
 					this->function.erase(this->function.begin() + i);
 		}
@@ -109,16 +119,10 @@ namespace dt
 		std::vector<Shortcut> shortcut;
 		std::vector<Function> function;
 
-		// crie uma classe propria para todas as configurações do sistema (class System_Settings)
+		json shortcut_db;
+		json function_db;
 
-
-		/*std::vector<sys::Sys_Setting> setting =
-		{
-			sys::Sys_Setting("Caret_Color", "UNDERLINE_RED")
-		};*/
-
-
-		std::string path;
-
+		std::string stc_path;
+		std::string func_path;
 	};
 }

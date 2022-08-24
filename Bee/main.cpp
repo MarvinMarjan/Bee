@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	hand::Path path(boot);
 	path = util::swap(path.get_path(), '\\', '/');
 
-	dt::DBase dbase("src/Source/Data/DBase/shortcuts.txt");
+	dt::DBase dbase;
 	if (dbase.fail) sys::warn(sys::DataBase_Bootstrap_Err);
 
 	is::Buffer buff;
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if (mode != bt::Default && btflag.is_active(bt::Pause)) is::get_ch();
+	if ((mode != bt::Default || system.pause_sys) && (btflag.is_active(bt::Pause) || system.pause_sys)) is::get_ch();
 
 	return EXIT_SUCCESS;
 }

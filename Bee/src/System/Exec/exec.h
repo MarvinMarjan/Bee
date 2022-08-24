@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "../../Deps/nlohmann/json.hpp"
+
 #include "../../System/Handle/path_handling.h"
 
 #include "../../System/Bootstrap/bootstrap_flag.h"
@@ -131,7 +133,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	}
 
 	case cmd::Detail:
-		sys::details();
+		sys::details(system);
 		break;
 
 	case cmd::Help:

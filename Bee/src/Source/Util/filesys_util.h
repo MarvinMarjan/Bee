@@ -75,6 +75,14 @@ namespace util
 		return lines;
 	}
 
+	std::ifstream read_fs_file(std::string path)
+	{
+		std::ifstream file;
+		file.open(path.c_str());
+
+		return file;
+	}
+
 	inline void write_file(std::string path, std::string content, std::ios::openmode mode = std::ios::app, bool new_line = true)
 	{
 		std::fstream file;
