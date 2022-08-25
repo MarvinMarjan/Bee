@@ -9,7 +9,7 @@ namespace cmd
 	enum Command
 	{
 		Null,
-		Not_found,
+		Not_found,	
 
 		Exit,
 		Setting,
@@ -18,6 +18,8 @@ namespace cmd
 		Clear,
 
 		Color,
+		Errs,
+		Warns,
 
 		CD,
 		Diagnostic,
@@ -56,172 +58,196 @@ namespace cmd
 				this->name = "exit";
 				this->description = "Exit the program";
 				this->syntax = "exit";
-				this->name_variants = { "exit", ".x", ".exit", "quit", ".quit" };
+				this->name_variants = { this->name, ".x", ".exit", "quit", ".quit" };
 				break;
 
 			case Setting:
 				this->name = "setting";
 				this->description = "Show/Edit system settings";
 				this->syntax = "setting";
-				this->name_variants = { "setting", "config", ".sett", ".conf", "*" };
+				this->name_variants = { this->name, "config", ".sett", ".conf", "*" };
 				break;
 
 			case Detail:
 				this->name = "detail";
 				this->description = "Show program details (Version, Name)";
 				this->syntax = "detail";
-				this->name_variants = { "detail", ".d", ".detail" };
+				this->name_variants = { this->name, ".d", ".detail" };
 				break;
 
 			case Help:
 				this->name = "help";
 				this->description = "Show this message";
-				this->syntax = "help";
-				this->name_variants = { "help", ".h", ".help" };
+				this->syntax = "help [ Command ? ] { command_name (-cn) ? }";
+				this->name_variants = { this->name, ".h", ".help" };
 				break;
 
 			case Clear:
 				this->name = "clear";
 				this->description = "Clear the console";
 				this->syntax = "clear";
-				this->name_variants = { "clear", "clean", ".cl" };
+				this->name_variants = { this->name, "clean", ".cl" };
 				break;
 
 			case Color:
 				this->name = "color";
 				this->description = "Show a list of colors";
 				this->syntax = "color";
-				this->name_variants = { "color", "clr" };
+				this->name_variants = { this->name, "clr" };
+				break;
+
+			case Errs:
+				this->name = "errs";
+				this->description = "Show a list of system erros";
+				this->syntax = "errs";
+				this->name_variants = { this->name, "erros", "err" };
+				break;
+
+			case Warns:
+				this->name = "warns";
+				this->description = "Show a list of system warnings";
+				this->syntax = "warns";
+				this->name_variants = { this->name, "warn" };
 				break;
 
 			case CD:
 				this->name = "cd";
 				this->description = "Helps with directory navigation";
 				this->syntax = "cd [ Path ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Diagnostic:
 				this->name = "diag";
 				this->description = "Displays the details of the current directory";
 				this->syntax = "diag { dirs_size (-ds) ? } { path_debug (-pd) ? } ";
-				this->name_variants = { "diag", "diagnostic" };
+				this->name_variants = { this->name, "diagnostic" };
 				break;
 
 			case Print:
 				this->name = "print";
 				this->description = "Print a specific value in the console";
 				this->syntax = "print [ String ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Add:
 				this->name = "add";
 				this->description = "Add a new command";
 				this->syntax = "add [ Cmd_Name ] [ Block ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Rmv:
 				this->name = "rmv";
 				this->description = "Remove a created command";
 				this->syntax = "rmv [ Cmd_Name ]";
-				this->name_variants = { "rmv", "remove" };
+				this->name_variants = { this->name, "remove" };
 				break;
 
 			case Set:
 				this->name = "set";
 				this->description = "Create or edit a shortcut";
 				this->syntax = "set [ Name ] [ Value ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Del:
 				this->name = "del";
 				this->description = "Delete a shortcut";
 				this->syntax = "del [ Name ]";
+				this->name_variants = { this->name };
 				break;
 
 			case List:
 				this->name = "list";
 				this->description = "List all shortcuts";
 				this->syntax = "list";
+				this->name_variants = { this->name };
 				break;
 
 			case Mfile:
 				this->name = "mfile";
 				this->description = "Create a file";
 				this->syntax = "mfile [ Path ]";
-				this->name_variants = { "mfile", "make_file"};
+				this->name_variants = { this->name, "make_file"};
 				break;
 
 			case RMfile:
 				this->name = "rmfile";
 				this->description = "Remove a file";
 				this->syntax = "rmfile [ Path ]";
-				this->name_variants = { "rmfile", "remove_file" };
+				this->name_variants = { this->name, "remove_file" };
 				break;
 
 			case Mdir:
 				this->name = "mdir";
 				this->description = "Create e directory";
 				this->syntax = "mdir [ Path ]";
-				this->name_variants = { "mdir", "make_dir" };
+				this->name_variants = { this->name, "make_dir" };
 				break;
 
 			case RMdir:
 				this->name = "rmdir";
 				this->description = "Remove a directory";
 				this->syntax = "rmdir [ Path ]";
-				this->name_variants = { "rmdir", "remove_dir" };
+				this->name_variants = { this->name, "remove_dir" };
 				break;
 
 			case Rename:
 				this->name = "rename";
 				this->description = "Rename a file/directory";
 				this->syntax = "rename [ Path ] [ New_Name ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Sizeof:
 				this->name = "sizeof";
 				this->description = "Return the size of a file in bytes";
 				this->syntax = "sizeof [ Path ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Lineof:
 				this->name = "lineof";
 				this->description = "Return the total lines of a file";
 				this->syntax = "lineof [ Path ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Read:
 				this->name = "read";
 				this->description = "Return the content of a file";
 				this->syntax = "read [ Path ]";
-				this->name_variants = { "read", "read_file" };
+				this->name_variants = { this->name, "read_file" };
 				break;
 
 			case Write:
 				this->name = "write";
 				this->description = "Write content in a file";
 				this->syntax = "write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }";
-				this->name_variants = { "write", "write_file" };
+				this->name_variants = { this->name, "write_file" };
 				break;
 
 			case Run:
 				this->name = "run";
 				this->description = "Run a OS command";
 				this->syntax = "run [ Command ]";
+				this->name_variants = { this->name };
 				break;
 
 			case Stat:
 				this->name = "stat";
 				this->description = "Show OS status";
 				this->syntax = "stat { update (-up) ? }";
-				this->name_variants = { "stat", "stats", "status", ".s" };
+				this->name_variants = { this->name, "stats", "status", ".s" };
 				break;
 
 			default:
 				this->name = "<invalid>";
 				this->description = "<invalid>";
 				this->syntax = "<invalid>";
-				this->name_variants = { "<invalid>" };
+				this->name_variants = { this->name };
 			}
 		}
 

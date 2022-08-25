@@ -76,6 +76,7 @@ int main(int argc, char* argv[])
 		args = util::format_args_all(s_buff, dbase);
 
 		flags = cmd::check_flags(args);
+		args.erase_flags();
 
 		if (cmd::check(s_buff[0]) == cmd::Not_found && !dbase.exist_function(s_buff[0]))
 		{

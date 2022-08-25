@@ -15,7 +15,9 @@ namespace cmd
 		Not_New_Line,
 		Clear_File,
 
-		Update
+		Update,
+
+		Only_CMD_Name
 	};
 
 	class CMD_Flags
@@ -54,6 +56,8 @@ namespace cmd
 			else if (flag == "cf") flags.push_back(Clear_File);
 
 			else if (flag == "up") flags.push_back(Update);
+
+			else if (flag == "cn") flags.push_back(Only_CMD_Name);
 		}
 
 		return flags;

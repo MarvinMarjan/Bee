@@ -18,6 +18,8 @@ namespace cmd
 		cmd::CMD_Data(Clear),
 
 		cmd::CMD_Data(Color),
+		cmd::CMD_Data(Errs),
+		cmd::CMD_Data(Warns),
 
 		cmd::CMD_Data(CD),
 		cmd::CMD_Data(Diagnostic),
@@ -55,6 +57,8 @@ namespace cmd
 		else if (buff == "clear" || buff == "clean" || buff == ".cl") return Clear;
 
 		else if (buff == "color" || buff == "clr") return Color;
+		else if (buff == "errs" || buff == "erros" || buff == "err") return Errs;
+		else if (buff == "warns" || buff == "warn") return Warns;
 
 		else if (buff == "cd") return CD;
 		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;

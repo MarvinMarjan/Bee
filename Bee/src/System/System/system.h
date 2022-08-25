@@ -23,6 +23,30 @@ namespace sys
 {
 	inline void error(sys::Error err, std::string arg = "");
 
+
+	const std::vector<Error> errs =
+	{
+		Error(System_Bootstrap_Err),
+
+		Error(Function_Not_Found_Err),
+		Error(Shortcut_Not_Found_Err),
+		Error(Setting_Not_Found_Err),
+		Error(Command_Not_Found),
+
+		Error(Invalid_Path_File),
+		Error(Invalid_Path_Dir)
+	};
+
+	const std::vector<Warning> warns =
+	{
+		Warning(DataBase_Bootstrap_Err),
+
+		Warning(Incomplete_Expression),
+		Warning(Shortcut_Not_Found_Warn),
+		Warning(Insufficient_Args)
+	};
+
+
 	class System
 	{
 	public:

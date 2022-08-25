@@ -137,7 +137,23 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Help:
-		for (cmd::CMD_Data cmd : cmd::commands) sys::help(cmd);
+		if (args.get().size() >= 1) {
+			for (size_t i = 0; i < cmd::commands.size(); i++) {
+				if (util::exist(args[0].get_arg(), cmd::commands[i].name_variants)) {
+					sys::help(cmd::commands[i]);
+					break;
+				}
+				if (i + 1 >= cmd::commands.size()) sys::error(sys::Command_Not_Found, args[0].get_arg());
+			}
+		}
+
+		else {
+			if (flags.is_active(cmd::Only_CMD_Name))
+				for (size_t i = 0; i < cmd::commands.size(); i += 2)
+					std::cout << std::setw(40) << std::left << os::clr(cmd::commands[i].name, os::WT_CYAN) << std::right << ((i + 1 >= cmd::commands.size()) ? "" : os::clr(cmd::commands[i + 1].name, os::WT_CYAN)) << std::endl;
+
+			else for (cmd::CMD_Data cmd : cmd::commands) sys::help(cmd);
+		}
 		break;
 
 	case cmd::Clear:
@@ -147,6 +163,16 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	case cmd::Color:
 		for (std::string color : os::STRColors)
 			std::cout << os::clr(color, util::string_to_color(color)) << std::endl;
+		break;
+		
+	case cmd::Errs:
+		for (sys::Error err : sys::errs)
+			std::cout << os::clr(err.name, os::WT_RED) << std::endl;
+		break;
+
+	case cmd::Warns:
+		for (sys::Warning warn : sys::warns)
+			std::cout << os::clr(warn.name, os::WT_YELLOW) << std::endl;
 		break;
 
 	case cmd::CD:
