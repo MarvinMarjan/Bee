@@ -189,7 +189,7 @@
     <None Include="src\Source\Data\DBase\functions.json">
       <Filter>src\Source\Data\DBase</Filter>
     </None>
-    <None Include="src\System\System\system_info.json">
+    <None Include="src\System\System\system_settings_data.json">
       <Filter>src\System\System</Filter>
     </None>
   </ItemGroup>

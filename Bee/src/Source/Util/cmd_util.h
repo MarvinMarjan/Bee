@@ -15,9 +15,9 @@
 
 namespace util
 {
-	inline std::vector<std::string> format_args_all(std::vector<std::string>& src, dt::DBase& dbase);
+	inline std::vector<std::string> format_args_all(sys::System& system, std::vector<std::string>& src, dt::DBase& dbase);
 
-	std::vector<std::string> format_args1(std::vector<std::string>& _src, dt::DBase& dbase)
+	std::vector<std::string> format_args1(sys::System& system, std::vector<std::string>& _src, dt::DBase& dbase)
 	{
 		std::vector<std::string> f_src;
 		std::vector<std::string> src = _src;
@@ -84,7 +84,7 @@ namespace util
 
 				if (dbase.exist_shortcut(name)) f_src.push_back(dbase.get_shortcut(name)->get_value());
 				else {
-					sys::warn(sys::Shortcut_Not_Found_Warn, src[i]);
+					system.warn(sys::Shortcut_Not_Found_Warn, src[i]);
 					f_src.push_back(src[i]);
 				}
 			}
@@ -116,7 +116,7 @@ namespace util
 		return f_src;
 	}
 
-	std::vector<std::string> format_args2(std::vector<std::string>& src)
+	std::vector<std::string> format_args2(sys::System& system, std::vector<std::string>& src)
 	{
 		std::vector<std::string> f_src = src;
 
@@ -130,7 +130,7 @@ namespace util
 
 			else if (f_src[i] == "+")
 			{
-				if (i + 1 >= f_src.size() || i == 0) sys::warn(sys::Incomplete_Expression);
+				if (i + 1 >= f_src.size() || i == 0) system.warn(sys::Incomplete_Expression);
 				else
 				{
 					f_src[i - 1] = f_src[i - 1] + f_src[i + 1];
@@ -144,19 +144,19 @@ namespace util
 		return f_src;
 	}
 
-	inline std::vector<std::string> format_args_all(std::vector<std::string>& src, dt::DBase& dbase)
+	inline std::vector<std::string> format_args_all(sys::System& system, std::vector<std::string>& src, dt::DBase& dbase)
 	{
-		std::vector<std::string> f_src = format_args1(src, dbase);
-		f_src = format_args2(f_src);
+		std::vector<std::string> f_src = format_args1(system, src, dbase);
+		f_src = format_args2(system, f_src);
 
 		return f_src;
 	}
 
-	inline bool _args(cmd::CMD_Arg args, cmd::Command cmd)
+	inline bool _args(sys::System& system, cmd::CMD_Arg args, cmd::Command cmd)
 	{
 		if (args.get().size() < cmd::arg_size(cmd))
 		{
-			sys::warn(sys::Insufficient_Args);
+			system.warn(sys::Insufficient_Args);
 			return true;
 		}
 

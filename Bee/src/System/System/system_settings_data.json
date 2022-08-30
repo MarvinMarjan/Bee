@@ -1,0 +1,24 @@
+{
+  "settings": {
+    "caret_color": {
+      "type": "Color",
+      "value": "RED"
+    },
+    "disable_error_msg": {
+      "type": "Bool",
+      "value": "false"
+    },
+    "disable_warn_msg": {
+      "type": "Bool",
+      "value": "false"
+    },
+    "initial_path": {
+      "type": "String",
+      "value": "C:/Users/Usuario/Desktop"
+    },
+    "itellisense": {
+      "type": "Bool",
+      "value": "true"
+    }
+  }
+}

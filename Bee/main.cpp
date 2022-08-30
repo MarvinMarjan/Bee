@@ -1,3 +1,4 @@
+// include all files
 #include "src/System/Exec/exec.h"
 
 inline std::ostream& operator<<(std::ostream& os, hand::Path path)
@@ -10,10 +11,17 @@ inline std::ostream& operator<<(std::ostream& os, is::Buffer buff)
 	return (os << buff.get());
 }
 
+// main function
 int main(int argc, char* argv[])
 {
 	sys::System_Settings sys_config;
 	sys::System system;
+
+	if (sys_config.fail) {
+		system.warn(sys::Settings_Bootstrap_Err);
+		sys_config.set_default_settings(sys::default_settings);
+	}
+
 	sys::Defs defs;
 
 	sys::set_defs(defs, sys_config);
@@ -27,7 +35,7 @@ int main(int argc, char* argv[])
 	if (mode == bt::ReadFile) {
 		if (hand::exist_file(argv[system.mode_arg_index])) boot.src_file = util::read_file(argv[system.mode_arg_index]);
 		else {
-			sys::error(sys::Invalid_Path_File, argv[system.mode_arg_index]);
+			system.error(sys::Invalid_Path_File, argv[system.mode_arg_index]);
 			system.abort = true;
 		}
 	}
@@ -35,10 +43,12 @@ int main(int argc, char* argv[])
 	if (btflag.is_active(bt::HideWindow)) util::set_window(util::Hidden);
 
 	hand::Path path(boot);
-	path = util::swap(path.get_path(), '\\', '/');
+
+	if (sys_config["initial_path"]->get_value() != "") path = sys_config["initial_path"]->get_value();
+	else path = util::swap(path.get_path(), '\\', '/');
 
 	dt::DBase dbase;
-	if (dbase.fail) sys::warn(sys::DataBase_Bootstrap_Err);
+	if (dbase.fail) system.warn(sys::DataBase_Bootstrap_Err);
 
 	is::Buffer buff;
 	std::vector<std::string> s_buff;
@@ -73,7 +83,7 @@ int main(int argc, char* argv[])
 		while (util::ends_with(buff.get(), ' ') || util::ends_with(buff.get(), '\t')) buff = util::erase_last(buff.get());
 
 		s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
-		args = util::format_args_all(s_buff, dbase);
+		args = util::format_args_all(system, s_buff, dbase);
 
 		flags = cmd::check_flags(args);
 		args.erase_flags();

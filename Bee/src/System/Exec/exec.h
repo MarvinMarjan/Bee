@@ -55,7 +55,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		{
 			buff = line;
 			s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
-			args = util::format_args_all(s_buff, dbase);
+			args = util::format_args_all(system, s_buff, dbase);
 
 			flags = cmd::check_flags(args);
 			args.erase_flags();
@@ -85,16 +85,20 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 				value = sys_config[i]->get_value();
 				type = sys_config[i]->get_type();
 
-				std::cout << os::clr(name, os::WT_CYAN) << "   ";
-				
+				std::cout << std::setw(30) << std::left << os::clr(name, os::WT_CYAN);
+
 				switch (type)
 				{
 				case sys::Color:
-					std::cout << os::clr(value, util::string_to_color(value)) << std::endl;
+					std::cout << std::right << os::clr(value, util::string_to_color(value)) << std::endl;
+					break;
+
+				case sys::String:
+					std::cout << std::right << os::clr('\"' + value + '\"', os::WT_GREEN) << std::endl;
 					break;
 
 				case sys::Bool:
-					std::cout << os::clr(value, os::WT_YELLOW) << std::endl;
+					std::cout << std::right << os::clr(value, os::WT_YELLOW) << std::endl;
 					break;
 				}
 			}
@@ -108,7 +112,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 			sys::SettingType type;
 
-			if (!sys_config.exist(name)) sys::error(sys::Setting_Not_Found_Err, name);
+			if (!sys_config.exist(name)) system.error(sys::Setting_Not_Found_Err, name);
 			else {
 				type = sys_config[name]->get_type();
 				value = sys_config[name]->get_value();
@@ -120,11 +124,14 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 		else if (args.get().size() == 2) {
 			std::string name = args[0].get_arg();
-			std::string value = (sys_config[name]->get_type() == sys::Bool) ? util::to_lower(args[1].get_arg()) : args[1].get_arg();
+			std::string value;
 
-			if (!sys_config.exist(name)) sys::error(sys::Setting_Not_Found_Err, name);
+			if (!sys_config.exist(name)) system.error(sys::Setting_Not_Found_Err, name);
 
-			else if (sys_config[name]->is_same_type(value)) sys_config[name]->set_value(value);
+			else {
+				value = (sys_config[name]->get_type() == sys::Bool) ? util::to_lower(args[1].get_arg()) : args[1].get_arg();
+				if (sys_config[name]->is_same_type(value)) sys_config[name]->set_value(value);
+			}
 		}
 		
 		sys::set_defs(defs, sys_config);
@@ -143,7 +150,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 					sys::help(cmd::commands[i]);
 					break;
 				}
-				if (i + 1 >= cmd::commands.size()) sys::error(sys::Command_Not_Found, args[0].get_arg());
+				if (i + 1 >= cmd::commands.size()) system.error(sys::Command_Not_Found, args[0].get_arg());
 			}
 		}
 
@@ -176,9 +183,9 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::CD:
-		if (util::_args(args, cmd::CD)) break;
+		if (util::_args(system, args, cmd::CD)) break;
 
-		if (!hand::exist_folder(path + args[0])) sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
+		if (!hand::exist_folder(path + args[0])) system.error(sys::Invalid_Path_Dir, args[0].get_arg());
 		else path.cd(args[0].get_arg());
 		break;
 
@@ -244,7 +251,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		std::vector<std::string> block;
 		std::string buffer;
 
-		if (util::_args(args, cmd::Add)) break;
+		if (util::_args(system, args, cmd::Add)) break;
 		if (args[1].get_arg() == "...") do {
 			util::set_mouse_visible(util::True);
 			std::getline(std::cin, buffer);
@@ -266,21 +273,21 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	}
 
 	case cmd::Rmv:
-		if (util::_args(args, cmd::Rmv)) break;
+		if (util::_args(system, args, cmd::Rmv)) break;
 		if (dbase.exist_function(args[0].get_arg())) dbase.del_function(args[0].get_arg());
-		else sys::error(sys::Function_Not_Found_Err, args[0].get_arg());
+		else system.error(sys::Function_Not_Found_Err, args[0].get_arg());
 		break;
 
 	case cmd::Set:
-		if (util::_args(args, cmd::Set)) break;
+		if (util::_args(system, args, cmd::Set)) break;
 		if (dbase.exist_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
 		else dbase.add_shortcut(dt::Shortcut(args[0].get_arg(), args[1].get_arg()));
 		break;
 
 	case cmd::Del:
-		if (util::_args(args, cmd::Del)) break;
+		if (util::_args(system, args, cmd::Del)) break;
 		if (dbase.exist_shortcut(args[0].get_arg())) dbase.del_shortcut(args[0].get_arg());
-		else sys::error(sys::Shortcut_Not_Found_Err, args[0].get_arg());
+		else system.error(sys::Shortcut_Not_Found_Err, args[0].get_arg());
 		break;
 
 	case cmd::List:
@@ -289,53 +296,53 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Mfile:
-		if (util::_args(args, cmd::Mfile)) break;
+		if (util::_args(system, args, cmd::Mfile)) break;
 		if (hand::exist_file(util::_fmt(path, args[0]))) {
-			if (sys::ask(sys::Replace_File)) util::create_file(util::_fmt(path, args[0]));
+			if (system.ask(sys::Replace_File)) util::create_file(util::_fmt(path, args[0]));
 		}
 		else util::create_file(util::_fmt(path, args[0]));
 		break;
 
 	case cmd::RMfile:
-		if (util::_args(args, cmd::RMfile)) break;
+		if (util::_args(system, args, cmd::RMfile)) break;
 		if (hand::exist_file(util::_fmt(path, args[0]))) util::remove_file(util::_fmt(path, args[0]));
-		else sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		else system.error(sys::Invalid_Path_File, args[0].get_arg());
 		break;
 
 	case cmd::Mdir:
-		if (util::_args(args, cmd::Mdir)) break;
+		if (util::_args(system, args, cmd::Mdir)) break;
 		util::create_folder(util::_fmt(path, args[0]));
 		break;
 
 	case cmd::RMdir:
 		std::cout << os::scroll_up(3) << os::up_ln() << os::up_ln() << os::up_ln();
-		if (util::_args(args, cmd::RMfile)) break;
+		if (util::_args(system, args, cmd::RMfile)) break;
 		if (!hand::exist_folder(util::_fmt(path, args[0])))
 		{
-			sys::error(sys::Invalid_Path_Dir, args[0].get_arg());
+			system.error(sys::Invalid_Path_Dir, args[0].get_arg());
 			break;
 		}
 
 		if (util::get_folder_ent(util::_fmt(path, args[0])).size() == 0) util::remove_folder(util::_fmt(path, args[0]));
-		else if (sys::ask(sys::Remove_Not_Empty_Dir)) util::remove_not_empty_folder(util::_fmt(path, args[0]), flags.is_active(cmd::Path_debug));
+		else if (system.ask(sys::Remove_Not_Empty_Dir)) util::remove_not_empty_folder(util::_fmt(path, args[0]), flags.is_active(cmd::Path_debug));
 		break;
 
 	case cmd::Rename:
-		if (util::_args(args, cmd::Rename)) break;
+		if (util::_args(system, args, cmd::Rename)) break;
 		util::rename_f(util::_fmt(path, args[0]), args[1].get_arg());
 		break;
 
 	case cmd::Sizeof:
-		if (util::_args(args, cmd::Sizeof)) break;
-		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		if (util::_args(system, args, cmd::Sizeof)) break;
+		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
 		else std::cout << util::sizeof_file(util::_fmt(path, args[0])) << std::endl;
 		break;
 
 	case cmd::Lineof:
-		if (util::_args(args, cmd::Lineof)) break;
+		if (util::_args(system, args, cmd::Lineof)) break;
 		if (!hand::exist_file(util::_fmt(path, args[0])))
 		{
-			sys::error(sys::Invalid_Path_File, args[0].get_arg());
+			system.error(sys::Invalid_Path_File, args[0].get_arg());
 			break;
 		}
 
@@ -343,20 +350,20 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Read:
-		if (util::_args(args, cmd::Read)) break;
-		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		if (util::_args(system, args, cmd::Read)) break;
+		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
 		else for (std::string line : util::read_file(util::_fmt(path, args[0])))
 			std::cout << line << std::endl;
 		break;
 
 	case cmd::Write:
-		if (util::_args(args, cmd::Write)) break;
-		if (!hand::exist_file(util::_fmt(path, args[0]))) sys::error(sys::Invalid_Path_File, args[0].get_arg());
+		if (util::_args(system, args, cmd::Write)) break;
+		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
 		else util::write_file(util::_fmt(path, args[0]), args[1].get_arg(), ((flags.is_active(cmd::Clear_File)) ? std::ios::out : std::ios::app), (!flags.is_active(cmd::Not_New_Line)));
 		break;
 
 	case cmd::Run:
-		if (util::_args(args, cmd::Run)) break;
+		if (util::_args(system, args, cmd::Run)) break;
 		std::system(args[0].get_arg().c_str());
 		break;
 
@@ -374,7 +381,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	}
 
 	case cmd::Not_found:
-		sys::error(sys::Error(sys::Command_Not_Found), s_buff[0]);
+		system.error(sys::Command_Not_Found, s_buff[0]);
 		break;
 	}
 }

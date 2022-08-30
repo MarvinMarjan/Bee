@@ -7,6 +7,7 @@ namespace sys
 	enum WarnType
 	{
 		DataBase_Bootstrap_Err,
+		Settings_Bootstrap_Err,
 
 		Incomplete_Expression,
 		Shortcut_Not_Found_Warn,
@@ -22,7 +23,12 @@ namespace sys
 			{
 			case DataBase_Bootstrap_Err:
 				this->name = "DataBase_Bootstrap_Err";
-				this->msg = "Couldn't initialize DataBase, some functions may not work";
+				this->msg = "Couldn't initialize DataBase. Data can't be saved";
+				break;
+
+			case Settings_Bootstrap_Err:
+				this->name = "Settings_Bootstrap_Err";
+				this->msg = "Couldn't initialize Settings. Using default Settings";
 				break;
 
 			case Insufficient_Args:

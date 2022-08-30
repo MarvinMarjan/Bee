@@ -7,8 +7,6 @@ namespace sys
 {
 	enum ErrorType
 	{
-		System_Bootstrap_Err,
-
 		Function_Not_Found_Err,
 		Shortcut_Not_Found_Err,
 		Setting_Not_Found_Err,
@@ -25,11 +23,6 @@ namespace sys
 		{
 			switch (error)
 			{
-			case System_Bootstrap_Err:
-				this->name = "System_Bootstrap_Err";
-				this->msg = "Couldn't initialize system";
-				break;
-
 			case Function_Not_Found_Err:
 				this->name = "Function_Not_Found";
 				this->msg = "The following function couldn't be found";

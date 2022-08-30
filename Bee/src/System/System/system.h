@@ -15,19 +15,17 @@
 #include "system_ask.h"
 #include "system_err.h"
 
-#define BEE_SYSTEM_INFO_PATH "src/System/System/system_info.json"
+#define BEE_OPERATIONAL_SYSTEM "Windows"
+#define BEE_VERSION_STATE "DEV - TEST"
+#define BEE_VERSION "v0.0.8.2"
+#define BEE_NAME "Bee"
 
 using json = nlohmann::json;
 
 namespace sys
 {
-	inline void error(sys::Error err, std::string arg = "");
-
-
 	const std::vector<Error> errs =
 	{
-		Error(System_Bootstrap_Err),
-
 		Error(Function_Not_Found_Err),
 		Error(Shortcut_Not_Found_Err),
 		Error(Setting_Not_Found_Err),
@@ -40,6 +38,7 @@ namespace sys
 	const std::vector<Warning> warns =
 	{
 		Warning(DataBase_Bootstrap_Err),
+		Warning(Settings_Bootstrap_Err),
 
 		Warning(Incomplete_Expression),
 		Warning(Shortcut_Not_Found_Warn),
@@ -54,6 +53,9 @@ namespace sys
 		bool pause_sys = false;
 		bool abort = false;
 
+		bool disable_errs_msg = false;
+		bool disable_warns_msg = false;
+
 		size_t inline_mode_arg_itr = 0;
 		size_t readfile_mode_arg_itr = 0;
 		size_t mode_arg_index;
@@ -63,71 +65,64 @@ namespace sys
 		std::string name;
 		std::string os;
 
-		System()
-		{
-			if (!hand::exist_file(BEE_SYSTEM_INFO_PATH)) {
-				error(System_Bootstrap_Err);
-				this->pause_sys = true;
-				this->abort = true;
-				return;
-			}
-
-			json sys_info = json::parse(util::read_fs_file(BEE_SYSTEM_INFO_PATH));
-
-			this->os = sys_info["os"];
-			this->name = sys_info["name"];
-			this->version = sys_info["version"]["data"];
-			this->version_state = sys_info["version"]["state"];
+		System() {
+			this->os = BEE_OPERATIONAL_SYSTEM;
+			this->name = BEE_NAME;
+			this->version = BEE_VERSION;
+			this->version_state = BEE_VERSION_STATE;
 		}
 
 		~System() {
 			util::set_mouse_visible(util::True);
 		}
 		
-		inline void update(System_Settings sys_config)
+		inline void update(System_Settings& sys_config)
 		{
-			if (boolstring_to_bool(sys_config["itellisense"]->get_value()))
-				this->use_itellisense = true;
-			else 
-				this->use_itellisense = false;
+			this->use_itellisense = boolstring_to_bool(sys_config["itellisense"]->get_value());
+			this->disable_errs_msg = boolstring_to_bool(sys_config["disable_error_msg"]->get_value());
+			this->disable_warns_msg = boolstring_to_bool(sys_config["disable_warn_msg"]->get_value());
+		}
+
+		inline void error(sys::Error err, std::string arg = "")
+		{
+			if (this->disable_errs_msg) return;
+
+			std::cout << os::clr("[" + err.name + "] ", os::WT_RED) << err.msg;
+
+			if (arg != "")
+				std::cout << ": " << os::clr('\"' + arg + '\"', os::GREEN);
+
+			std::cout << std::endl << std::endl;
+		}
+
+		inline void warn(sys::Warning warn, std::string arg = "")
+		{
+			if (this->disable_warns_msg) return;
+
+			std::cout << os::clr("[" + warn.name + "] ", os::WT_YELLOW) << warn.msg;
+
+			if (arg != "")
+				std::cout << ": " << os::clr('\"' + arg + '\"', os::GREEN);
+
+			std::cout << std::endl << std::endl;
+		}
+
+		inline bool ask(sys::Question ask)
+		{
+			util::set_mouse_visible(util::True);
+			std::string res;
+			std::cout << os::clr("[" + ask.name + "] ", os::WT_GREEN) << ask.msg << " (S/N): ";
+
+			std::getline(std::cin, res);
+			res = util::to_lower(res);
+
+			if (res == "y" || res == "yes") return true;
+			if (res == "n" || res == "no") return false;
+
+			util::set_mouse_visible(util::False);
+			return false;
 		}
 	};
-
-	inline void error(sys::Error err, std::string arg) 
-	{
-		std::cout << os::clr("[" + err.name + "] ", os::WT_RED) << err.msg;
-
-		if (arg != "")
-			std::cout << ": " << os::clr('\"' + arg + '\"', os::GREEN);
-
-		std::cout << std::endl << std::endl;
-	}
-
-	inline void warn(sys::Warning warn, std::string arg = "")
-	{
-		std::cout << os::clr("[" + warn.name + "] ", os::WT_YELLOW) << warn.msg;
-
-		if (arg != "")
-			std::cout << ": " << os::clr('\"' + arg + '\"', os::GREEN);
-
-		std::cout << std::endl << std::endl;
-	}
-
-	inline bool ask(sys::Question ask)
-	{
-		util::set_mouse_visible(util::True);
-		std::string res;
-		std::cout << os::clr("[" + ask.name + "] ", os::WT_GREEN) << ask.msg << " (S/N): ";
-
-		std::getline(std::cin, res);
-		res = util::to_lower(res);
-
-		if (res == "y" || res == "yes") return true;
-		if (res == "n" || res == "no") return false;
-
-		util::set_mouse_visible(util::False);
-		return false;
-	}
 
 	inline void details(System& system)
 	{

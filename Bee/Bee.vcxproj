@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Source\Data\DBase\functions.json" />
-    <None Include="src\System\System\system_info.json" />
+    <None Include="src\System\System\system_settings_data.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

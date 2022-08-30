@@ -12,7 +12,7 @@ namespace sys
 		os::Color caret_color;
 	};
 
-	void set_defs(Defs& defs, sys::System_Settings settings)
+	void set_defs(Defs& defs, sys::System_Settings& settings)
 	{
 		defs.caret_color = util::string_to_color(settings["caret_color"]->get_value());
 	}
