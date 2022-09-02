@@ -3,21 +3,16 @@
 #include <string>
 #include <vector>
 
-#include "../../System/System/system_warn.h"
-#include "../../System/System/system.h"
+#include "../../System/Exec/exec.h"
 
-#include "../../System/Handle/path_handling.h"
-#include "../../Source/Util/cmd_util.h"
-
-#include "../Data/Shortcut/shortcut.h"
-
-#include "../Cmds/cmd_data.h"
+void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff,
+	std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func);
 
 namespace util
 {
-	inline std::vector<std::string> format_args_all(sys::System& system, std::vector<std::string>& src, dt::DBase& dbase);
+	inline std::vector<std::string> format_args_all(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::Function* parent_func, std::vector<std::string>& src, dt::DBase& dbase);
 
-	std::vector<std::string> format_args1(sys::System& system, std::vector<std::string>& _src, dt::DBase& dbase)
+	std::vector<std::string> format_args1(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::Function* parent_func, std::vector<std::string>& _src, dt::DBase& dbase, bool* ignore_fmt2 = nullptr)
 	{
 		std::vector<std::string> f_src;
 		std::vector<std::string> src = _src;
@@ -49,6 +44,8 @@ namespace util
 
 			else if (src[i][0] == '{' && src[i].size() > 1)
 			{
+				*ignore_fmt2 = true;
+
 				std::vector<std::string> parts;
 				std::string aux = "";
 
@@ -91,15 +88,39 @@ namespace util
 
 			else if (src[i][0] == '#')
 			{
-				std::string name = src[i];
-				name.erase(0, 1);
+				if (src[i][1] == '(') {
+					std::string joined = util::join_string(util::get_from(src, i));
 
-				if (name == "input") {
-					std::string buff;
-					set_mouse_visible(True);
-					std::getline(std::cin, buff);
-					set_mouse_visible(False);
-					f_src.push_back(buff);
+					std::string func = util::sub_string(joined, 2, util::find_first(joined, ')'));
+					std::vector<std::string> s_func = util::split_string(func);
+
+					cmd::CMD_Arg f_args = format_args_all(system, sys_config, defs, path, parent_func, s_func, dbase);
+					cmd::CMD_Flags flags = cmd::check_flags(f_args);
+
+					f_args.erase_flags();
+
+					is::Buffer buff = s_func[0] + ' ' + util::join_string(f_args.get_str());
+
+					std::vector<std::string> s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
+
+					run(system, sys_config, defs, path, dbase, buff, s_buff, f_args, flags, parent_func);
+
+					f_src.push_back(dbase.get_function(s_func[0])->get_return_value());
+
+					while (src[i][src[i].size() - 1] != ')') i++;
+				}
+
+				else {
+					std::string name = src[i];
+					name.erase(0, 1);
+
+					if (name == "input") {
+						std::string buff;
+						set_mouse_visible(True);
+						std::getline(std::cin, buff);
+						set_mouse_visible(False);
+						f_src.push_back(buff);
+					}
 				}
 			}
 
@@ -144,18 +165,19 @@ namespace util
 		return f_src;
 	}
 
-	inline std::vector<std::string> format_args_all(sys::System& system, std::vector<std::string>& src, dt::DBase& dbase)
+	inline std::vector<std::string> format_args_all(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::Function* parent_func, std::vector<std::string>& src, dt::DBase& dbase)
 	{
-		std::vector<std::string> f_src = format_args1(system, src, dbase);
-		f_src = format_args2(system, f_src);
+		bool ignore_fmt2 = false;
+
+		std::vector<std::string> f_src = format_args1(system, sys_config, defs, path, parent_func, src, dbase, &ignore_fmt2);
+		if (!ignore_fmt2) f_src = format_args2(system, f_src);
 
 		return f_src;
 	}
 
 	inline bool _args(sys::System& system, cmd::CMD_Arg args, cmd::Command cmd)
 	{
-		if (args.get().size() < cmd::arg_size(cmd))
-		{
+		if (args.get().size() < cmd::arg_size(cmd)) {
 			system.warn(sys::Insufficient_Args);
 			return true;
 		}

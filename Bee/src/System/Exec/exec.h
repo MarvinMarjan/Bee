@@ -47,21 +47,30 @@
 #include "../../Source/Util/cmd_util.h"
 
 void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
-	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags)
+	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func = nullptr)
 {
 	if (dbase.exist_function(s_buff[0]))
 	{
-		for (std::string line : dbase.get_function(s_buff[0])->get_block())
-		{
+		dt::Function* function = dbase.get_function(s_buff[0]);
+		size_t args_count = 1;
+
+		for (args_count; args_count <= args.get().size(); args_count++)
+			dbase.add_shortcut(dt::Shortcut(("arg" + std::to_string(args_count)), args[args_count - 1].get_arg()));
+
+		for (std::string line : function->get_block()) {
 			buff = line;
 			s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
-			args = util::format_args_all(system, s_buff, dbase);
+			args = util::format_args_all(system, sys_config, defs, path, parent_func, s_buff, dbase);
 
 			flags = cmd::check_flags(args);
 			args.erase_flags();
 
-			run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
+			run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags, function);
+
 		}
+		
+		for (size_t i = 1; i <= args_count; i++)
+			dbase.del_shortcut(("arg" + std::to_string(i)));
 
 		return;
 	}
@@ -248,6 +257,11 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Add: {
+		if (dbase.exist_shortcut(args[0].get_arg())) {
+			system.error(sys::Unavaliable_Name, args[0].get_arg());
+			break;
+		}
+
 		std::vector<std::string> block;
 		std::string buffer;
 
@@ -278,8 +292,14 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		else system.error(sys::Function_Not_Found_Err, args[0].get_arg());
 		break;
 
+	case cmd::Return:
+		if (util::_args(system, args, cmd::Return)) break;
+		if (parent_func) parent_func->set_return_value(args[0].get_arg());
+		break;
+
 	case cmd::Set:
 		if (util::_args(system, args, cmd::Set)) break;
+		if (dbase.exist_function(args[0].get_arg())) system.error(sys::Unavaliable_Name, args[0].get_arg());
 		if (dbase.exist_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
 		else dbase.add_shortcut(dt::Shortcut(args[0].get_arg(), args[1].get_arg()));
 		break;
@@ -291,8 +311,21 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::List:
-		for (dt::Shortcut st : dbase.get_all_shortcut())
-			std::cout << os::clr(st.get_name(), os::WT_CYAN) << "  " << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
+		if (args.get().size() == 0) {
+			for (dt::Shortcut st : dbase.get_all_shortcut())
+				std::cout << os::clr(st.get_name(), os::WT_CYAN) << "  " << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
+
+			for (dt::Function fc : dbase.get_all_function())
+				std::cout << os::clr(fc.get_name(), os::WT_CYAN) << "  " << '{' + os::clr("...", os::WT_GREEN) + '}' << std::endl;
+		}
+
+		else if (args.get().size() == 1) {
+			if (dbase.exist_shortcut(args[0].get_arg())) std::cout << dbase.get_shortcut(args[0].get_arg())->get_value() << std::endl;
+			else if (dbase.exist_function(args[0].get_arg()))
+				for (std::string line : dbase.get_function(args[0].get_arg())->get_block())
+					std::cout << line << std::endl;
+		}
+
 		break;
 
 	case cmd::Mfile:

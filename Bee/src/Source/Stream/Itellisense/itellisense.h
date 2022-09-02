@@ -114,14 +114,31 @@ namespace it
 					continue;
 				}
 
+				//         '#'
 				case is::NumberSign:
-					for (i; i < buffer.size(); i++) {
-						if (buffer[i] == ' ') break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else std::cout << os::clr(util::str_char(buffer[i]), os::WT_CYAN);
+					if (buffer[i + 1] == '(') {
+						size_t end = util::find_first(buffer, ')', i);
+
+						if (end >= buffer.size()) end--;
+
+						for (i; i <= end; i++) {
+							if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
+							else std::cout << os::clr(util::str_char(buffer[i]), os::WT_CYAN);
+						}
+
+						i--;
+						continue;
+					}
+
+					else {
+						for (i; i < buffer.size(); i++) {
+							if (buffer[i] == ' ') break;
+							if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
+							else std::cout << os::clr(util::str_char(buffer[i]), os::WT_CYAN);
+						}
 					}
 					break;
-
+				
 				case is::DollarSign: {
 					std::string name = "";
 
@@ -166,7 +183,7 @@ namespace it
 				}				
 
 
-				if (cmd::check(util::split_string(buffer)[0]) != cmd::Not_found && i < util::find_first(buffer, ' '))
+				if ((cmd::check(util::split_string(buffer)[0]) != cmd::Not_found || dbase.exist_function(util::split_string(buffer)[0])) && i < util::find_first(buffer, ' '))
 					for (i; i < util::find_first(buffer, ' '); i++) {
 						if (i >= buffer.size()) break;
 						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);

@@ -73,8 +73,7 @@ namespace util
 	{
 		size_t i = init;
 
-		for (i; ; ((direction == Right) ? i++ : i--))
-		{
+		for (i; ; ((direction == Right) ? i++ : i--)) {
 			if (src[i] == ch)
 				return i;
 

@@ -27,6 +27,7 @@ namespace cmd
 
 		cmd::CMD_Data(Add),
 		cmd::CMD_Data(Rmv),
+		cmd::CMD_Data(Return),
 
 		cmd::CMD_Data(Set),
 		cmd::CMD_Data(Del),
@@ -56,21 +57,26 @@ namespace cmd
 		else if (buff == ".h" || buff == ".help" || buff == "help") return Help;
 		else if (buff == "clear" || buff == "clean" || buff == ".cl") return Clear;
 
+
 		else if (buff == "color" || buff == "clr") return Color;
 		else if (buff == "errs" || buff == "erros" || buff == "err") return Errs;
 		else if (buff == "warns" || buff == "warn") return Warns;
+
 
 		else if (buff == "cd") return CD;
 		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;
 		else if (buff == "print") return Print;
 
+
 		else if (buff == "add") return Add;
 		else if (buff == "rmv" || buff == "remove") return Rmv;
+		else if (buff == "return") return Return;
 
 
 		else if (buff == "set") return Set;
 		else if (buff == "del") return Del;
 		else if (buff == "list") return List;
+
 
 		else if (buff == "mfile" || buff == "make_file") return Mfile;
 		else if (buff == "rmfile" || buff == "remove_file") return RMfile;
@@ -81,6 +87,7 @@ namespace cmd
 		else if (buff == "lineof") return Lineof;
 		else if (buff == "read") return Read;
 		else if (buff == "write") return Write;
+
 
 		else if (buff == "run") return Run;
 		else if (buff == "stat" || buff == "stats" || buff == "status" || buff == ".s") return Stat;

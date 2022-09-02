@@ -14,23 +14,26 @@ inline std::ostream& operator<<(std::ostream& os, is::Buffer buff)
 // main function
 int main(int argc, char* argv[])
 {
+	//std::cout << util::linesof_folder("src") - util::linesof_folder("src/Deps") << std::endl;
+
 	sys::System_Settings sys_config;
 	sys::System system;
+	sys::Defs defs;
 
 	if (sys_config.fail) {
 		system.warn(sys::Settings_Bootstrap_Err);
 		sys_config.set_default_settings(sys::default_settings);
 	}
-
-	sys::Defs defs;
-
+	
 	sys::set_defs(defs, sys_config);
 
 	it::Itelli_Buffer it_buff;
 
+
 	bt::Bootstrap boot;
 	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
 	bt::BootMode mode = bt::get_bt_mode(argc, argv, system.mode_arg_index);
+
 
 	if (mode == bt::ReadFile) {
 		if (hand::exist_file(argv[system.mode_arg_index])) boot.src_file = util::read_file(argv[system.mode_arg_index]);
@@ -83,7 +86,7 @@ int main(int argc, char* argv[])
 		while (util::ends_with(buff.get(), ' ') || util::ends_with(buff.get(), '\t')) buff = util::erase_last(buff.get());
 
 		s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
-		args = util::format_args_all(system, s_buff, dbase);
+		args = util::format_args_all(system, sys_config, defs, path, nullptr, s_buff, dbase);
 
 		flags = cmd::check_flags(args);
 		args.erase_flags();
