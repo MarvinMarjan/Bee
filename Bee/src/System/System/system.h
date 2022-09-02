@@ -17,7 +17,7 @@
 
 #define BEE_OPERATIONAL_SYSTEM "Windows"
 #define BEE_VERSION_STATE "DEV - TEST"
-#define BEE_VERSION "v0.0.8.2"
+#define BEE_VERSION "v0.0.9"
 #define BEE_NAME "Bee"
 
 using json = nlohmann::json;
@@ -32,7 +32,9 @@ namespace sys
 		Error(Command_Not_Found),
 
 		Error(Invalid_Path_File),
-		Error(Invalid_Path_Dir)
+		Error(Invalid_Path_Dir),
+
+		Error(Unavaliable_Name)
 	};
 
 	const std::vector<Warning> warns =

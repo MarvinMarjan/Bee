@@ -1,3 +1,13 @@
 {
-  "function": []
+  "function": [
+    {
+      "block": [
+        "set name #input",
+        "print \"hello, \" $name",
+        "return $name",
+        "del name"
+      ],
+      "name": "greet"
+    }
+  ]
 }

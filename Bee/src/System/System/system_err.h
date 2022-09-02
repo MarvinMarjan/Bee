@@ -13,7 +13,9 @@ namespace sys
 		Command_Not_Found,
 
 		Invalid_Path_File,
-		Invalid_Path_Dir
+		Invalid_Path_Dir,
+
+		Unavaliable_Name
 	};
 
 	class Error
@@ -51,6 +53,11 @@ namespace sys
 			case Invalid_Path_Dir:
 				this->name = "Invalid_Path_Dir";
 				this->msg = "The following path isn't a folder or does not exist";
+				break;
+
+			case Unavaliable_Name:
+				this->name = "Unavaliable_Name";
+				this->msg = "The following name is unavaliable";
 				break;
 
 			default:

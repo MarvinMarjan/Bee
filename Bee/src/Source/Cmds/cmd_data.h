@@ -27,6 +27,7 @@ namespace cmd
 
 		Add,
 		Rmv,
+		Return,
 
 		Set,
 		Del,
@@ -145,6 +146,13 @@ namespace cmd
 				this->name_variants = { this->name, "remove" };
 				break;
 
+			case Return:
+				this->name = "return";
+				this->description = "Defines a return value in a function (only works in created functions)";
+				this->syntax = "return [ Value ]";
+				this->name_variants = { this->name };
+				break;
+
 			case Set:
 				this->name = "set";
 				this->description = "Create or edit a shortcut";
@@ -161,8 +169,8 @@ namespace cmd
 
 			case List:
 				this->name = "list";
-				this->description = "List all shortcuts";
-				this->syntax = "list";
+				this->description = "List all Shortcuts/Functions";
+				this->syntax = "list [ Name ? ]";
 				this->name_variants = { this->name };
 				break;
 
@@ -265,6 +273,7 @@ namespace cmd
 
 		case Add:        return 2;
 		case Rmv:        return 1;
+		case Return:     return 1;
 
 		case Set:        return 2;
 		case Del:        return 1;
