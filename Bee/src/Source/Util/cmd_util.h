@@ -125,10 +125,20 @@ namespace util
 			}
 
 			else if (src[i][0] == '\\') {
-				std::string name = src[i];
-				name.erase(0, 1);
+
+				std::string full = util::to_upper(src[i]);
+				full.erase(0, 1);
+
+				std::string color = "Null";
+				std::string mode = "NORMAL";
+				std::vector<std::string> s_full;
+
+				s_full = util::split_string(full, ';');
+
+				if (s_full.size() >= 1) color = util::to_upper(s_full[0]);
+				if (s_full.size() >= 2) mode = util::to_upper(s_full[1]);
 				
-				if (util::string_to_color(name) != os::Nothing) f_src.push_back(os::get_clr(util::string_to_color(name)));
+				if (util::string_to_color(color) != os::Nothing) f_src.push_back(os::get_clr(util::string_to_color(color), util::string_to_color_mode(mode)));
 			}
 
 			else f_src.push_back(src[i]);

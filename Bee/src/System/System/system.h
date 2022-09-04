@@ -16,8 +16,8 @@
 #include "system_err.h"
 
 #define BEE_OPERATIONAL_SYSTEM "Windows"
-#define BEE_VERSION_STATE "DEV - TEST"
-#define BEE_VERSION "v0.0.9"
+#define BEE_VERSION_STATE "DEV"
+#define BEE_VERSION "v0.1.0"
 #define BEE_NAME "Bee"
 
 using json = nlohmann::json;
@@ -78,11 +78,11 @@ namespace sys
 			util::set_mouse_visible(util::True);
 		}
 		
-		inline void update(System_Settings& sys_config)
+		inline void update(Defs& defs)
 		{
-			this->use_itellisense = boolstring_to_bool(sys_config["itellisense"]->get_value());
-			this->disable_errs_msg = boolstring_to_bool(sys_config["disable_error_msg"]->get_value());
-			this->disable_warns_msg = boolstring_to_bool(sys_config["disable_warn_msg"]->get_value());
+			this->use_itellisense = defs.itellisense;
+			this->disable_errs_msg = defs.disable_error_msg;
+			this->disable_warns_msg = defs.disable_warn_msg;
 		}
 
 		inline void error(sys::Error err, std::string arg = "")

@@ -76,7 +76,7 @@ namespace sys
 			{
 			case Any: return true;
 			case Color:
-				if (util::string_to_color(value) != os::Nothing) return true;
+				if (value[0] == '\\') return true;
 				break;
 
 			case String: return true;
@@ -99,7 +99,13 @@ namespace sys
 	const std::vector<Sys_Setting> default_settings =
 	{
 		Sys_Setting("itellisense", "true", Bool),
-		Sys_Setting("caret_color", "RED", Color),
+
+		Sys_Setting("caret_color", "\\RED;UNDERLINE", Color),
+		Sys_Setting("command_color", "\\GRAY;ITALIC", Color),
+		Sys_Setting("quote_color", "\\GREEN;NORMAL", Color),
+		Sys_Setting("number_sign_color", "\\WT_CYAN;NORMAL", Color),
+		Sys_Setting("dollar_sign_color", "\\CYAN;NORMAL", Color),
+		Sys_Setting("hyphen_color", "\\YELLOW;DARK", Color),
 
 		Sys_Setting("initial_path", "", String),
 
@@ -165,6 +171,12 @@ namespace sys
 			for (Sys_Setting setting : this->settings)
 				if (setting.get_name() == name)
 					return true;
+
+			return false;
+		}
+
+		inline bool exist(size_t index) {
+			if (index < this->get_size()) return true;
 
 			return false;
 		}

@@ -18,6 +18,7 @@ namespace cmd
 		cmd::CMD_Data(Clear),
 
 		cmd::CMD_Data(Color),
+		cmd::CMD_Data(Color_Mode),
 		cmd::CMD_Data(Errs),
 		cmd::CMD_Data(Warns),
 
@@ -59,6 +60,7 @@ namespace cmd
 
 
 		else if (buff == "color" || buff == "clr") return Color;
+		else if (buff == "color_mode" || buff == "cmode") return Color_Mode;
 		else if (buff == "errs" || buff == "erros" || buff == "err") return Errs;
 		else if (buff == "warns" || buff == "warn") return Warns;
 

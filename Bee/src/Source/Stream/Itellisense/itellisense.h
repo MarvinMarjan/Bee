@@ -28,12 +28,17 @@ namespace it
 		std::cout << os::clr(util::str_char(ch), caret_color, caret_color_mode);
 	}
 
+	inline void itelli_draw_caret(os::ColorSet caret, char ch = ' ')
+	{
+		std::cout << os::clr(util::str_char(ch), caret);
+	}
+
 	inline void _checkcaret(size_t i, size_t index, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE, char ch = ' ')
 	{
 		if (i == index)	itelli_draw_caret(caret_color, caret_color_mode, ch);
 	}
 
-	std::string itelli_stdin(hand::Path path, dt::DBase& dbase, Itelli_Buffer it_buff, os::Color caret_color = os::RED, os::ColorMode caret_color_mode = os::UNDERLINE)
+	std::string itelli_stdin(hand::Path path, dt::DBase& dbase, Itelli_Buffer it_buff, sys::Defs& defs, os::ColorMode caret_color_mode = os::UNDERLINE)
 	{
 		std::cout << os::save_c();
 		
@@ -55,7 +60,7 @@ namespace it
 		char ch;
 
 		do {
-			if (index >= buffer.size()) itelli_draw_caret(caret_color, caret_color_mode);
+			if (index >= buffer.size()) itelli_draw_caret(defs.caret_color);
 
 			set_substring(sub_bf, buffer, ((index == 0) ? index : index - 1));
 
@@ -107,8 +112,8 @@ namespace it
 				case is::Quote: {
 					size_t init_index = i;
 					for (i; i < buffer.size(); i++) {
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else std::cout << os::clr(util::str_char(buffer[i]), os::GREEN);
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else std::cout << os::clr(util::str_char(buffer[i]), defs.quote_color);
 						if ((int)buffer[i] == is::Quote && i != init_index) break;
 					}
 					continue;
@@ -122,8 +127,8 @@ namespace it
 						if (end >= buffer.size()) end--;
 
 						for (i; i <= end; i++) {
-							if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-							else std::cout << os::clr(util::str_char(buffer[i]), os::WT_CYAN);
+							if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+							else std::cout << os::clr(util::str_char(buffer[i]), defs.number_sign_color);
 						}
 
 						i--;
@@ -133,8 +138,8 @@ namespace it
 					else {
 						for (i; i < buffer.size(); i++) {
 							if (buffer[i] == ' ') break;
-							if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-							else std::cout << os::clr(util::str_char(buffer[i]), os::WT_CYAN);
+							if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+							else std::cout << os::clr(util::str_char(buffer[i]), defs.number_sign_color);
 						}
 					}
 					break;
@@ -149,8 +154,8 @@ namespace it
 
 					for (i; i < buffer.size(); i++) {
 						if (buffer[i] == ' ') break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else if (dbase.exist_shortcut(name)) std::cout << os::clr(util::str_char(buffer[i]), os::CYAN);
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else if (dbase.exist_shortcut(name)) std::cout << os::clr(util::str_char(buffer[i]), defs.dollar_sign_color);
 						else std::cout << buffer[i];
 					}
 					break;
@@ -159,23 +164,31 @@ namespace it
 				case is::Hyphen:
 					for (i; i < buffer.size(); i++) {
 						if (buffer[i] == ' ') break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else std::cout << os::clr(util::str_char(buffer[i]), os::GRAY, os::DARK);
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else std::cout << os::clr(util::str_char(buffer[i]), defs.hyphen_color);
 					}
 					break;
 
 				case is::Backslash: {
-					std::string name;
+					std::string full;
+					std::string color = "Null";
+					std::string mode = "NORMAL";
+					std::vector<std::string> s_full;
 
 					for (size_t o = i + 1; o < buffer.size(); o++) {
 						if (buffer[o] == ' ') break;
-						name += buffer[o];
+						full += buffer[o];
 					}
+
+					s_full = util::split_string(full, ';');
+
+					if (s_full.size() >= 1) color = util::to_upper(s_full[0]);
+					if (s_full.size() >= 2) mode = util::to_upper(s_full[1]);
 
 					for (i; i < buffer.size(); i++) {
 						if (buffer[i] == ' ') break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else if (util::string_to_color(name) != os::Nothing) std::cout << os::clr(util::str_char(buffer[i]), util::string_to_color(name));
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else if (util::string_to_color(color) != os::Nothing) std::cout << os::clr(util::str_char(buffer[i]), util::string_to_color(color), util::string_to_color_mode(mode));
 						else std::cout << buffer[i];
 					}
 					break;
@@ -186,18 +199,18 @@ namespace it
 				if ((cmd::check(util::split_string(buffer)[0]) != cmd::Not_found || dbase.exist_function(util::split_string(buffer)[0])) && i < util::find_first(buffer, ' '))
 					for (i; i < util::find_first(buffer, ' '); i++) {
 						if (i >= buffer.size()) break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
-						else std::cout << os::clr(util::str_char(buffer[i]), os::GRAY);
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else std::cout << os::clr(util::str_char(buffer[i]), defs.command_color);
 					}
 
 				if (op::check(buffer[0]) != op::Null)
 					for (i; i < util::find_first(buffer, ' '); i++) {
 						if (i >= buffer.size()) break;
-						if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
 						else std::cout << os::clr(util::str_char(buffer[i]), os::PURPLE);
 					}
 
-				if (i == index && draw_caret) itelli_draw_caret(caret_color, caret_color_mode, buffer[i]);
+				if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
 				else std::cout << buffer[i];
 			}
 

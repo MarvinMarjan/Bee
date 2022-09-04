@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../Stream/ostream_clr.h"
+#include "../Util/string_util.h"
 
 #include <string>
 #include <vector>
+#include <map>
 
 namespace util
 {
@@ -73,5 +75,64 @@ namespace util
 		}
 
 		return "";
+	}
+
+	os::ColorMode string_to_color_mode(std::string src)
+	{
+		if (src == "NORMAL") return os::NORMAL;
+		else if (src == "BOLD") return os::BOLD;
+		else if (src == "DARK") return os::DARK;
+		else if (src == "ITALIC") return os::ITALIC;
+		else if (src == "UNDERLINE") return os::UNDERLINE;
+		else if (src == "TOGGLE_SLOW") return os::TOGGLE_SLOW;
+		else if (src == "TOGGLE_RAPID") return os::TOGGLE_RAPID;
+		else if (src == "INVERT") return os::INVERT;
+		else if (src == "NOTHING") return os::NOTHING;
+		else if (src == "CROSSED") return os::CROSSED;
+
+		return os::NORMAL;
+	}
+
+	std::string color_mode_to_string(os::ColorMode src)
+	{
+		switch (src)
+		{
+		    case os::NORMAL: return "NORMAL";
+			case os::BOLD: return "BOLD";
+			case os::DARK: return "DARK";
+			case os::ITALIC: return "ITALIC";
+			case os::UNDERLINE: return "UNDERLINE";
+			case os::TOGGLE_SLOW: return "TOGGLE_SLOW";
+			case os::TOGGLE_RAPID: return "TOGGLE_RAPID";
+			case os::INVERT: return "INVERT";
+			case os::NOTHING: return "NOTHING";
+			case os::CROSSED: return "CROSSED";
+
+			default: return "NORMAL";
+		}
+	}
+
+	inline os::ColorSet raw_to_color_set(std::string src)
+	{
+		os::ColorSet color_set;
+
+		for (size_t i = 0; i < src.size(); i++) {
+			if (src[i] == '[') color_set.color_mode = os::ColorMode(std::stoi(util::get_until(src, ';', i + 1)));
+			if (src[i] == ';') color_set.color = os::Color(std::stoi(util::get_until(src, 'm', i + 1)));
+		}
+
+		return color_set;
+	}
+
+	inline os::ColorSet semi_raw_to_color_set(std::string src)
+	{
+		os::ColorSet color_set;
+
+		for (size_t i = 0; i < src.size(); i++) {
+			if (src[i] == '\\') color_set.color = util::string_to_color(util::get_until(src, ';', i + 1));
+			if (src[i] == ';') color_set.color_mode = util::string_to_color_mode(util::sub_string(src, i + 1, src.size()));
+		}
+
+		return color_set;
 	}
 }

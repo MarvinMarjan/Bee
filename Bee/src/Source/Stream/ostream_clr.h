@@ -5,7 +5,6 @@
 
 namespace os
 {
-
 	const std::vector<std::string> STRColors = {
 		"RED",
 		"GREEN",
@@ -22,6 +21,19 @@ namespace os
 		"WT_BLUE",
 		"WT_PURPLE",
 		"WT_CYAN"
+	};
+
+	const std::vector<std::string> STRColors_mode = {
+		"NORMAL",
+		"BOLD",
+		"DARK",
+		"ITALIC",
+		"UNDERLINE",
+		"TOGGLE_SLOW",
+		"TOGGLE_RAPID",
+		"INVERT",
+		"CROSSED"
+
 	};
 
 	enum Color
@@ -49,6 +61,8 @@ namespace os
 
 	enum ColorMode
 	{
+		Default = -1,
+
 		NORMAL,
 		BOLD,
 		DARK,
@@ -57,13 +71,23 @@ namespace os
 		TOGGLE_SLOW,
 		TOGGLE_RAPID,
 		INVERT,
-		_VOID,
+		NOTHING,
 		CROSSED
+	};
+
+	struct ColorSet {
+		os::Color color;
+		os::ColorMode color_mode;
 	};
 
 	inline std::string clr(std::string stream, Color color, ColorMode color_mode = NORMAL)
 	{
 		return "\033[" + std::to_string(color_mode) + ';' + std::to_string(color) + 'm' + stream + "\033[0m";
+	}
+
+	inline std::string clr(std::string stream, ColorSet color)
+	{
+		return "\033[" + std::to_string(color.color_mode) + ';' + std::to_string(color.color) + 'm' + stream + "\033[0m";
 	}
 
 	inline std::string get_clr(Color color = Null, ColorMode color_mode = NORMAL)

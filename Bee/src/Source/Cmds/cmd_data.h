@@ -18,6 +18,7 @@ namespace cmd
 		Clear,
 
 		Color,
+		Color_Mode,
 		Errs,
 		Warns,
 
@@ -95,6 +96,13 @@ namespace cmd
 				this->description = "Show a list of colors";
 				this->syntax = "color";
 				this->name_variants = { this->name, "clr" };
+				break;
+
+			case Color_Mode:
+				this->name = "color_mode";
+				this->description = "Show a list of color modes";
+				this->syntax = "color_mode";
+				this->name_variants = { this->name, "cmode" };
 				break;
 
 			case Errs:

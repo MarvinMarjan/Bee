@@ -40,7 +40,7 @@ namespace util
 	}
 
 	template<typename T>
-	inline void print(std::vector<T> arr, bool spliter = '\n')
+	inline void print(std::vector<T> arr, char spliter = '\n')
 	{
 		for (size_t i = 0; i < arr.size(); i++)
 			std::cout << arr[i] << spliter;

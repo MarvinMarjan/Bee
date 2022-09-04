@@ -15,6 +15,7 @@ inline std::ostream& operator<<(std::ostream& os, is::Buffer buff)
 int main(int argc, char* argv[])
 {
 	//std::cout << util::linesof_folder("src") - util::linesof_folder("src/Deps") << std::endl;
+	bt::Bootstrap boot;
 
 	sys::System_Settings sys_config;
 	sys::System system;
@@ -24,13 +25,9 @@ int main(int argc, char* argv[])
 		system.warn(sys::Settings_Bootstrap_Err);
 		sys_config.set_default_settings(sys::default_settings);
 	}
-	
-	sys::set_defs(defs, sys_config);
 
 	it::Itelli_Buffer it_buff;
 
-
-	bt::Bootstrap boot;
 	bt::Bootstrap_Flag btflag = bt::check_bt_flag(argc, argv);
 	bt::BootMode mode = bt::get_bt_mode(argc, argv, system.mode_arg_index);
 
@@ -61,13 +58,14 @@ int main(int argc, char* argv[])
 
 	while (!system.abort)
 	{
-		system.update(sys_config);
+		sys::set_defs(defs, sys_config);
+		system.update(defs);
 
 		if (system.use_itellisense) util::set_mouse_visible(util::False);
 		else util::set_mouse_visible(util::True);
 
 		if (!btflag.is_active(bt::HidePath) || mode == bt::Default) std::cout << os::path(path);
-		if (mode == bt::Default) buff = ((system.use_itellisense) ? it::itelli_stdin(path, dbase, it_buff, defs.caret_color) : is::get_line());
+		if (mode == bt::Default) buff = ((system.use_itellisense) ? it::itelli_stdin(path, dbase, it_buff, defs) : is::get_line());
 
 		if (buff != "") it_buff.add_buff(buff);
 
@@ -97,14 +95,39 @@ int main(int argc, char* argv[])
 			{
 			case op::Null: break;
 			case op::OP_Repeat: {
+				size_t times;
 				s_buff[0] = util::erase_first(s_buff[0]);
-				size_t times = stoi(s_buff[0]);
+				try { times = stoi(s_buff[0]); }
+				catch (...) {
+					system.error(sys::Type_Conversion_Err, s_buff[0]);
+					times = 0;
+				}
 				buff = util::join_string(args.get_str());
 				args.erase_first();
 				s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
 				for (size_t i = 0; i < times; i++) run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
 				continue;
 			}
+
+			case op::OP_Do:
+				std::string block = util::join_string(args.get_str());
+				std::vector<std::string> lines = util::split_string(block, ';');
+				
+				for (size_t i = 0; i < lines.size(); i++) {
+					while (lines[i][0] == ' ') lines[i] = util::erase_first(lines[i]);
+					while (lines[i][lines[i].size() - 1] == ' ') lines[i] = util::erase_last(lines[i]);
+				}
+
+				for (std::string line : lines) {
+					buff = line;
+					s_buff = util::split_string(line);
+					args = util::format_args_all(system, sys_config, defs, path, nullptr, s_buff, dbase);
+					flags = cmd::check_flags(args);
+					args.erase_flags();
+
+					run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
+				}
+				continue;
 			}
 
 			if (op::check(s_buff[0][0]) != op::Null) continue;

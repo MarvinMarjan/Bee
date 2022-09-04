@@ -94,12 +94,12 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 				value = sys_config[i]->get_value();
 				type = sys_config[i]->get_type();
 
-				std::cout << std::setw(30) << std::left << os::clr(name, os::WT_CYAN);
+				std::cout << std::setw(50) << std::left << os::clr('.' + std::to_string(i), os::WT_YELLOW) + "  " + os::clr(name, os::WT_CYAN);
 
 				switch (type)
 				{
 				case sys::Color:
-					std::cout << std::right << os::clr(value, util::string_to_color(value)) << std::endl;
+					std::cout << std::right << os::clr(value, util::semi_raw_to_color_set(value)) << std::endl;
 					break;
 
 				case sys::String:
@@ -116,29 +116,58 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 		else if (args.get().size() == 1)
 		{
+			bool abort = false;
 			std::string name = args[0].get_arg();
 			std::string value;
 
 			sys::SettingType type;
 
-			if (!sys_config.exist(name)) system.error(sys::Setting_Not_Found_Err, name);
-			else {
+			if (name[0] == '.') {
+				try {
+					if (sys_config.exist((size_t)std::stoi(util::sub_string(name, 1, name.size()))))
+						name = sys_config[(size_t)std::stoi(util::sub_string(name, 1, name.size()))]->get_name();
+				}
+				catch (...) {
+					system.error(sys::Type_Conversion_Err, name);
+					abort = true;
+				}
+			}
+			
+			if (!sys_config.exist(name) && !abort) system.error(sys::Setting_Not_Found_Err, name);
+			else if (!abort) {
 				type = sys_config[name]->get_type();
 				value = sys_config[name]->get_value();
 
-				std::cout << ((type == sys::Color) ? os::clr(value, util::string_to_color(value)) :
-					(type == sys::Bool) ? os::clr(value, os::WT_YELLOW) : value) << std::endl;
+				std::cout << ((type == sys::Color) ? os::clr(value, util::semi_raw_to_color_set(value)) :
+							  (type == sys::Bool) ? os::clr(value, os::WT_YELLOW) : value) << std::endl;
 			}
 		}
 
 		else if (args.get().size() == 2) {
+			bool abort = false;
 			std::string name = args[0].get_arg();
 			std::string value;
 
-			if (!sys_config.exist(name)) system.error(sys::Setting_Not_Found_Err, name);
+			if (name[0] == '.') {
+				try {
+					if (sys_config.exist((size_t)std::stoi(util::sub_string(name, 1, name.size()))))
+						name = sys_config[(size_t)std::stoi(util::sub_string(name, 1, name.size()))]->get_name();
+				}
+				catch (...) {
+					system.error(sys::Type_Conversion_Err, name);
+					abort = true;
+				}
+			}
 
-			else {
-				value = (sys_config[name]->get_type() == sys::Bool) ? util::to_lower(args[1].get_arg()) : args[1].get_arg();
+			if (!sys_config.exist(name) && !abort) system.error(sys::Setting_Not_Found_Err, name);
+			else if (!abort) {
+				if (sys_config[name]->get_type() == sys::Color) {
+					os::ColorSet color_set = util::raw_to_color_set(args[1].get_arg());
+
+					value = '\\' + util::color_to_string(color_set.color) + ';' + util::color_mode_to_string(color_set.color_mode);
+				}
+
+				else value = (sys_config[name]->get_type() == sys::Bool) ? util::to_lower(args[1].get_arg()) : args[1].get_arg();
 				if (sys_config[name]->is_same_type(value)) sys_config[name]->set_value(value);
 			}
 		}
@@ -179,6 +208,11 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	case cmd::Color:
 		for (std::string color : os::STRColors)
 			std::cout << os::clr(color, util::string_to_color(color)) << std::endl;
+		break;
+
+	case cmd::Color_Mode:
+		for (std::string cmode : os::STRColors_mode)
+			std::cout << os::clr(cmode, os::WHITE, util::string_to_color_mode(cmode)) << std::endl;
 		break;
 		
 	case cmd::Errs:
@@ -312,11 +346,15 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 	case cmd::List:
 		if (args.get().size() == 0) {
-			for (dt::Shortcut st : dbase.get_all_shortcut())
-				std::cout << os::clr(st.get_name(), os::WT_CYAN) << "  " << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
+			for (dt::Shortcut st : dbase.get_all_shortcut()) {
+				std::cout << std::setw(30);
+				std::cout << std::left << os::clr(st.get_name(), os::WT_CYAN) << std::right << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
+			}
 
-			for (dt::Function fc : dbase.get_all_function())
-				std::cout << os::clr(fc.get_name(), os::WT_CYAN) << "  " << '{' + os::clr("...", os::WT_GREEN) + '}' << std::endl;
+			for (dt::Function fc : dbase.get_all_function()) {
+				std::cout << std::setw(30);
+				std::cout << std::left << os::clr(fc.get_name(), os::WT_CYAN) << std::right << '{' + os::clr("...", os::WT_GREEN) + '}' << std::endl;
+			}
 		}
 
 		else if (args.get().size() == 1) {

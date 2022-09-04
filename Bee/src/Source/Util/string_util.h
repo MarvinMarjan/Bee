@@ -200,4 +200,16 @@ namespace util
 		std::string str(1, ch);
 		return str;
 	}
+
+	inline std::string get_until(std::string src, char ch, size_t index = 0, Direction direction = Right)
+	{
+		std::string _src = "";
+
+		for (index; ((direction == Right) ? index < src.size() : index >= 0); ((direction == Right) ? index++ : index--)) {
+			if (src[index] == ch) return _src;
+			_src += src[index];
+		}
+
+		return _src;
+	}
 }

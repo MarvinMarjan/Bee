@@ -7,6 +7,8 @@ namespace sys
 {
 	enum ErrorType
 	{
+		Type_Conversion_Err,
+
 		Function_Not_Found_Err,
 		Shortcut_Not_Found_Err,
 		Setting_Not_Found_Err,
@@ -25,6 +27,11 @@ namespace sys
 		{
 			switch (error)
 			{
+			case Type_Conversion_Err:
+				this->name = "Type_Conversion_Err";
+				this->msg = "Type conversion error";
+				break;
+
 			case Function_Not_Found_Err:
 				this->name = "Function_Not_Found";
 				this->msg = "The following function couldn't be found";

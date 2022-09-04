@@ -2,7 +2,11 @@
   "settings": {
     "caret_color": {
       "type": "Color",
-      "value": "RED"
+      "value": "\\RED;UNDERLINE"
+    },
+    "command_color": {
+      "type": "Color",
+      "value": "\\GRAY;ITALIC"
     },
     "disable_error_msg": {
       "type": "Bool",
@@ -12,13 +16,29 @@
       "type": "Bool",
       "value": "false"
     },
+    "dollar_sign_color": {
+      "type": "Color",
+      "value": "\\CYAN;NORMAL"
+    },
+    "hyphen_color": {
+      "type": "Color",
+      "value": "\\GRAY;NORMAL"
+    },
     "initial_path": {
       "type": "String",
-      "value": "C:/Users/Usuario/Desktop"
+      "value": ""
     },
     "itellisense": {
       "type": "Bool",
       "value": "true"
+    },
+    "number_sign_color": {
+      "type": "Color",
+      "value": "\\WT_CYAN;NORMAL"
+    },
+    "quote_color": {
+      "type": "Color",
+      "value": "\\WT_GREEN;NORMAL"
     }
   }
 }
