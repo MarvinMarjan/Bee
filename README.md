@@ -153,17 +153,17 @@ Instead of writing "detail", we can opt for a smaller option: ".d":
 ![image](https://user-images.githubusercontent.com/103616110/188334819-b6e8409c-cc0b-465e-a6e5-b35fcd8110c8.png)
 
 
-**the documentation of commands will follow the following template:**
+# Commands
 
-## (Command Name)
+## Command syntax
 
-Description
+To facilitate the demonstration of the structure of a command, I will use a syntax that describes its parts:
 
-Arguments<br>
-Flags
+- `[ text ]`: a argument
+- `{ text (-text) }`: a flag
+- `[ text ? ]` | `{ text (-text) ? }`: a optional argument/flag
 
-
-## Commands
+## Command List
 
 - [Exit](https://github.com/MarvinMarjan/Bee/edit/master/README.md#exit)
   
@@ -173,5 +173,57 @@ Flags
 
 End the program
 
-this command has no arguments<br>
-this command has no flags
+Name variants:
+- exit
+- .x
+- .exit
+- quit
+- .quit
+
+Syntax:
+`exit`
+
+## Setting
+
+Show/Edit system settings
+
+Bee has some settings that can be modified by the user
+
+Name variants:
+- setting
+- config
+- .sett
+- .conf
+- \*
+
+Syntax: `setting [ Setting_Name ? ] [ Setting_Value ? ]`
+
+- If you want to see the settings: `setting`
+- If you want to see a specific setting: `setting [ Setting_Name ]` -> `setting itellisense`
+- If you want to modify a setting: `setting [ Setting_Name ] [ Setting_Value ]` -> `setting itellisense false`
+
+## Detail
+
+Show program details (Version, Name)
+
+Name variants:
+- detail
+- .d
+- .detail
+
+Syntax: `detail`
+
+## Help
+
+Show a help message containing commands and their details (name variants, syntax, description)
+
+Name variants:
+- help
+- .h
+- .help
+
+Syntax: help [ Command ? ] { command_name (-cn) ? }
+
+- If you want to see whole help message: `help`
+- If you want to see aa specific command: `help [ Command ]` -> `help print`
+- If you want to see only command name: `help { command_name (-cn) }` -> `help -cn`
