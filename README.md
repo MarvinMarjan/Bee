@@ -49,6 +49,8 @@ Syntax: - (flag_name)
 
 To test this feature, we can disable the newline that the "print" command leaves at the end using the "-nl" flag:
 
+Note that you can use more than one flag in a same command
+
 
 ![image](https://user-images.githubusercontent.com/103616110/188335152-270580a9-8201-49c1-957c-234c1e016a1a.png)
 ![image](https://user-images.githubusercontent.com/103616110/188335144-78213027-949d-4970-95be-a85d1b3bdf60.png)
@@ -162,6 +164,7 @@ To facilitate the demonstration of the structure of a command, I will use a synt
 - `[ text ]`: a argument
 - `{ text (-text) }`: a flag
 - `[ text ? ]` | `{ text (-text) ? }`: a optional argument/flag
+- `[ text... ]`: indefinite number of arguments
 
 ## Command List
 
@@ -227,3 +230,260 @@ Syntax: help [ Command ? ] { command_name (-cn) ? }
 - If you want to see whole help message: `help`
 - If you want to see aa specific command: `help [ Command ]` -> `help print`
 - If you want to see only command name: `help { command_name (-cn) }` -> `help -cn`
+
+## Clear
+
+Clear the console
+
+Name variants:
+- clear
+- clean
+- .cl
+
+Syntax: `clear`
+
+## Color
+
+Show a list of colors
+
+Name variants:
+- color
+- clr
+
+Syntax: `color`
+
+## Color Mode
+
+Show a list of color modes
+
+Name variants:
+- color_mode
+- cmode
+
+Syntax: `color_mode`
+
+## Errs
+
+Show a list of system errors
+
+Name variants:
+- errs
+- errors
+- err
+
+Syntax: `errs`
+
+## Warns
+
+Show a list of system warnings
+
+Name variants:
+- warns
+- warn
+
+Syntax: `warns`
+
+## Cd
+
+Helps with directory navigation
+
+Name variants:
+- cd
+
+Syntax: `cd [ Path ]`
+
+## Diag
+
+Display the details of the current directory
+
+Note: By default "dirs" will not display the size of a directory
+
+Name variants:
+- diag
+- diagnostic
+
+Syntax: `diag { dirs_size (-ds) ? } { path_debug (-pd) ? }`
+
+- If you want to show directory size: `diag { dirs_size (-ds) }` -> `diag -ds`
+- If you want to debug diag: `diag { path_debug (-pd) }` -> `diag -pd`
+
+## Print
+
+Print a specific value in the console
+
+Name variants:
+- print
+
+Syntax: `print [ Values... ? ]`
+
+## Add
+
+Add a new command
+
+Name variants:
+- add
+
+Syntax: `add [ Cmd_Name ] [ Block ]`
+
+## rmv
+
+Remove a created command
+
+Name variants:
+- rmv
+- remove
+
+Syntax: `rmv [ Cmd_Name ]`
+
+## Return
+
+Defines a return value in a function (only works in created functions)
+
+Name variants:
+- return
+
+Syntax: `return [ Value ]`
+
+## Set
+
+Create or edit a shortcut
+
+Name variants:
+- set
+
+Syntax: `set [ Name ] [ Value ]`
+
+## Del
+
+Delete a shortcut
+
+Name variants:
+- del
+
+Syntax: `del [ Name ]`
+
+## List
+
+List all Shortcuts/Functions
+
+Name variants:
+- list
+
+Syntax: `list [ Name ? ]`
+
+- If you want to see all shortcuts/functions: `list`
+- If you want to see a specific shortcut/function: `list [ Name ]` -> `list target_name`
+
+## Mfile
+
+Create a file
+
+Name variants:
+- mfile
+- make_file
+
+Syntax: `mfile [ Path ]`
+
+## Rmfile
+
+Remove a file
+
+Name variants:
+- rmfile
+- remove_file
+
+Syntax: `rmfile [ Path ]`
+
+## Mdir
+
+Create a directory
+
+Name variants:
+- mdir
+- make_dir
+
+Syntax: `mdir [ Path ]`
+
+## Rmdir
+
+Remove a directory
+
+Name variants:
+- rmdir
+- remove_dir
+
+Syntax: `rmdir [ Path ]`
+
+## Rename
+
+Rename a file/directory
+
+Name variants:
+- rename
+
+Syntax: `rename [ Path ] [ New_Name ]`
+
+## Sizeof
+
+Return the size of a file in bytes
+
+Name variants:
+- sizeof
+
+Syntax: `siszeof [ Path ]`
+
+## Lineof
+
+Return the total lines of a file
+
+Name variants:
+- lineof
+
+Syntax: `lineof [ Path ]`
+
+## Read
+
+Return the content of a file
+
+Name variants:
+- read
+- read_file
+
+Syntax: `read [ Path ]`
+
+## Write
+
+Write content in a file
+
+Name variants:
+- write
+- write_file
+
+Syntax: `write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }`
+
+- If you want to clear the file before writing: `write [ Path ] [ Content ] { clear_file (-cf) }` -> `write C:/some_dir/some_file.txt "hello, world" -cf`
+- If you want to disable the new line after writing: `write [ Path ] [ Content ] { disable_newline (-nl) }` -> `write C:/some_dir/some_file.txt "hello, world" -nl`
+
+
+## Run
+
+Run a OS command
+
+Name variants:
+- run
+
+Syntax: `run [ Command ]`
+
+## Stat
+
+Show OS status
+
+Name variants:
+- stat
+- stats
+- status
+- .s
+
+Syntax: `stat { update (-up) ? }`
+
+- If you want to update every second: `stat { update (-up) }` -> `stat -up`
