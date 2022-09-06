@@ -45,4 +45,15 @@ namespace util
 		for (size_t i = 0; i < arr.size(); i++)
 			std::cout << arr[i] << spliter;
 	}
+
+	template<typename T>
+	inline std::vector<T> filter(std::vector<T> arr, bool (*func)(T))
+	{
+		std::vector<T> filtered;
+
+		for (size_t i = 0; i < arr.size(); i++)
+			if (func(arr[i])) filtered.push_back(arr[i]);
+
+		return filtered;
+	}
 }

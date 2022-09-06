@@ -103,10 +103,16 @@ namespace util
 
 					std::vector<std::string> s_buff = ((buff.get_split().size() == 0) ? std::vector<std::string>({ "" }) : buff.get_split());
 
-					run(system, sys_config, defs, path, dbase, buff, s_buff, f_args, flags, parent_func);
+					dt::Function* function = dbase.get_function(s_func[0]);
 
-					f_src.push_back(dbase.get_function(s_func[0])->get_return_value());
+					if (!function) system.error(sys::Base_Function_Not_Found, s_func[0]);
+					else {
+						run(system, sys_config, defs, path, dbase, buff, s_buff, f_args, flags, function);
 
+						f_src.push_back(function->get_return_value());
+						function->set_return_value();
+					}
+					
 					while (src[i][src[i].size() - 1] != ')') i++;
 				}
 

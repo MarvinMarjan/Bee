@@ -18,6 +18,7 @@ namespace sys
 		os::ColorSet number_sign_color;
 		os::ColorSet dollar_sign_color;
 		os::ColorSet hyphen_color;
+		os::ColorSet curly_brace_color;
 
 		std::string initial_path;
 
@@ -35,6 +36,7 @@ namespace sys
 		defs.number_sign_color = util::semi_raw_to_color_set(settings["number_sign_color"]->get_value());
 		defs.dollar_sign_color = util::semi_raw_to_color_set(settings["dollar_sign_color"]->get_value());
 		defs.hyphen_color = util::semi_raw_to_color_set(settings["hyphen_color"]->get_value());
+		defs.curly_brace_color = util::semi_raw_to_color_set(settings["curly_brace_color"]->get_value());
 
 		defs.initial_path = settings["initial_path"]->get_value();
 

@@ -30,6 +30,9 @@ namespace dt
 				return;
 			}
 
+			for (cmd::CMD_Data command : cmd::commands)
+				if (command.predef) this->function.push_back(Function(command.name, {}, true));
+
 			this->shortcut_db = json::parse(util::read_fs_file(BEE_SHORTCUT_FILE_PATH));
 			this->function_db = json::parse(util::read_fs_file(BEE_FUNCTION_FILE_PATH));
 
@@ -48,24 +51,22 @@ namespace dt
 			this->function_db["function"].clear();
 
 			for (Shortcut sct : this->shortcut)
-				this->shortcut_db["shortcut"].push_back({ {"name", sct.get_name()}, {"value", sct.get_value()} });
+				if (!sct.predef) this->shortcut_db["shortcut"].push_back({ {"name", sct.get_name()}, {"value", sct.get_value()} });
 
 			for (Function func : this->function)
-				this->function_db["function"].push_back({ {"name", func.get_name()}, {"block", func.get_block()} });
+				if (!func.predef) this->function_db["function"].push_back({ {"name", func.get_name()}, {"block", func.get_block()} });
 
 			util::write_file(BEE_SHORTCUT_FILE_PATH, this->shortcut_db.dump(2), std::ios::out, false);
 			util::write_file(BEE_FUNCTION_FILE_PATH, this->function_db.dump(2), std::ios::out, false);
 		}
 
-		inline void del_shortcut(std::string name)
-		{
+		inline void del_shortcut(std::string name) {
 			for (size_t i = 0; i < this->shortcut.size(); i++)
 				if (this->shortcut[i].get_name() == name)
 					this->shortcut.erase(this->shortcut.begin() + i);
 		}
 
-		inline void del_function(std::string name)
-		{
+		inline void del_function(std::string name) {
 			for (size_t i = 0; i < this->function.size(); i++)
 				if (this->function[i].get_name() == name)
 					this->function.erase(this->function.begin() + i);
@@ -74,8 +75,7 @@ namespace dt
 		inline void add_shortcut(Shortcut shortcut) { this->shortcut.push_back(shortcut); }
 		inline void add_function(Function function) { this->function.push_back(function); }
 
-		inline Shortcut* get_shortcut(std::string name)
-		{
+		inline Shortcut* get_shortcut(std::string name) {
 			for (size_t i = 0; i < this->shortcut.size(); i++)
 				if (this->shortcut[i].get_name() == name)
 					return &this->shortcut[i];
@@ -83,8 +83,7 @@ namespace dt
 			return nullptr;
 		}
 
-		inline Function* get_function(std::string name)
-		{
+		inline Function* get_function(std::string name) {
 			for (size_t i = 0; i < this->function.size(); i++)
 				if (this->function[i].get_name() == name)
 					return &this->function[i];
@@ -95,8 +94,7 @@ namespace dt
 		inline std::vector<Shortcut> get_all_shortcut() { return this->shortcut; }
 		inline std::vector<Function> get_all_function() { return this->function; }
 
-		inline bool exist_shortcut(std::string name)
-		{
+		inline bool exist_shortcut(std::string name) {
 			for (size_t i = 0; i < this->shortcut.size(); i++)
 				if (this->shortcut[i].get_name() == name)
 					return true;
@@ -104,8 +102,7 @@ namespace dt
 			return false;
 		}
 
-		inline bool exist_function(std::string name)
-		{
+		inline bool exist_function(std::string name) {
 			for (size_t i = 0; i < this->function.size(); i++)
 				if (this->function[i].get_name() == name)
 					return true;
@@ -113,10 +110,33 @@ namespace dt
 			return false;
 		}
 
+		inline bool is_predef_function(std::string name) {
+			for (size_t i = 0; i < this->function.size(); i++)
+				if (this->function[i].get_name() == name)
+					return this->function[i].predef;
+
+			return false;
+		}
+
+		inline bool is_predef_shortcut(std::string name) {
+			for (size_t i = 0; i < this->shortcut.size(); i++)
+				if (this->shortcut[i].get_name() == name)
+					return this->shortcut[i].predef;
+
+			return false;
+		}
+
 		bool fail;
 
 	private:
-		std::vector<Shortcut> shortcut;
+		std::vector<Shortcut> shortcut =
+		{
+			Shortcut("NAME", BEE_NAME, true),
+			Shortcut("VERSION", BEE_VERSION, true),
+			Shortcut("VERSION_STATE", BEE_VERSION_STATE, true),
+			Shortcut("OS", BEE_OPERATIONAL_SYSTEM, true)
+		};
+
 		std::vector<Function> function;
 
 		json shortcut_db;

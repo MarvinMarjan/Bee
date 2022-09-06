@@ -9,6 +9,7 @@ namespace sys
 	{
 		Type_Conversion_Err,
 
+		Base_Function_Not_Found,
 		Function_Not_Found_Err,
 		Shortcut_Not_Found_Err,
 		Setting_Not_Found_Err,
@@ -30,6 +31,11 @@ namespace sys
 			case Type_Conversion_Err:
 				this->name = "Type_Conversion_Err";
 				this->msg = "Type conversion error";
+				break;
+
+			case Base_Function_Not_Found:
+				this->name = "Base_Function_Not_Found";
+				this->msg = "The following base function couldn't be found";
 				break;
 
 			case Function_Not_Found_Err:

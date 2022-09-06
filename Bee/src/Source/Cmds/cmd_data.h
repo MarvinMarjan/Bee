@@ -12,7 +12,10 @@ namespace cmd
 		Not_found,	
 
 		Exit,
+
 		Setting,
+		Get_Setting,
+
 		Detail,
 		Help,
 		Clear,
@@ -54,6 +57,8 @@ namespace cmd
 	public:
 		CMD_Data(Command _cmd)
 		{
+			this->adress = _cmd;
+
 			switch (_cmd)
 			{
 			case Exit:
@@ -66,8 +71,16 @@ namespace cmd
 			case Setting:
 				this->name = "setting";
 				this->description = "Show/Edit system settings";
-				this->syntax = "setting";
+				this->syntax = "setting [ Setting_Name ? ] [ Setting_Value ? ]";
 				this->name_variants = { this->name, "config", ".sett", ".conf", "*" };
+				break;
+
+			case Get_Setting:
+				this->name = "get_setting";
+				this->description = "Return the value of a setting";
+				this->syntax = "get_setting [ Setting ]";
+				this->name_variants = { this->name };
+				this->predef = true;
 				break;
 
 			case Detail:
@@ -136,7 +149,7 @@ namespace cmd
 			case Print:
 				this->name = "print";
 				this->description = "Print a specific value in the console";
-				this->syntax = "print [ String ]";
+				this->syntax = "print [ Values... ? ]";
 				this->name_variants = { this->name };
 				break;
 
@@ -222,12 +235,14 @@ namespace cmd
 				this->description = "Return the size of a file in bytes";
 				this->syntax = "sizeof [ Path ]";
 				this->name_variants = { this->name };
+				this->predef = true;
 				break;
 
 			case Lineof:
 				this->name = "lineof";
 				this->description = "Return the total lines of a file";
 				this->syntax = "lineof [ Path ]";
+				this->predef = true;
 				this->name_variants = { this->name };
 				break;
 
@@ -271,33 +286,39 @@ namespace cmd
 		std::string description;
 		std::string syntax;
 		std::vector<std::string> name_variants;
+
+		Command adress;
+
+		bool predef = false;
 	};
 
 	int arg_size(Command cmd)
 	{
 		switch (cmd)
 		{
-		case CD:         return 1;
-
-		case Add:        return 2;
-		case Rmv:        return 1;
-		case Return:     return 1;
-
-		case Set:        return 2;
-		case Del:        return 1;
-
-		case Mfile:      return 1;
-		case RMfile:     return 1;
-		case Mdir:       return 1;
-		case RMdir:      return 1;
-		case Rename:     return 2;
-		case Sizeof:     return 1;
-		case Lineof:     return 1;
-
-		case Read:       return 1;
-		case Write:      return 2;
-
-		case Run:        return 1;
+		case Get_Setting: return 1;
+						  
+		case CD:          return 1;
+						  
+		case Add:         return 2;
+		case Rmv:         return 1;
+		case Return:      return 1;
+						  
+		case Set:         return 2;
+		case Del:         return 1;
+						  
+		case Mfile:       return 1;
+		case RMfile:      return 1;
+		case Mdir:        return 1;
+		case RMdir:       return 1;
+		case Rename:      return 2;
+		case Sizeof:      return 1;
+		case Lineof:      return 1;
+						  
+		case Read:        return 1;
+		case Write:       return 2;
+						  
+		case Run:         return 1;
 
 		default: return 0;
 		}

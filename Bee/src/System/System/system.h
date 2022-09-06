@@ -17,7 +17,7 @@
 
 #define BEE_OPERATIONAL_SYSTEM "Windows"
 #define BEE_VERSION_STATE "DEV"
-#define BEE_VERSION "v0.1.0"
+#define BEE_VERSION "v0.1.1"
 #define BEE_NAME "Bee"
 
 using json = nlohmann::json;
@@ -26,6 +26,9 @@ namespace sys
 {
 	const std::vector<Error> errs =
 	{
+		Error(Type_Conversion_Err),
+
+		Error(Base_Function_Not_Found),
 		Error(Function_Not_Found_Err),
 		Error(Shortcut_Not_Found_Err),
 		Error(Setting_Not_Found_Err),
@@ -162,6 +165,6 @@ namespace sys
 		for (size_t i = 0; i < cmd.name_variants.size(); i++)
 			names += cmd.name_variants[i] + ((i + 1 >= cmd.name_variants.size()) ? "" : " | ");
 
-		std::cout << os::clr(cmd.name, os::WT_CYAN) << " - " << os::clr(cmd.syntax, os::CYAN) << ((cmd.name_variants.size()) ? " -> " + os::clr(names, os::WT_YELLOW) : "") << std::endl << '\t' << cmd.description << std::endl << std::endl;
+		std::cout << os::clr(cmd.name, ((cmd.predef) ? os::YELLOW : os::WT_CYAN)) << " - " << os::clr(cmd.syntax, os::CYAN) << ((cmd.name_variants.size()) ? " -> " + os::clr(names, os::WT_YELLOW) : "") << std::endl << '\t' << cmd.description << std::endl << std::endl;
 	}
 }

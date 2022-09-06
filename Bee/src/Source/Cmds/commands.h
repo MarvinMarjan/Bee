@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "../Util/array_util.h"
+
 #include "../Stream/istream.h"
 
 #include "cmd_data.h"
@@ -13,6 +15,7 @@ namespace cmd
 	{
 		cmd::CMD_Data(Exit),
 		cmd::CMD_Data(Setting),
+		cmd::CMD_Data(Get_Setting),
 		cmd::CMD_Data(Detail),
 		cmd::CMD_Data(Help),
 		cmd::CMD_Data(Clear),
@@ -48,52 +51,12 @@ namespace cmd
 		cmd::CMD_Data(Stat)
 	};
 
-	Command check(is::Buffer buff)
+	inline Command check(is::Buffer buff)
 	{
-		if (buff == "") return Null;
+		for (CMD_Data command : commands)
+			if (util::exist(buff.get(), command.name_variants))
+				return command.adress;
 
-		else if (buff == ".x" || buff == ".exit" || buff == "exit" || buff == "quit" || buff == ".quit") return Exit;
-		else if (buff == "setting" || buff == "config" || buff == ".sett" || buff == ".conf" || buff == "*") return Setting;
-		else if (buff == ".d" || buff == ".detail" || buff == "detail") return Detail;
-		else if (buff == ".h" || buff == ".help" || buff == "help") return Help;
-		else if (buff == "clear" || buff == "clean" || buff == ".cl") return Clear;
-
-
-		else if (buff == "color" || buff == "clr") return Color;
-		else if (buff == "color_mode" || buff == "cmode") return Color_Mode;
-		else if (buff == "errs" || buff == "erros" || buff == "err") return Errs;
-		else if (buff == "warns" || buff == "warn") return Warns;
-
-
-		else if (buff == "cd") return CD;
-		else if (buff == "diag" || buff == "diagnostic") return Diagnostic;
-		else if (buff == "print") return Print;
-
-
-		else if (buff == "add") return Add;
-		else if (buff == "rmv" || buff == "remove") return Rmv;
-		else if (buff == "return") return Return;
-
-
-		else if (buff == "set") return Set;
-		else if (buff == "del") return Del;
-		else if (buff == "list") return List;
-
-
-		else if (buff == "mfile" || buff == "make_file") return Mfile;
-		else if (buff == "rmfile" || buff == "remove_file") return RMfile;
-		else if (buff == "mdir" || buff == "make_dir") return Mdir;
-		else if (buff == "rmdir" || buff == "remove_dir") return RMdir;
-		else if (buff == "rename") return Rename;
-		else if (buff == "sizeof") return Sizeof;
-		else if (buff == "lineof") return Lineof;
-		else if (buff == "read") return Read;
-		else if (buff == "write") return Write;
-
-
-		else if (buff == "run") return Run;
-		else if (buff == "stat" || buff == "stats" || buff == "status" || buff == ".s") return Stat;
-
-		else return Not_found;
+		return Not_found;
 	}
 }

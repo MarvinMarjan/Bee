@@ -8,6 +8,10 @@
       "type": "Color",
       "value": "\\GRAY;ITALIC"
     },
+    "curly_brace_color": {
+      "type": "Color",
+      "value": "\\YELLOW;NORMAL"
+    },
     "disable_error_msg": {
       "type": "Bool",
       "value": "false"
@@ -22,11 +26,11 @@
     },
     "hyphen_color": {
       "type": "Color",
-      "value": "\\GRAY;NORMAL"
+      "value": "\\YELLOW;DARK"
     },
     "initial_path": {
       "type": "String",
-      "value": ""
+      "value": "C:/Users/Usuario/Desktop"
     },
     "itellisense": {
       "type": "Bool",

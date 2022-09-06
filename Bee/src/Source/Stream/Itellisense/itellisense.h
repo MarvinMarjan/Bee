@@ -193,6 +193,20 @@ namespace it
 					}
 					break;
 				}
+
+				case is::LeftCurlyBrace: {
+					size_t end = util::find_first(buffer, '}', i);
+
+					if (end >= buffer.size()) end--;
+
+					for (i; i <= end; i++) {
+						if (i == index && draw_caret) itelli_draw_caret(defs.caret_color, buffer[i]);
+						else std::cout << os::clr(util::str_char(buffer[i]), defs.curly_brace_color);
+					}
+
+					i--;
+					continue;
+				}
 				}				
 
 

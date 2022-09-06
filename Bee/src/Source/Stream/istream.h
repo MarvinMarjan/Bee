@@ -59,6 +59,9 @@ namespace is
 		DollarSign = 36, //  $
 		Hyphen = 45,     //  -
 		Backslash = 92,  //  \
+
+		LeftCurlyBrace = 123,
+		RightCurlyBrace = 125,
  
 		Tab = 9
 	};

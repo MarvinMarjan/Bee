@@ -49,7 +49,7 @@
 void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
 	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func = nullptr)
 {
-	if (dbase.exist_function(s_buff[0]))
+	if (dbase.exist_function(s_buff[0]) && !dbase.is_predef_function(s_buff[0]))
 	{
 		dt::Function* function = dbase.get_function(s_buff[0]);
 		size_t args_count = 1;
@@ -177,6 +177,15 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 	}
 
+	case cmd::Get_Setting:
+		if (util::_args(system, args, cmd::Get_Setting)) break;
+		if (parent_func) {
+			if (sys_config.exist(args[0].get_arg())) parent_func->set_return_value(sys_config[args[0].get_arg()]->get_value());
+			else system.error(sys::Setting_Not_Found_Err, args[0].get_arg());
+		}
+		else std::cout << sys_config[args[0].get_arg()]->get_value() << std::endl;
+		break;
+
 	case cmd::Detail:
 		sys::details(system);
 		break;
@@ -193,11 +202,30 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		}
 
 		else {
-			if (flags.is_active(cmd::Only_CMD_Name))
-				for (size_t i = 0; i < cmd::commands.size(); i += 2)
-					std::cout << std::setw(40) << std::left << os::clr(cmd::commands[i].name, os::WT_CYAN) << std::right << ((i + 1 >= cmd::commands.size()) ? "" : os::clr(cmd::commands[i + 1].name, os::WT_CYAN)) << std::endl;
+			if (flags.is_active(cmd::Only_CMD_Name)) {
+				if (flags.is_active(cmd::Bee_Base)) {
+					std::vector<cmd::CMD_Data> predefs = util::filter<cmd::CMD_Data>(cmd::commands,
+						[](cmd::CMD_Data command) -> bool {
+							return (command.predef);
+						});
 
-			else for (cmd::CMD_Data cmd : cmd::commands) sys::help(cmd);
+					for (size_t i = 0; i < predefs.size(); i += 2)
+						std::cout << std::setw(40) << std::left << os::clr(predefs[i].name, os::YELLOW) << std::right 
+							<< ((i + 1 >= predefs.size()) ? "" : os::clr(predefs[i + 1].name, os::YELLOW)) << std::endl;
+				}
+
+				else for (size_t i = 0; i < cmd::commands.size(); i += 2)
+						std::cout << std::setw(40) << std::left << os::clr(cmd::commands[i].name, ((cmd::commands[i].predef) ? os::YELLOW : os::WT_CYAN))
+						<< std::right << ((i + 1 >= cmd::commands.size()) ? "" : os::clr(cmd::commands[i + 1].name, ((cmd::commands[i + 1].predef) ? os::YELLOW : os::WT_CYAN))) << std::endl;
+			}
+			else for (cmd::CMD_Data cmd : cmd::commands) {
+				if (flags.is_active(cmd::Bee_Base)) {
+					if (cmd.predef)
+						sys::help(cmd);
+				}
+
+				else sys::help(cmd);
+			}
 		}
 		break;
 
@@ -334,13 +362,13 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	case cmd::Set:
 		if (util::_args(system, args, cmd::Set)) break;
 		if (dbase.exist_function(args[0].get_arg())) system.error(sys::Unavaliable_Name, args[0].get_arg());
-		if (dbase.exist_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
-		else dbase.add_shortcut(dt::Shortcut(args[0].get_arg(), args[1].get_arg()));
+		if (dbase.exist_shortcut(args[0].get_arg()) && !dbase.is_predef_shortcut(args[0].get_arg())) dbase.get_shortcut(args[0].get_arg())->set_value(args[1].get_arg());
+		else if (!dbase.is_predef_shortcut(args[0].get_arg())) dbase.add_shortcut(dt::Shortcut(args[0].get_arg(), args[1].get_arg()));
 		break;
 
 	case cmd::Del:
 		if (util::_args(system, args, cmd::Del)) break;
-		if (dbase.exist_shortcut(args[0].get_arg())) dbase.del_shortcut(args[0].get_arg());
+		if (dbase.exist_shortcut(args[0].get_arg()) && !dbase.is_predef_shortcut(args[0].get_arg())) dbase.del_shortcut(args[0].get_arg());
 		else system.error(sys::Shortcut_Not_Found_Err, args[0].get_arg());
 		break;
 
@@ -348,10 +376,11 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		if (args.get().size() == 0) {
 			for (dt::Shortcut st : dbase.get_all_shortcut()) {
 				std::cout << std::setw(30);
-				std::cout << std::left << os::clr(st.get_name(), os::WT_CYAN) << std::right << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
+				std::cout << std::left << os::clr(st.get_name(), ((dbase.is_predef_shortcut(st.get_name())) ? os::WT_BLUE : os::WT_CYAN)) << std::right << os::clr('\"' + st.get_value() + '\"', os::GREEN) << std::endl;
 			}
 
 			for (dt::Function fc : dbase.get_all_function()) {
+				if (dbase.is_predef_function(fc.get_name())) continue;
 				std::cout << std::setw(30);
 				std::cout << std::left << os::clr(fc.get_name(), os::WT_CYAN) << std::right << '{' + os::clr("...", os::WT_GREEN) + '}' << std::endl;
 			}
@@ -406,18 +435,15 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	case cmd::Sizeof:
 		if (util::_args(system, args, cmd::Sizeof)) break;
 		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
-		else std::cout << util::sizeof_file(util::_fmt(path, args[0])) << std::endl;
+		else if (!parent_func) std::cout << util::sizeof_file(util::_fmt(path, args[0])) << std::endl;
+		else parent_func->set_return_value(std::to_string(util::sizeof_file(util::_fmt(path, args[0]))));
 		break;
 
 	case cmd::Lineof:
 		if (util::_args(system, args, cmd::Lineof)) break;
-		if (!hand::exist_file(util::_fmt(path, args[0])))
-		{
-			system.error(sys::Invalid_Path_File, args[0].get_arg());
-			break;
-		}
-
-		std::cout << util::lineof_file(util::_fmt(path, args[0])) << std::endl;
+		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
+		else if (!parent_func) std::cout << util::lineof_file(util::_fmt(path, args[0])) << std::endl;
+		else parent_func->set_return_value(std::to_string(util::lineof_file(util::_fmt(path, args[0]))));
 		break;
 
 	case cmd::Read:

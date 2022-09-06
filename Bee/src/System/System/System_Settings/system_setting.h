@@ -106,6 +106,7 @@ namespace sys
 		Sys_Setting("number_sign_color", "\\WT_CYAN;NORMAL", Color),
 		Sys_Setting("dollar_sign_color", "\\CYAN;NORMAL", Color),
 		Sys_Setting("hyphen_color", "\\YELLOW;DARK", Color),
+		Sys_Setting("curly_brace_color", "\\WHITE;DARK", Color),
 
 		Sys_Setting("initial_path", "", String),
 
