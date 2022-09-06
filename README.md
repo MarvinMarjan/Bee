@@ -24,7 +24,7 @@ systems like Linux or MacOS.
 ## Basic syntax
 
 Bee has some features to make it easier to use.
-To demonstrate some, I will use the "print" command.
+To demonstrate some, I will use the [Print](https://github.com/MarvinMarjan/Bee/edit/master/README.md#print) command.
 
 Note: the "print" command by default concatenates all arguments into a single string
 
@@ -77,6 +77,44 @@ So, to get around this and make "print" interpret "hello," and "world" as an arg
 
 
 That way "print" will no longer separate "hello, world".
+
+
+### Shortcuts
+
+Sometimes you might want to write a long text or store a important value.
+In these cases you can use a feature called "Shortcut", which works similarly to variables.
+
+To create a Shortcut we can use the [Set](https://github.com/MarvinMarjan/Bee/edit/master/README.md#set) command.
+
+The first argument is the shortcut name, and the second is the value to be stored.
+Let's create a shortcut called "number" that stores the value "123":
+
+
+![image](https://user-images.githubusercontent.com/103616110/188651510-58f8d755-7924-4e73-b663-542e971b6e9a.png)
+
+
+Now we need to access the stored value. To access the value of a shortcut you need to use this syntax: `$name`
+
+
+![image](https://user-images.githubusercontent.com/103616110/188652758-e9bb8826-ab17-4b91-ab19-b56fe380df19.png)
+
+
+To list all shortcuts you can use the [List](https://github.com/MarvinMarjan/Bee/edit/master/README.md#list) command:
+
+
+![image](https://user-images.githubusercontent.com/103616110/188653697-07612580-afae-4c01-9e8a-fb358218f6ec.png)
+
+
+To delete a shortcut, use the [Del](https://github.com/MarvinMarjan/Bee/edit/master/README.md#del) command:
+
+
+![image](https://user-images.githubusercontent.com/103616110/188653883-b77fb70b-51f4-42a6-bc4d-ebc82e31f04b.png)
+
+
+To edit the value of a shorcut, use the [Set](https://github.com/MarvinMarjan/Bee/edit/master/README.md#set) command:
+
+
+![image](https://user-images.githubusercontent.com/103616110/188654453-ba975853-7bf1-4c4d-ad65-7b5760bf0d26.png)
 
 
 ### Concatenation
@@ -169,7 +207,34 @@ To facilitate the demonstration of the structure of a command, I will use a synt
 ## Command List
 
 - [Exit](https://github.com/MarvinMarjan/Bee/edit/master/README.md#exit)
-  
+- [Setting](https://github.com/MarvinMarjan/Bee/edit/master/README.md#setting)
+- [Detail](https://github.com/MarvinMarjan/Bee/edit/master/README.md#detail)
+- [Help](https://github.com/MarvinMarjan/Bee/edit/master/README.md#help)
+- [Clear](https://github.com/MarvinMarjan/Bee/edit/master/README.md#clear)
+- [Color](https://github.com/MarvinMarjan/Bee/edit/master/README.md#color)
+- [Color_Mode](https://github.com/MarvinMarjan/Bee/edit/master/README.md#color_mode)
+- [Errs](https://github.com/MarvinMarjan/Bee/edit/master/README.md#errs)
+- [Warns](https://github.com/MarvinMarjan/Bee/edit/master/README.md#warns)
+- [Cd](https://github.com/MarvinMarjan/Bee/edit/master/README.md#cd)
+- [Diag](https://github.com/MarvinMarjan/Bee/edit/master/README.md#diag)
+- [Print](https://github.com/MarvinMarjan/Bee/edit/master/README.md#print)
+- [Add](https://github.com/MarvinMarjan/Bee/edit/master/README.md#add)
+- [Rmv](https://github.com/MarvinMarjan/Bee/edit/master/README.md#rmv)
+- [Return](https://github.com/MarvinMarjan/Bee/edit/master/README.md#return)
+- [Set](https://github.com/MarvinMarjan/Bee/edit/master/README.md#set)
+- [Del](https://github.com/MarvinMarjan/Bee/edit/master/README.md#del)
+- [List](https://github.com/MarvinMarjan/Bee/edit/master/README.md#list)
+- [Mfile](https://github.com/MarvinMarjan/Bee/edit/master/README.md#mfile)
+- [Rmfile](https://github.com/MarvinMarjan/Bee/edit/master/README.md#rmfile)
+- [Mdir](https://github.com/MarvinMarjan/Bee/edit/master/README.md#mdir)
+- [Rmdir](https://github.com/MarvinMarjan/Bee/edit/master/README.md#rmdir)
+- [Rename](https://github.com/MarvinMarjan/Bee/edit/master/README.md#rename)
+- [Sizeof](https://github.com/MarvinMarjan/Bee/edit/master/README.md#sizeof)
+- [Lineof](https://github.com/MarvinMarjan/Bee/edit/master/README.md#lineof)
+- [Read](https://github.com/MarvinMarjan/Bee/edit/master/README.md#read)
+- [Write](https://github.com/MarvinMarjan/Bee/edit/master/README.md#write)
+- [Run](https://github.com/MarvinMarjan/Bee/edit/master/README.md#run)
+- [Stat](https://github.com/MarvinMarjan/Bee/edit/master/README.md#stat)
   
   
 ## Exit
@@ -252,7 +317,7 @@ Name variants:
 
 Syntax: `color`
 
-## Color Mode
+## Color_Mode
 
 Show a list of color modes
 
