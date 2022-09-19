@@ -17,7 +17,7 @@
 
 #define BEE_OPERATIONAL_SYSTEM "Windows"
 #define BEE_VERSION_STATE "DEV"
-#define BEE_VERSION "v0.1.1"
+#define BEE_VERSION "v0.1.2"
 #define BEE_NAME "Bee"
 
 using json = nlohmann::json;
@@ -151,20 +151,5 @@ namespace sys
 
 			std::cout << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2) << os::up_ln() << os::del_ln(2);
 		}
-	}
-
-	inline void bee_help()
-	{
-
-	}
-
-	inline void help(cmd::CMD_Data cmd)
-	{
-		std::string names = "";
-
-		for (size_t i = 0; i < cmd.name_variants.size(); i++)
-			names += cmd.name_variants[i] + ((i + 1 >= cmd.name_variants.size()) ? "" : " | ");
-
-		std::cout << os::clr(cmd.name, ((cmd.predef) ? os::YELLOW : os::WT_CYAN)) << " - " << os::clr(cmd.syntax, os::CYAN) << ((cmd.name_variants.size()) ? " -> " + os::clr(names, os::WT_YELLOW) : "") << std::endl << '\t' << cmd.description << std::endl << std::endl;
 	}
 }

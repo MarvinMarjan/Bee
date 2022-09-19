@@ -56,6 +56,8 @@ int main(int argc, char* argv[])
 	cmd::CMD_Arg args;
 	cmd::CMD_Flags flags;
 
+	bool can_use_else_statement;
+
 	while (!system.abort)
 	{
 		sys::set_defs(defs, sys_config);
@@ -110,23 +112,7 @@ int main(int argc, char* argv[])
 			}
 
 			case op::OP_Do:
-				std::string block = util::join_string(args.get_str());
-				std::vector<std::string> lines = util::split_string(block, ';');
-				
-				for (size_t i = 0; i < lines.size(); i++) {
-					while (lines[i][0] == ' ') lines[i] = util::erase_first(lines[i]);
-					while (lines[i][lines[i].size() - 1] == ' ') lines[i] = util::erase_last(lines[i]);
-				}
-
-				for (std::string line : lines) {
-					buff = line;
-					s_buff = util::split_string(line);
-					args = util::format_args_all(system, sys_config, defs, path, nullptr, s_buff, dbase);
-					flags = cmd::check_flags(args);
-					args.erase_flags();
-
-					run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
-				}
+				util::exec_block(system, sys_config, defs, path, args.get_str(), dbase);
 				continue;
 			}
 
@@ -135,7 +121,7 @@ int main(int argc, char* argv[])
 
 		if (mode != bt::Default && !btflag.is_active(bt::HidePath)) std::cout << buff << std::endl;
 
-		run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
+		if (buff != "") run(system, sys_config, defs, path, dbase, buff, s_buff, args, flags);
 
 		if (mode == bt::InlineCMD) {
 			if (system.inline_mode_arg_itr >= argc - system.mode_arg_index - 1) system.abort = true;

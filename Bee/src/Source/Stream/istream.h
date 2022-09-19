@@ -60,6 +60,11 @@ namespace is
 		Hyphen = 45,     //  -
 		Backslash = 92,  //  \
 
+		Period = 46,
+
+		Colon = 58,
+		SemiColon = 59,
+
 		LeftCurlyBrace = 123,
 		RightCurlyBrace = 125,
  

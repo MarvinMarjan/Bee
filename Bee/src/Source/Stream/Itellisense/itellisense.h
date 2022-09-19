@@ -38,13 +38,14 @@ namespace it
 		if (i == index)	itelli_draw_caret(caret_color, caret_color_mode, ch);
 	}
 
-	std::string itelli_stdin(hand::Path path, dt::DBase& dbase, Itelli_Buffer it_buff, sys::Defs& defs, os::ColorMode caret_color_mode = os::UNDERLINE)
+	std::string itelli_stdin(hand::Path path, dt::DBase& dbase, Itelli_Buffer it_buff, sys::Defs& defs)
 	{
 		std::cout << os::save_c();
 		
 		std::string buffer = "";
 		std::string sub_str = "";
 
+		std::vector<std::string> cmds = util::map<cmd::CMD_Data, std::string>(cmd::commands, [] (cmd::CMD_Data cmd) { return cmd.name; });
 		std::vector<std::string> ents;
 		std::vector<std::string> aux;
 		Itelli_Buffer query_list;
@@ -68,22 +69,25 @@ namespace it
 
 			if ((int)ch == is::Enter) draw_caret = false;
 			else if ((int)ch == is::Tab) {
+				bool is_command = (!util::exist_ch(buffer, ' '));
+
 				if (!tab_process) {
 					sub_bf_str = util::sub_string(buffer, ((sub_bf.begin == 0) ? sub_bf.begin : sub_bf.begin + 1), sub_bf.end);
 					ents = util::get_folder_ent(path.get_path());
 					tab_process = true;
 				}
 
-				aux = util::get_query_list(((util::exist(sub_bf_str, ents) ? "" : sub_bf_str)), ents);
+				
+				aux = util::get_query_list(((util::exist(sub_bf_str, ((is_command) ? cmds : ents)) ? "" : sub_bf_str)), ((is_command) ? cmds : ents));
 
 				for (size_t i = 0; i < aux.size(); i++)
-					if (util::find_all(aux[i], ' ').size() != 0) {
+					if (util::find_all(aux[i], ' ').size() != 0 && !is_command) {
 						aux[i] = util::insert(aux[i], "\"", 0);
 						aux[i] += '\"';
 					}
 
 				query_list.set_buff(aux, false);
-
+				
 				if (query_list.size() > 0) {
 					buffer = util::erase(buffer, sub_bf.begin - ((query_list.buff_get_last().get()[0] == '\"' && query_list.get_itr() != 0) ? 1 : 0), sub_bf.end);
 					buffer = util::insert(buffer, ((buffer.size() == 0) ? "" : " ") + query_list.buff_get().get(), sub_bf.begin);

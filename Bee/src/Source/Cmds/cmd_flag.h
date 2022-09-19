@@ -18,7 +18,8 @@ namespace cmd
 		Update,
 
 		Only_CMD_Name,
-		Bee_Base
+		Bee_Base,
+		Instruction
 	};
 
 	class CMD_Flags
@@ -60,6 +61,7 @@ namespace cmd
 
 			else if (flag == "cn") flags.push_back(Only_CMD_Name);
 			else if (flag == "b") flags.push_back(Bee_Base);
+			else if (flag == "i") flags.push_back(Instruction);
 		}
 
 		return flags;

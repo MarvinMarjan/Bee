@@ -28,7 +28,7 @@ namespace dt
 		inline std::string get_return_value() { return this->return_value; }
 
 		inline void set_block(std::vector<std::string> block) { this->block = block; }
-		inline void set_return_value(std::string return_value = "null") { this->return_value = return_value; }
+		inline void set_return_value(std::string return_value = "") { this->return_value = return_value; }
 
 		inline void operator=(std::vector<std::string> block) { this->set_block(block); }
 
@@ -41,7 +41,7 @@ namespace dt
 
 		std::string name;
 		std::vector<std::string> block;
-		std::string return_value = "null";
+		std::string return_value = "";
 
 		bool predef = false;
 	};

@@ -6,7 +6,7 @@
 #include "../../System/Exec/exec.h"
 
 void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff,
-	std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func);
+	std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func = nullptr);
 
 namespace util
 {
@@ -40,6 +40,27 @@ namespace util
 				aux.erase(aux.size() - 1);
 
 				f_src.push_back(aux);
+			}
+
+			else if (src[i] == ".{")
+			{
+				util::set_mouse_visible(util::True);
+				std::vector<std::string> lines;
+				std::string line;
+
+				do {
+					std::getline(std::cin, line);
+					if (line != "}.") {
+						for (std::string part : util::split_string(line)) lines.push_back(part);
+						lines.push_back(";");
+					}
+				} while (line != "}.");
+
+				for (std::string _line : lines) f_src.push_back(_line);
+				util::set_mouse_visible(util::False);
+
+				for (size_t j = 0; j < lines.size(); j++) std::cout << os::up_ln();
+				std::cout << os::del_win(0);
 			}
 
 			else if (src[i][0] == '{' && src[i].size() > 1)
@@ -130,6 +151,29 @@ namespace util
 				}
 			}
 
+			else if (src[i][0] == '!' && src[i][1] == '(')
+			{
+				std::string full = util::join_string(util::get_from(src, i));
+				full = util::sub_string(full, 2, util::find_first(full, ')'));
+
+				std::vector<std::string> s_full = { "" };
+				s_full = util::concat(s_full, util::split_string(full));
+
+				s_full = format_args1(system, sys_config, defs, path, parent_func, s_full, dbase);
+				
+				for (size_t i = 0; i < s_full.size(); i++) {
+					if (s_full[i] == "==") f_src.push_back(util::bool_to_str(s_full[i - 1] == s_full[i + 1]));
+					else if (s_full[i] == "!=") f_src.push_back(util::bool_to_str(s_full[i - 1] != s_full[i + 1]));
+					else if (s_full[i] == "<") f_src.push_back(util::bool_to_str(std::stoi(s_full[i - 1]) < std::stoi(s_full[i + 1])));
+					else if (s_full[i] == ">") f_src.push_back(util::bool_to_str(std::stoi(s_full[i - 1]) > std::stoi(s_full[i + 1])));
+					else if (s_full[i] == "<=") f_src.push_back(util::bool_to_str(std::stoi(s_full[i - 1]) <= std::stoi(s_full[i + 1])));
+					else if (s_full[i] == ">=") f_src.push_back(util::bool_to_str(std::stoi(s_full[i - 1]) >= std::stoi(s_full[i + 1])));
+				}
+
+				while (src[i][src[i].size() - 1] != ')') i++;
+			}
+		
+
 			else if (src[i][0] == '\\') {
 
 				std::string full = util::to_upper(src[i]);
@@ -171,6 +215,30 @@ namespace util
 				else
 				{
 					f_src[i - 1] = f_src[i - 1] + f_src[i + 1];
+
+					f_src.erase(f_src.begin() + (i), f_src.begin() + (i + 2));
+					i--;
+				}
+			}
+
+			else if (f_src[i] == "&&")
+			{
+				if (i + 1 >= f_src.size() || i == 0) system.warn(sys::Incomplete_Expression);
+				else
+				{
+					f_src[i - 1] = util::bool_to_str(util::str_to_bool(f_src[i - 1]) && util::str_to_bool(f_src[i + 1]));
+
+					f_src.erase(f_src.begin() + (i), f_src.begin() + (i + 2));
+					i--;
+				}
+			}
+			
+			else if (f_src[i] == "||")
+			{
+				if (i + 1 >= f_src.size() || i == 0) system.warn(sys::Incomplete_Expression);
+				else
+				{
+					f_src[i - 1] = util::bool_to_str(util::str_to_bool(f_src[i - 1]) || util::str_to_bool(f_src[i + 1]));
 
 					f_src.erase(f_src.begin() + (i), f_src.begin() + (i + 2));
 					i--;

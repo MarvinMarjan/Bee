@@ -48,7 +48,13 @@ namespace cmd
 		cmd::CMD_Data(Write),
 
 		cmd::CMD_Data(Run),
-		cmd::CMD_Data(Stat)
+		cmd::CMD_Data(Stat),
+
+		cmd::CMD_Data(Kpress),
+
+		cmd::CMD_Data(If),
+		cmd::CMD_Data(Else),
+		cmd::CMD_Data(While)
 	};
 
 	inline Command check(is::Buffer buff)

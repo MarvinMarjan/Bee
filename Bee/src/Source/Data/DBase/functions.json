@@ -1,3 +1,11 @@
 {
-  "function": []
+  "function": [
+    {
+      "block": [
+        "print 123",
+        "print 321"
+      ],
+      "name": "test"
+    }
+  ]
 }

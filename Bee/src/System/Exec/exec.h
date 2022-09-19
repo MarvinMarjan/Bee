@@ -17,6 +17,7 @@
 #include "../../System/System/System_Settings/setting_types_converts.h"
 #include "../../System/System/System_Settings/system_setting_def.h"
 #include "../../System/System/System_Settings/system_setting.h"
+#include "../../System/System/system_help.h"
 #include "../../System/System/system_warn.h"
 #include "../../System/System/system_ask.h"
 #include "../../System/System/system_err.h"
@@ -44,10 +45,13 @@
 #include "../../Source/Util/memory_util.h"
 #include "../../Source/Util/string_util.h"
 #include "../../Source/Util/array_util.h"
+#include "../../Source/Util/exec_util.h"
 #include "../../Source/Util/cmd_util.h"
 
+bool can_use_else_statement = false;
+
 void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs, hand::Path& path, dt::DBase& dbase, is::Buffer& buff, 
-	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func = nullptr)
+	     std::vector<std::string> s_buff, cmd::CMD_Arg& args, cmd::CMD_Flags& flags, dt::Function* parent_func)
 {
 	if (dbase.exist_function(s_buff[0]) && !dbase.is_predef_function(s_buff[0]))
 	{
@@ -83,7 +87,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 
 	case cmd::Setting: {
-		if (args.get().size() == 0) 
+		if (args.get().size() == 0)
 		{
 			std::string name, value;
 			sys::SettingType type;
@@ -132,14 +136,14 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 					abort = true;
 				}
 			}
-			
+
 			if (!sys_config.exist(name) && !abort) system.error(sys::Setting_Not_Found_Err, name);
 			else if (!abort) {
 				type = sys_config[name]->get_type();
 				value = sys_config[name]->get_value();
 
 				std::cout << ((type == sys::Color) ? os::clr(value, util::semi_raw_to_color_set(value)) :
-							  (type == sys::Bool) ? os::clr(value, os::WT_YELLOW) : value) << std::endl;
+					(type == sys::Bool) ? os::clr(value, os::WT_YELLOW) : value) << std::endl;
 			}
 		}
 
@@ -171,7 +175,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 				if (sys_config[name]->is_same_type(value)) sys_config[name]->set_value(value);
 			}
 		}
-		
+
 		sys::set_defs(defs, sys_config);
 
 		break;
@@ -203,32 +207,23 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 
 		else {
 			if (flags.is_active(cmd::Only_CMD_Name)) {
-				if (flags.is_active(cmd::Bee_Base)) {
-					std::vector<cmd::CMD_Data> predefs = util::filter<cmd::CMD_Data>(cmd::commands,
-						[](cmd::CMD_Data command) -> bool {
-							return (command.predef);
-						});
-
-					for (size_t i = 0; i < predefs.size(); i += 2)
-						std::cout << std::setw(40) << std::left << os::clr(predefs[i].name, os::YELLOW) << std::right 
-							<< ((i + 1 >= predefs.size()) ? "" : os::clr(predefs[i + 1].name, os::YELLOW)) << std::endl;
-				}
-
-				else for (size_t i = 0; i < cmd::commands.size(); i += 2)
-						std::cout << std::setw(40) << std::left << os::clr(cmd::commands[i].name, ((cmd::commands[i].predef) ? os::YELLOW : os::WT_CYAN))
-						<< std::right << ((i + 1 >= cmd::commands.size()) ? "" : os::clr(cmd::commands[i + 1].name, ((cmd::commands[i + 1].predef) ? os::YELLOW : os::WT_CYAN))) << std::endl;
+				if (flags.is_active(cmd::Bee_Base)) sys::only_name_help(sys::Base);
+				else if (flags.is_active(cmd::Instruction)) sys::only_name_help(sys::Instruction);
+				else sys::only_name_help();
 			}
-			else for (cmd::CMD_Data cmd : cmd::commands) {
-				if (flags.is_active(cmd::Bee_Base)) {
-					if (cmd.predef)
-						sys::help(cmd);
-				}
+			else if (flags.is_active(cmd::Bee_Base)) 
+				util::foreach(util::filter<cmd::CMD_Data>(cmd::commands, 
+					[](cmd::CMD_Data cmd) { return sys::is_cmd_same_type(cmd, sys::Base); }
+				), sys::help);
+			else if (flags.is_active(cmd::Instruction))
+				util::foreach(util::filter<cmd::CMD_Data>(cmd::commands,
+					[](cmd::CMD_Data cmd) { return sys::is_cmd_same_type(cmd, sys::Instruction); }
+				), sys::help);
 
-				else sys::help(cmd);
-			}
+			else util::foreach(cmd::commands, sys::help);
 		}
 		break;
-
+				
 	case cmd::Clear:
 		std::system("cls");
 		break;
@@ -242,7 +237,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		for (std::string cmode : os::STRColors_mode)
 			std::cout << os::clr(cmode, os::WHITE, util::string_to_color_mode(cmode)) << std::endl;
 		break;
-		
+
 	case cmd::Errs:
 		for (sys::Error err : sys::errs)
 			std::cout << os::clr(err.name, os::WT_RED) << std::endl;
@@ -274,7 +269,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		{
 			util::EntType type = util::get_ent_type(path + ent);
 			std::string s_type = ((type == util::File) ? "File" : "Dirs");
-			float byte_size = (dir_size && type == util::Folder) ? (float) util::sizeof_folder(path + ent, path_dbg) :
+			float byte_size = (dir_size && type == util::Folder) ? (float)util::sizeof_folder(path + ent, path_dbg) :
 				(float)util::sizeof_file(path + ent);
 
 			float f_size = ((byte_size < 1000)
@@ -313,8 +308,10 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	}
 
 	case cmd::Print:
-		for (cmd::Arg arg : args.get()) std::cout << arg.get_arg();
-		if (!flags.is_active(cmd::Not_New_Line)) std::cout << std::endl;
+		if (args.get().size() && args[0].get_arg() != "") {
+			for (cmd::Arg arg : args.get()) std::cout << arg.get_arg();
+			if (!flags.is_active(cmd::Not_New_Line)) std::cout << std::endl;
+		}
 		std::cout << os::get_clr();
 		break;
 
@@ -328,15 +325,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		std::string buffer;
 
 		if (util::_args(system, args, cmd::Add)) break;
-		if (args[1].get_arg() == "...") do {
-			util::set_mouse_visible(util::True);
-			std::getline(std::cin, buffer);
-			if (buffer != ";") {
-				block.push_back(buffer);
-				util::set_mouse_visible(util::False);
-			}
-		} while (buffer != ";");
-		else for (std::string line : util::split_string(util::join_string(util::get_from(args.get_str(false), 1)), ';')) {
+	    for (std::string line : util::split_string(util::join_string(util::get_from(args.get_str(false), 1)), ';')) {
 			while (line[0] == ' ') line = util::erase_first(line);
 			while (line[line.size() - 1] == ' ') line = util::erase_last(line);
 
@@ -417,8 +406,7 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 	case cmd::RMdir:
 		std::cout << os::scroll_up(3) << os::up_ln() << os::up_ln() << os::up_ln();
 		if (util::_args(system, args, cmd::RMfile)) break;
-		if (!hand::exist_folder(util::_fmt(path, args[0])))
-		{
+		if (!hand::exist_folder(util::_fmt(path, args[0]))) {
 			system.error(sys::Invalid_Path_Dir, args[0].get_arg());
 			break;
 		}
@@ -446,13 +434,17 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		else parent_func->set_return_value(std::to_string(util::lineof_file(util::_fmt(path, args[0]))));
 		break;
 
-	case cmd::Read:
+	case cmd::Read: {
 		if (util::_args(system, args, cmd::Read)) break;
 		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
-		else for (std::string line : util::read_file(util::_fmt(path, args[0])))
-			std::cout << line << std::endl;
+		else if (!parent_func) {
+			for (std::string line : util::read_file(util::_fmt(path, args[0])))
+				std::cout << line << std::endl;
+		}
+		else parent_func->set_return_value(util::join_string(util::read_file(util::_fmt(path, args[0])), "\n"));
 		break;
-
+	}
+				
 	case cmd::Write:
 		if (util::_args(system, args, cmd::Write)) break;
 		if (!hand::exist_file(util::_fmt(path, args[0]))) system.error(sys::Invalid_Path_File, args[0].get_arg());
@@ -477,8 +469,38 @@ void run(sys::System& system, sys::System_Settings& sys_config, sys::Defs& defs,
 		break;
 	}
 
+	case cmd::Kpress:
+		if (parent_func && is::k_hit())	parent_func->set_return_value(util::str_char(is::get_ch()));
+		else if (is::k_hit()) std::cout << is::get_ch() << std::endl;
+		break;
+
+	case cmd::If:
+		if (util::_args(system, args, cmd::If)) break;
+		if (args[0].get_arg() == "true") {
+			util::exec_block(system, sys_config, defs, path, util::get_from(args.get_str(), 1), dbase, parent_func);
+			can_use_else_statement = false;
+		}
+		else can_use_else_statement = true;
+		break;
+
+	case cmd::Else:
+		if (util::_args(system, args, cmd::Else)) break;
+		if (!can_use_else_statement) break;
+		else util::exec_block(system, sys_config, defs, path, util::get_from(args.get_str(), 0), dbase, parent_func);
+		can_use_else_statement = false;
+
+	case cmd::While:
+		if (util::_args(system, args, cmd::While)) break;
+		while (args[0].get_arg() == "true") {
+			util::exec_block(system, sys_config, defs, path, util::get_from(args.get_str(), 1), dbase, parent_func);
+			args = util::format_args_all(system, sys_config, defs, path, parent_func, s_buff, dbase);
+		}
+		break;
+
 	case cmd::Not_found:
 		system.error(sys::Command_Not_Found, s_buff[0]);
 		break;
 	}
+
+	
 }

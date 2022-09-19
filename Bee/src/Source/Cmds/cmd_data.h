@@ -48,237 +48,161 @@ namespace cmd
 		Write,
 
 		Run,
-		Stat
+		Stat,
 
+		Kpress,
+
+		If,
+		Else,
+		While
 	};
 
 	class CMD_Data
 	{
 	public:
-		CMD_Data(Command _cmd)
+		CMD_Data(Command cmd)
 		{
-			this->adress = _cmd;
+			this->adress = cmd;
 
-			switch (_cmd)
+			switch (cmd)
 			{
 			case Exit:
-				this->name = "exit";
-				this->description = "Exit the program";
-				this->syntax = "exit";
-				this->name_variants = { this->name, ".x", ".exit", "quit", ".quit" };
+				this->set_data("exit", "Exit the program", { ".x", ".exit", "quit", ".quit" });
 				break;
 
 			case Setting:
-				this->name = "setting";
-				this->description = "Show/Edit system settings";
-				this->syntax = "setting [ Setting_Name ? ] [ Setting_Value ? ]";
-				this->name_variants = { this->name, "config", ".sett", ".conf", "*" };
+				this->set_data("setting", "Show/Edit system settings", { "config", ".sett", ".conf", "*" }, "setting [ Setting_Name ? ] [ Setting_Value ? ]");
 				break;
 
 			case Get_Setting:
-				this->name = "get_setting";
-				this->description = "Return the value of a setting";
-				this->syntax = "get_setting [ Setting ]";
-				this->name_variants = { this->name };
-				this->predef = true;
+				this->set_data("get_setting", "Return the value of a setting", {}, "get_setting [ Setting ]", true);
 				break;
 
 			case Detail:
-				this->name = "detail";
-				this->description = "Show program details (Version, Name)";
-				this->syntax = "detail";
-				this->name_variants = { this->name, ".d", ".detail" };
+				this->set_data("detail", "Show program details (Version, Name)", { ".d", ".detail" });
 				break;
 
 			case Help:
-				this->name = "help";
-				this->description = "Show this message";
-				this->syntax = "help [ Command ? ] { command_name (-cn) ? }";
-				this->name_variants = { this->name, ".h", ".help" };
-				break;
+				this->set_data("help", "Show this message", { ".h", ".help" }, "help [ Command ? ] { command_name (-cn) ? }");
+				break; 
 
 			case Clear:
-				this->name = "clear";
-				this->description = "Clear the console";
-				this->syntax = "clear";
-				this->name_variants = { this->name, "clean", ".cl" };
+				this->set_data("clear", "Clear the console", { "clean", ".cl" });
 				break;
 
 			case Color:
-				this->name = "color";
-				this->description = "Show a list of colors";
-				this->syntax = "color";
-				this->name_variants = { this->name, "clr" };
+				this->set_data("color", "Show a list of colors", { "clr" });
 				break;
 
 			case Color_Mode:
-				this->name = "color_mode";
-				this->description = "Show a list of color modes";
-				this->syntax = "color_mode";
-				this->name_variants = { this->name, "cmode" };
+				this->set_data("color_mode", "Show a list of color modes", { "cmode" });
 				break;
 
 			case Errs:
-				this->name = "errs";
-				this->description = "Show a list of system erros";
-				this->syntax = "errs";
-				this->name_variants = { this->name, "erros", "err" };
+				this->set_data("errs", "Show a list of system erros", { "erros", "err" });
 				break;
 
 			case Warns:
-				this->name = "warns";
-				this->description = "Show a list of system warnings";
-				this->syntax = "warns";
-				this->name_variants = { this->name, "warn" };
+				this->set_data("warns", "Show a list of system warnings", { "warn" });
 				break;
 
 			case CD:
-				this->name = "cd";
-				this->description = "Helps with directory navigation";
-				this->syntax = "cd [ Path ]";
-				this->name_variants = { this->name };
+				this->set_data("cd", "Helps with directory navigation", {}, "cd [ Path ]");
 				break;
 
 			case Diagnostic:
-				this->name = "diag";
-				this->description = "Displays the details of the current directory";
-				this->syntax = "diag { dirs_size (-ds) ? } { path_debug (-pd) ? } ";
-				this->name_variants = { this->name, "diagnostic" };
+				this->set_data("diag", "Displays the details of the current directory", { "diagnostic" }, "diag { dirs_size (-ds) ? } { path_debug (-pd) ? } ");
 				break;
 
 			case Print:
-				this->name = "print";
-				this->description = "Print a specific value in the console";
-				this->syntax = "print [ Values... ? ]";
-				this->name_variants = { this->name };
+				this->set_data("print", "Print a specific value in the console", {}, "print [ Values... ? ]");
 				break;
 
 			case Add:
-				this->name = "add";
-				this->description = "Add a new command";
-				this->syntax = "add [ Cmd_Name ] [ Block ]";
-				this->name_variants = { this->name };
+				this->set_data("add", "Add a new command", {}, "add [ Cmd_Name ] [ Block ]");
 				break;
 
 			case Rmv:
-				this->name = "rmv";
-				this->description = "Remove a created command";
-				this->syntax = "rmv [ Cmd_Name ]";
-				this->name_variants = { this->name, "remove" };
+				this->set_data("rmv", "Remove a created command", { "remove" }, "rmv [ Cmd_Name ]");
 				break;
 
 			case Return:
-				this->name = "return";
-				this->description = "Defines a return value in a function (only works in created functions)";
-				this->syntax = "return [ Value ]";
-				this->name_variants = { this->name };
+				this->set_data("return", "Defines a return value in a function (only works in created functions)", {}, "return [ Value ]");
 				break;
 
 			case Set:
-				this->name = "set";
-				this->description = "Create or edit a shortcut";
-				this->syntax = "set [ Name ] [ Value ]";
-				this->name_variants = { this->name };
+				this->set_data("set", "Create or edit a shortcut", {}, "set [ Name ] [ Value ]");
 				break;
 
 			case Del:
-				this->name = "del";
-				this->description = "Delete a shortcut";
-				this->syntax = "del [ Name ]";
-				this->name_variants = { this->name };
+				this->set_data("del", "Delete a shortcut", {}, "del [ Name ]");
 				break;
 
 			case List:
-				this->name = "list";
-				this->description = "List all Shortcuts/Functions";
-				this->syntax = "list [ Name ? ]";
-				this->name_variants = { this->name };
+				this->set_data("list", "List all Shortcuts/Functions", {}, "list [ Name ]");
 				break;
 
 			case Mfile:
-				this->name = "mfile";
-				this->description = "Create a file";
-				this->syntax = "mfile [ Path ]";
-				this->name_variants = { this->name, "make_file"};
+				this->set_data("mfile", "Create a file", { "make_file" }, "mfile [ Path ]");
 				break;
 
 			case RMfile:
-				this->name = "rmfile";
-				this->description = "Remove a file";
-				this->syntax = "rmfile [ Path ]";
-				this->name_variants = { this->name, "remove_file" };
+				this->set_data("rmfile", "Remove a file", { "remove_file" }, "rmfile [ Path ]");
 				break;
 
 			case Mdir:
-				this->name = "mdir";
-				this->description = "Create e directory";
-				this->syntax = "mdir [ Path ]";
-				this->name_variants = { this->name, "make_dir" };
+				this->set_data("mdir", "Create a directory", { "make_dir" }, "mdir [ Path ]");
 				break;
 
 			case RMdir:
-				this->name = "rmdir";
-				this->description = "Remove a directory";
-				this->syntax = "rmdir [ Path ]";
-				this->name_variants = { this->name, "remove_dir" };
+				this->set_data("rmdir", "Remove a directory", { "remove_dir" }, "rmdir [ Path ]");
 				break;
 
 			case Rename:
-				this->name = "rename";
-				this->description = "Rename a file/directory";
-				this->syntax = "rename [ Path ] [ New_Name ]";
-				this->name_variants = { this->name };
+				this->set_data("rename", "Rename a file/directory", {}, "rename [ Path ] [ New_Name ]");
 				break;
 
 			case Sizeof:
-				this->name = "sizeof";
-				this->description = "Return the size of a file in bytes";
-				this->syntax = "sizeof [ Path ]";
-				this->name_variants = { this->name };
-				this->predef = true;
+				this->set_data("sizeof", "Return the size of a file in bytes", {}, "sizeof [ Path ]", true);
 				break;
 
 			case Lineof:
-				this->name = "lineof";
-				this->description = "Return the total lines of a file";
-				this->syntax = "lineof [ Path ]";
-				this->predef = true;
-				this->name_variants = { this->name };
+				this->set_data("lineof", "Return the total lines of a file", {}, "lineof [ Path ]", true);
 				break;
 
 			case Read:
-				this->name = "read";
-				this->description = "Return the content of a file";
-				this->syntax = "read [ Path ]";
-				this->name_variants = { this->name, "read_file" };
+				this->set_data("read", "Return the content of a file", { "read_file" }, "read [ Path ]", true);
 				break;
 
 			case Write:
-				this->name = "write";
-				this->description = "Write content in a file";
-				this->syntax = "write [ Path ] [ Content ] { clear_file (-cf) ? } { disable_newline (-nl) ? }";
-				this->name_variants = { this->name, "write_file" };
+				this->set_data("write", "Write content in a file", { "write_file" }, "write [ Path ] [ Content ] { clear_file(-cf) ? } { disable_newline(-nl) ? }");
 				break;
 
 			case Run:
-				this->name = "run";
-				this->description = "Run a OS command";
-				this->syntax = "run [ Command ]";
-				this->name_variants = { this->name };
+				this->set_data("run", "Run a OS command", {}, "run [ Command ]");
 				break;
 
 			case Stat:
-				this->name = "stat";
-				this->description = "Show OS status";
-				this->syntax = "stat { update (-up) ? }";
-				this->name_variants = { this->name, "stats", "status", ".s" };
+				this->set_data("stat", "Show OS status", {"stats", "status", ".s"}, "stat { update (-up) ? }");
 				break;
 
-			default:
-				this->name = "<invalid>";
-				this->description = "<invalid>";
-				this->syntax = "<invalid>";
-				this->name_variants = { this->name };
+			case Kpress:
+				this->set_data("kpress", "Return the pressed key", {}, "", true);
+				break;
+
+			case If:
+				this->set_data("if", "If statement", {}, "if [ Condition ] [ Block ]", false, true);
+				break;
+
+			case Else:
+				this->set_data("else", "Else statement", {}, "else [ Block ]", false, true);
+				break;
+
+			case While:
+				this->set_data("while", "While statement", {}, "while [ Condition ] [ Block ]", false, true);
+				break;
+
+			default: this->set_data("<invalid>", "<invalid>");
 			}
 		}
 
@@ -290,6 +214,22 @@ namespace cmd
 		Command adress;
 
 		bool predef = false;
+		bool instruction = false;
+
+	private:
+		inline void set_data(std::string name, std::string description, std::vector<std::string> name_variants = {}, std::string syntax = "", bool predef = false, bool instruction = false) {
+			if (syntax == "") syntax = name;
+			
+			this->name = name;
+			this->description = description;
+			this->syntax = syntax;
+
+			this->name_variants = name_variants;
+			this->name_variants.insert(this->name_variants.begin(), name);
+
+			this->predef = predef;
+			this->instruction = instruction;
+		}
 	};
 
 	int arg_size(Command cmd)
@@ -319,6 +259,10 @@ namespace cmd
 		case Write:       return 2;
 						  
 		case Run:         return 1;
+
+		case If:          return 2;
+		case Else:        return 1;
+		case While:       return 2;
 
 		default: return 0;
 		}

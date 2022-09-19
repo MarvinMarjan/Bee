@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Stream/istream.h"
+
 namespace op
 {
 	enum Operator
@@ -12,9 +14,11 @@ namespace op
 
 	Operator check(char ch)
 	{
-		if (ch == '.') return OP_Repeat;
-		else if (ch == ':') return OP_Do;
-
-		else return Null;
+		switch ((int)ch)
+		{
+		case is::Period: return OP_Repeat;
+		case is::Colon: return OP_Do;
+		default: return Null;
+		}
 	}
 }

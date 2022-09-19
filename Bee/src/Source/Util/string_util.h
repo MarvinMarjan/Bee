@@ -195,10 +195,19 @@ namespace util
 		return n_src;
 	}
 
-	inline std::string str_char(char ch)
-	{
+	inline std::string str_char(char ch) {
 		std::string str(1, ch);
 		return str;
+	}
+
+	inline std::string bool_to_str(bool src) {
+		if (src) return "true";
+		else return "false";
+	}
+	
+	inline bool str_to_bool(std::string src) {
+		if (src == "true") return true;
+		else return false;
 	}
 
 	inline std::string get_until(std::string src, char ch, size_t index = 0, Direction direction = Right)
@@ -211,5 +220,14 @@ namespace util
 		}
 
 		return _src;
+	}
+
+	inline bool exist_ch(std::string src, char ch)
+	{
+		for (char _ch : src)
+			if (_ch == ch)
+				return true;
+
+		return false;
 	}
 }

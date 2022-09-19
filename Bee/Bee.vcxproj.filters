@@ -179,6 +179,12 @@
     <ClInclude Include="src\System\System\System_Settings\setting_types_converts.h">
       <Filter>src\System\System\System_Settings</Filter>
     </ClInclude>
+    <ClInclude Include="src\System\System\system_help.h">
+      <Filter>src\System\System</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Source\Util\exec_util.h">
+      <Filter>src\Source\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\Source\Data\DBase\shortcuts.json">
