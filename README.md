@@ -193,6 +193,40 @@ Instead of writing "detail", we can opt for a smaller option: ".d":
 ![image](https://user-images.githubusercontent.com/103616110/188334819-b6e8409c-cc0b-465e-a6e5-b35fcd8110c8.png)
 
 
+### Blocks
+
+Some commands have an argument of type block, for exmaple: add, if, else, while
+
+Do you know what that block means?
+
+A block is several commands
+
+To create a block you have two options: "{ ... }" or ".{ ... }."
+
+For example, I will use the Do operator (':')
+
+Let's start with the "{}":
+
+
+![image](https://user-images.githubusercontent.com/103616110/191062195-66ef1eca-6c66-4a82-938e-c4a7d80ce183.png)
+
+![image](https://user-images.githubusercontent.com/103616110/191062526-e4d047c6-0287-463a-88e0-d61f11787925.png)
+
+In the block example above, the commands are separated by ';'
+
+I only recommend using the example above with blocks of few commands.
+if you want a block with many commands, I recommend using the example below:
+
+
+![image](https://user-images.githubusercontent.com/103616110/191064536-033ea5f1-966d-40cb-823e-cb3e9f6581ad.png)
+
+
+To end a block in the example above use the "}."
+
+
+![image](https://user-images.githubusercontent.com/103616110/191064553-8ea8ad60-63d0-4aee-bd85-ba2844be0574.png)
+
+
 # Commands
 
 ## Command syntax
